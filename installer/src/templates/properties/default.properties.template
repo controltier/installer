@@ -84,7 +84,7 @@ env.antdepo_base = ${user.home}/antdepo_base
 env.antdepo_home = ${user.home}/antdepo-@antdepo.version@
 
 # Hostname used by the machine for the ControlTier client
-client.hostname =
+client.hostname = ${server.tomcat.hostname}
 
 
 
