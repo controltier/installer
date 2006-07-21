@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<project>
+
+   <!--
+     ** version of Mavens project descriptor, leave alone maven will deal with 
+     ** it
+     -->
+   <pomVersion>3</pomVersion>
+
+   <!--
+     ** full name of the project, for JavaDoc titles
+     -->
+   <name>controltier-installer</name>
+
+   <!--
+     ** short name/version of the project, for jar and dist file generation
+   <id>depo</id>
+     -->
+   <id>ControlTier</id>
+   <currentVersion>3.0b3</currentVersion>
+
+
+   <!--
+     ** Organizational attributes name/url
+     -->
+   <organization>
+      <name>ControlTier, Inc.</name>
+      <url>http://www.controltier.com/</url>
+   </organization>
+
+   <!--
+     ** Copyright data generated for JavaDoc
+     -->
+   <inceptionYear>2006</inceptionYear>
+
+   <!--
+     ** JavaDoc pkg name
+     -->
+   <package>com.controltier.install</package>
+
+   <!--
+     ** single line description of project
+     -->
+   <shortDescription>Deployment Object Tools</shortDescription>
+
+   <!-- OPTIONAL for GUMP
+      <gumpRepositoryId>???</gumpRepositoryId>
+     -->
+ 
+   <!--
+     ** A detailed description of this project for "front page" of report
+     -->
+   <description>
+      This is the Deployment Object System, please see 
+      <![CDATA[<a href="http://www.networkgps.com">NetworkGPS Aspect-oriented Metadata Management</a>]]>
+      for details
+   </description>
+
+   <!--
+     ** URL to projects home page (not where cvs is located)
+     -->
+   <url>http://www.networkgps.com/</url>
+
+   <!--
+     ** Projects logo url (can be rel/abs path)
+     -->
+   <logo>http://www.opendepo.org/DepO/Drawings/Images/logo.gif</logo>
+
+   <!--  Project's issue tracking system OPTIONAL
+   <issueTrackingUrl>
+      http://trackingurl/...
+   </issueTrackingUrl>
+     -->
+
+   <!-- 
+     ** OPTIONAL, hostname/directory of project's webserver deployment hosting site
+     -->
+   <siteAddress>daffy.controltier.com</siteAddress>
+   <!-- <siteDirectory>/Some/Directory/Path</siteAddress> -->
+
+   <!--  
+     ** OPTIONAL, final distribution path name
+     -->
+   <!-- <distributionDirectory> /path/to/Distribution </distributionDirectory> -->
+
+   <!--  
+     ** Repository we will be doing checkouts from and it's browsable url
+     ** NOTE:  we must manage this file and replace cvs username in connection element for the correct one
+     ** also, requires key synchronization since SSH is used.
+     -->
+   <repository>
+      <!--
+        ** We will need to figure out how to deal with anoncvs or
+        ** softcode the username here
+        -->
+      <connection>
+         scm:cvs:ext:anoncvs@daffy.controltier.net:/srcroot/commander
+      </connection>
+      <url>
+         http://daffy.controltier.com/cgi-bin/cvsweb.cgi/
+      </url>
+   </repository>
+
+   <!--  OPTIONAL info on prev scm (cvs) versions of the project (tags, etc)
+   <versions>
+   </versions>
+     -->
+
+   <!--  
+     ** OPTIONAL for doc purposes, will put mailto: in doc 
+     -->
+   <!--
+   <mailingLists>
+      <mailingList>
+         <name>NetworkGPS User List</name>
+         <sucscribe>networkgps-colony-user-subscribe@networkgps.com</sucscribe>
+         <unsucscribe>networkgps-colony-user-unsubscribe@networkgps.com</unsucscribe>
+      </mailingList>
+      <mailingList>
+         <name>OpenDepo depo Developer List</name>
+         <sucscribe>networkgps-colony-dev-subscribe@networkgps.com</sucscribe>
+         <unsucscribe>networkgps-colongy-dev-user-unsubscribe@networkgps.com</unsucscribe>
+      </mailingList>
+   </mailingLists>
+     -->
+
+   <!--
+     ** Our participating developers
+     -->
+   <developers>
+      <developer>
+         <name>Chuck Scott</name>
+         <id>chuck</id>
+         <email>chuck@networkgps.com</email>
+         <organization>NetworkGPS</organization>
+      </developer>
+      <developer>
+         <name>Alex Honor</name>
+         <id>alexh</id>
+         <email>alex@networkgps.com</email>
+         <organization>NetworkGPS</organization>
+      </developer>
+      <developer>
+         <name>Greg Schueler</name>
+         <id>greg</id>
+         <email>greg@networkgps.com</email>
+         <organization>NetworkGPS</organization>
+      </developer>
+   </developers>
+
+   <!--
+     ** Classpath Dependencies.  We package jars in centralized server referenced by url property value from 
+     ** maven.repo.remote property (default set in build.xml file)
+     **    (Last currently set value was http://tellyouwhat.dnsalias.net/repo/ which is relative to doc root)
+     **
+     ** each dependency  must be packaged as so: 
+     ** <id>/jars/<id>-<version>.jar (relative to /repo/)
+     ** nested <war.bundle.jar>true</war.bundle.jar> to indicate whether this jar should be pkg'd in deployed war
+     -->
+   <dependencies>
+
+      <dependency>
+         <id>antdepo</id>
+         <version>1.2.5</version> 
+         <url>http://www.antdepo.org/</url>
+         <properties>
+            <war.bundle.jar>false</war.bundle.jar>
+         </properties>
+      </dependency>
+
+      <!-- the Workbench Server (ITNav) jar -->
+      <dependency>
+         <id>itnav</id>
+         <version>3.0b2</version> 
+         <url>http://www.controltier.com/</url>
+         <properties>
+            <war.bundle.jar>true</war.bundle.jar>
+         </properties>
+      </dependency>
+
+
+      <!-- needed in compile and runtime of ant tasks -->
+      <dependency>
+         <id>apache-ant</id>
+         <version>1.6.5</version>
+         <properties>
+            <war.bundle.jar>false</war.bundle.jar>
+         </properties>
+      </dependency>
+
+
+   </dependencies>
+
+   <!--
+     ** build related environmental info
+     -->
+   <build>
+
+      <defaultGoal>java:compile</defaultGoal>
+
+      <unitTest>
+         <excludes>
+            <exclude>**/AntdepoTest*.java</exclude>
+            <exclude>**/BuildFileTest*.java</exclude>
+         </excludes>
+      </unitTest>
+
+      <!--
+        ** email addr used for unattended builds, currnetly used by maven:gump-descriptor target, when enabled
+        ** currently not used, need to research GUMP!
+        -->
+      <nagEmailAddress>
+         info@controltier.com
+      </nagEmailAddress>
+
+      <!--
+        ** builds will compile source from this directory on down
+        -->
+      <sourceDirectory>src/java</sourceDirectory>
+
+      <!--
+        ** JUnit testing location
+      <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+      <unitTestSourceDirectory>src/_notest</unitTestSourceDirectory>
+        -->
+      <unitTestSourceDirectory>src/_notest</unitTestSourceDirectory>
+
+      <!--
+        ** Not defined, perhaps Cactus
+        -->
+      <integrationUnitTestSourceDirectory/>
+
+      <!-- aspect programming such as AspectJ, not enabled in properties -->
+      <aspectSourceDirectory/>
+
+      <!--
+        ** Unit tests for JUnit Framework only
+      <unitTestPatterns>
+         <unitTestPattern>include = **/Test*.java</unitTestPattern>
+      </unitTestPatterns>
+        -->
+      <unitTestPatterns>
+         **/Test*.java
+      </unitTestPatterns>
+
+      <!-- for Cactus framework only -->
+      <integrationUnitTestPatterns/>
+
+      <!-- 
+        ** Additional jar resources to pkg up, such as property files to ship, etc
+        ** You have to be lucky to get this right, this seems right now
+      <resources>
+         <includes>
+            <include>*.properties</include> 
+         </includes>
+      </resources>
+      <resources>
+         <includes>
+            <include>log4j.properties</include> 
+         </includes>
+      </resources>
+        -->
+
+
+      <!-- 
+        ** not documented well, perhaps addtional jars to be packaged within the jar being generated
+        -->
+      <jars>
+      </jars>
+
+   </build>
+         
+</project>
