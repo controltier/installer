@@ -17,6 +17,10 @@
 	    location="${src.dir}/templates/properties/installer.properties.template"/>
   <property name="default.props.template"
 	    location="${src.dir}/templates/properties/default.properties.template"/>
+  <!--builder import metadata-->
+   <property name="builder.props.template"
+            location="${basedir}/builder.properties.template"/>
+
 
 
   <preGoal name="java:compile">
@@ -167,6 +171,17 @@
     </copy>
 
 
+    <copy file="${builder.props.template}" filtering="true" overwrite="true"
+            tofile="${target.dir}/builder.properties">
+        <filterset>
+          <filter token="default.classname" value="CT_zip_installer"/>
+          <filter token="default.description" value="${pom.shortDescription}"/>
+          <filter token="default.package-base" value="${pom.id}"/>
+          <filter token="default.package-filetype" value="zip"/>
+          <filter token="default.package-release" value="1"/>
+          <filter token="default.package-version" value="${pom.currentVersion}"/>
+        </filterset>
+      </copy>
 
     <!--
 	** archive date for the to be built extension archive
