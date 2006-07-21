@@ -163,6 +163,7 @@
          <id>antdepo</id>
          <version>1.2.5</version> 
          <url>http://www.antdepo.org/</url>
+          <type>tgz</type>
          <properties>
             <war.bundle.jar>false</war.bundle.jar>
          </properties>
@@ -173,10 +174,32 @@
          <id>itnav</id>
          <version>3.0b2</version> 
          <url>http://www.controltier.com/</url>
+          <type>war</type>
          <properties>
             <war.bundle.jar>true</war.bundle.jar>
          </properties>
       </dependency>
+
+       <!-- headlines sample par-->
+       <dependency>
+           <id>headlines</id>
+           <version>20060714111526</version>
+           <url>http://www.controltier.com/</url>
+           <type>par</type>
+           <properties>
+               <war.bundle.jar>true</war.bundle.jar>
+           </properties>
+       </dependency>
+
+       <!-- headlines sample par-->
+       <dependency>
+           <id>commander-extension</id>
+           <version>3.0b2</version>
+           <url>http://www.controltier.com/</url>
+           <properties>
+               <war.bundle.jar>true</war.bundle.jar>
+           </properties>
+       </dependency>
 
 
       <!-- needed in compile and runtime of ant tasks -->
