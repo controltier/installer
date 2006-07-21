@@ -1,194 +1,179 @@
 <!--
-  ** Maven's config 
+    ** Maven's config 
 -->
 <project default="installer:create"
-    xmlns:u="jelly:util"
-    xmlns:j="jelly:core">
+	 xmlns:u="jelly:util"
+	 xmlns:j="jelly:core">
 
-    <property environment="env"/>
-
-
-    <property name="target.dir" value="${maven.build.dir}"/>
-    <property name="classes.dir" value="${target.dir}/classes"/>
-    <property name="src.java.dir" value="${src.dir}/java"/>
-
-    <property name="dist.dir" value="${maven.dist.dir}"/>
-    <property name="installer.props.template"
-        location="${src.dir}/templates/properties/installer.properties.template"/>
-    <property name="default.props.template"
-        location="${src.dir}/templates/properties/default.properties.template"/>
+  <property environment="env"/>
 
 
-    <preGoal name="java:compile">
+  <property name="target.dir" value="${maven.build.dir}"/>
+  <property name="classes.dir" value="${target.dir}/classes"/>
+  <property name="src.java.dir" value="${src.dir}/java"/>
 
-        <tstamp/>
-        <property name="installer.buildNumber" value="${DSTAMP}"/>
-        <property name="installer.version" value="${pom.currentVersion}"/>
-    </preGoal>
-
-
-    <goal name="installer:create-zip">
-        <!--<zip destfile="${target.dir}/${pom.id}-${pom.currentVersion}.zip"
-            basedir="${target.dir}" includes="${pom.id}-${pom.currentVersion}/**"/>-->
-        <echo>Creating zip file ${target.dir}/${pom.id}-${pom.currentVersion}.zip ...</echo>
-        <exec executable="zip" dir="${target.dir}" failonerror="true" outputproperty="zip.out">
-            <arg line=" -r -9 -v ${pom.id}-${pom.currentVersion}.zip ${pom.id}-${pom.currentVersion}"/>
-        </exec>
-    </goal>
-
-    <goal name="installer:create" prereqs="java:jar"
-        description="builds the extension archive from a temporary workspace and deploys into target dir">
-
-        <!--
-          ** workspace to build the reference extension
-          -->
-        <property name="installer.workspace"
-            value="${target.dir}/${pom.id}-${pom.currentVersion}"/>
-
-        <!--
-          ** cleanup and reset the workspace
-          -->
-        <delete dir="${installer.workspace}"/>
-        <mkdir dir="${installer.workspace}"/>
-        <mkdir dir="${installer.workspace}/pkgs"/>
-        <mkdir dir="${installer.workspace}/lib"/>
+  <property name="dist.dir" value="${maven.dist.dir}"/>
+  <property name="installer.props.template"
+	    location="${src.dir}/templates/properties/installer.properties.template"/>
+  <property name="default.props.template"
+	    location="${src.dir}/templates/properties/default.properties.template"/>
 
 
-        <!--
-          ** reference/check existence of the built jar
-          ** and package it into extension workspace
-          -->
-        <property name="project.jar" value="${target.dir}/${pom.id}-${pom.currentVersion}.jar"/>
+  <preGoal name="java:compile">
 
-        <available file="${project.jar}"
-            property="projectJarExists"/>
-        <fail unless="projectJarExists">${project.jar} does not exist, cannot proceed</fail>
-        <copy file="${project.jar}" tofile="${installer.workspace}/lib/installer.jar"/>
-
-        <copy todir="${installer.workspace}/etc">
-            <fileset dir="${basedir}/etc" />
-        </copy>
-        <copy todir="${installer.workspace}"
-            overwrite="true" filtering="true">
-            <filterset>
-                <filter token="pom.id" value="${pom.id}"/>
-                <filter token="pom.currentVersion" value="${pom.currentVersion}"/>
-            </filterset>
-            <fileset dir="${basedir}/doc" includes="*"/>
-        </copy>
-        <copy todir="${installer.workspace}"
-            overwrite="true" filtering="true">
-            <filterset>
-                <filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
-                <filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
-            </filterset>
-            <fileset dir="${src.dir}/sh" includes="install.sh"/>
-        </copy>
+    <tstamp/>
+    <property name="installer.buildNumber" value="${DSTAMP}"/>
+    <property name="installer.version" value="${pom.currentVersion}"/>
+  </preGoal>
 
 
-        <!--
-        TODO: copy installer source packages into pkgs directory
-        -->
-        <!--<if>
-            <isset property="packages.uselocal"/>
-            <then>-->
-                <fail unless="pkg.antdepo.expanded.name">pkg.antdepo.expanded.name was not defined</fail>
-                <fail unless="pkg.itnav.archive.name">pkg.antdepo.archive.name was not defined</fail>
-                <fail unless="pkg.headlines.archive.name">pkg.antdepo.archive.name was not defined</fail>
-                <fail unless="pkg.commander.archive.name">pkg.antdepo.archive.name was not defined</fail>
+  <goal name="installer:create-zip">
+    <!--<zip destfile="${target.dir}/${pom.id}-${pom.currentVersion}.zip"
+	basedir="${target.dir}" includes="${pom.id}-${pom.currentVersion}/**"/>-->
+    <echo>Creating zip file ${target.dir}/${pom.id}-${pom.currentVersion}.zip ...</echo>
+    <exec executable="zip" dir="${target.dir}" failonerror="true" outputproperty="zip.out">
+      <arg line=" -r -9 -v ${pom.id}-${pom.currentVersion}.zip ${pom.id}-${pom.currentVersion}"/>
+    </exec>
+  </goal>
 
-                <fail unless="pkg.antdepo.expanded.path">pkg.antdepo.expanded.path was not defined</fail>
-                <fail unless="pkg.itnav.archive.path">pkg.antdepo.archive.path was not defined</fail>
-                <fail unless="pkg.headlines.archive.path">pkg.antdepo.archive.path was not defined</fail>
-                <fail unless="pkg.commander.archive.path">pkg.antdepo.archive.path was not defined</fail>
+  <goal name="installer:create" prereqs="java:jar"
+	description="builds the extension archive from a temporary workspace and deploys into target dir">
 
-                <copy todir="${installer.workspace}/pkgs/${pkg.antdepo.expanded.name}" >
-                    <fileset dir="${pkg.antdepo.expanded.path}"/>
-                </copy>
-                <copy todir="${installer.workspace}/pkgs" file="${pkg.itnav.archive.path}"/>
-                <copy todir="${installer.workspace}/pkgs" file="${pkg.headlines.archive.path}"/>
-                <copy todir="${installer.workspace}/pkgs" file="${pkg.commander.archive.path}"/>
-               <!-- <exec executable="tar"
-                    dir="${installer.workspace}/pkgs">
-                    <arg line="xzf ${pkgs.dir}/${pkg.antdepo.archive}"/>
-                </exec>-->
-           <!-- </then>
-            <else>-->
-                <!-- TODO: use pom.dependencies to get appropriate archives -->
-                <!--<fail>Could not complete build, packages configuration from maven dependencies is not supported yet.
-Define this props in your build.properties to continue:
-pkg.antdepo.expanded.name =
-pkg.commander.archive.name =
-pkg.headlines.archive.name =
-pkg.itnav.archive.name =
+    <!--
+	** workspace to build the reference extension
+    -->
+    <property name="installer.workspace"
+	      value="${target.dir}/${pom.id}-${pom.currentVersion}"/>
 
-pkg.antdepo.expanded.path =
-pkg.commander.archive.path =
-pkg.headlines.archive.path =
-pkg.itnav.archive.path =
-                </fail>
--->
-                <!--<j:forEach var="dep" items="${pom.dependencies}">
-                <j:if test="${dep.id == 'itnav'}">
-                <copy file="${maven.home}/repository/${dep.id}/jars/${dep.id}-${dep.version}.jar"
-                todir="${installer.workspace}/jars"/>
-                </j:if>
-                <j:if test="${dep.id == 'commons-beanutils'}">
-                <copy file="${maven.home}/repository/${dep.id}/jars/${dep.id}-${dep.version}.jar"
-                todir="${installer.workspace}/jars"/>
-                </j:if>
-                </j:forEach> -->
-   <!--         </else>
-        </if>-->
+    <!--
+	** create the workspace
+    -->
+    <mkdir dir="${installer.workspace}"/>
+    <mkdir dir="${installer.workspace}/pkgs"/>
+    <mkdir dir="${installer.workspace}/lib"/>
 
 
-        <!--
-          ** package the properties and templates
-          ** into extension workspace
-          -->
-        <copy tofile="${installer.workspace}/etc/installer.properties"
-            overwrite="true" filtering="true">
-            <filterset>
-                <filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
-                <!-- XXX: use real values -->
-                <filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
-                <filter token="pkg.commander.archive.name" value="${pkg.commander.archive.name}"/>
-                <filter token="pkg.headlines.archive.name" value="${pkg.headlines.archive.name}"/>
-                <filter token="pkg.itnav.archive.name" value="${pkg.itnav.archive.name}"/>
-            </filterset>
+    <!--
+	** reference/check existence of the built jar
+	** and package it into extension workspace
+    -->
+    <property name="project.jar" value="${target.dir}/${pom.id}-${pom.currentVersion}.jar"/>
 
-            <fileset dir="${src.dir}/templates/properties" includes="installer.properties.template"/>
-        </copy>
+    <available file="${project.jar}"
+	       property="projectJarExists"/>
+    <fail unless="projectJarExists">${project.jar} does not exist, cannot proceed</fail>
+    <copy file="${project.jar}" tofile="${installer.workspace}/lib/installer.jar"/>
 
-        <!-- determine antdepo version -->
-        <j:forEach var="dep" items="${pom.dependencies}">
-            <j:if test="${dep.id == 'antdepo'}">
-                <property name="antdepo.version" value="${dep.version}"/>
-            </j:if>
-        </j:forEach>
+    <copy todir="${installer.workspace}/etc">
+      <fileset dir="${basedir}/etc" />
+    </copy>
+    <copy todir="${installer.workspace}"
+	  overwrite="true" filtering="true">
+      <filterset>
+	<filter token="pom.id" value="${pom.id}"/>
+	<filter token="pom.currentVersion" value="${pom.currentVersion}"/>
+      </filterset>
+      <fileset dir="${basedir}/doc" includes="*"/>
+    </copy>
+    <copy todir="${installer.workspace}"
+	  overwrite="true" filtering="true">
+      <filterset>
+	<filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
+	<filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
+      </filterset>
+      <fileset dir="${src.dir}/sh" includes="install.sh"/>
+    </copy>
 
-        <copy tofile="${installer.workspace}/default.properties"
-            overwrite="true" filtering="true">
-            <filterset>
-                <!-- XXX: use real values -->
-                <filter token="antdepo.version" value="${antdepo.version}"/>
-            </filterset>
-             <fileset dir="${src.dir}/templates/properties" includes="default.properties.template"/>
-         </copy>
+
+    <!--
+	copy installer source packages into pkgs directory
+    -->
+    <echo>Downloading dependencies from repository to populate the pkgs directory: 
+    ${installer.workspace}/pkgs
+    </echo>
+    <j:forEach var="dep" items="${pom.dependencies}">
+      <j:set var="dep.id" value="${dep.getId()}"/>
+      <j:set var="dep.version" value="${dep.getVersion()}"/>
+      <j:set var="expanded.name" value="${dep.id}-${dep.version}"/>
+
+      <j:if test="${dep.id == 'antdepo'}">
+	<get src="${maven.repo.ctier}/${dep.id}/tgzs/${dep.id}-${dep.version}.tgz"
+	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.tgz"
+	     ignoreerrors="false" verbose="true" usetimestamp="true"
+	     />
+	<j:set var="pkg.antdepo.expanded.name" value="${expanded.name}"/>
+	<j:set var="pkg.antdepo.archive.name" value="${expanded.name}.tgz"/>
+      </j:if>
+      <j:if test="${dep.id == 'itnav'}">
+	<get src="${maven.repo.ctier}/${dep.id}/wars/${dep.id}-${dep.version}.war"
+	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.war"
+	     ignoreerrors="false" verbose="true" usetimestamp="true"
+	     />
+	<j:set var="pkg.itnav.archive.name" value="${expanded.name}.war"/>
+      </j:if>
+      <j:if test="${dep.id == 'headlines'}">
+	<get src="${maven.repo.ctier}/${dep.id}/pars/${dep.id}-${dep.version}.par"
+	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.par"
+	     ignoreerrors="false" verbose="true" usetimestamp="true"
+	     />
+	<j:set var="pkg.headlines.archive.name" value="${expanded.name}.war"/>
+      </j:if>
+      <j:if test="${dep.id == 'commander-extension'}">
+	<get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
+	     ignoreerrors="false" verbose="true" usetimestamp="true"
+	     />
+	<j:set var="pkg.commander.archive.name" value="${expanded.name}.war"/>
+      </j:if>
+    </j:forEach> 
+
+    <!--
+	** package the properties and templates
+	** into extension workspace
+    -->
+    <copy tofile="${installer.workspace}/etc/installer.properties"
+	  overwrite="true" filtering="true">
+      <filterset>
+	<filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
+	<!-- XXX: use real values -->
+	<filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
+	<filter token="pkg.commander.archive.name" value="${pkg.commander.archive.name}"/>
+	<filter token="pkg.headlines.archive.name" value="${pkg.headlines.archive.name}"/>
+	<filter token="pkg.itnav.archive.name" value="${pkg.itnav.archive.name}"/>
+      </filterset>
+
+      <fileset dir="${src.dir}/templates/properties" includes="installer.properties.template"/>
+    </copy>
+
+    <!-- determine antdepo version -->
+    <j:forEach var="dep" items="${pom.dependencies}">
+      <j:if test="${dep.id == 'antdepo'}">
+	<property name="antdepo.version" value="${dep.version}"/>
+      </j:if>
+    </j:forEach>
+
+    <copy tofile="${installer.workspace}/default.properties"
+	  overwrite="true" filtering="true">
+      <filterset>
+	<!-- XXX: use real values -->
+	<filter token="antdepo.version" value="${antdepo.version}"/>
+      </filterset>
+      <fileset dir="${src.dir}/templates/properties" includes="default.properties.template"/>
+    </copy>
 
 
 
-        <!--
-          ** archive date for the to be built extension archive
-          -->
-        <tstamp>
-            <format property="archive.date"
-                pattern="yyyy-MM-dd G, H:m:s z"/>
-        </tstamp>
+    <!--
+	** archive date for the to be built extension archive
+    -->
+    <tstamp>
+      <format property="archive.date"
+	      pattern="yyyy-MM-dd G, H:m:s z"/>
+    </tstamp>
 
 
-        <attainGoal name="installer:create-zip"/>
-    </goal>
+    <attainGoal name="installer:create-zip"/>
+  </goal>
 
 </project>
 
