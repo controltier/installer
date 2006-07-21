@@ -1,0 +1,24 @@
+#####
+# installer.properties
+# 
+# DO NOT MODIFY this file.  Installer configuration is in the "default.properties" file.
+#####
+
+
+# information about packages included in this install
+
+pkgs.root=pkgs
+
+# pkgs.antdepo.archive=
+
+pkgs.antdepo.expanded=@pkg.antdepo.expanded.name@
+pkgs.commander.archive=@pkg.commander.archive.name@
+pkgs.headlines.archive=@pkg.headlines.archive.name@
+pkgs.itnav.archive=@pkg.itnav.archive.name@
+
+# ANT_HOME
+
+ANT_HOME=pkgs/@pkg.antdepo.expanded.name@/pkgs/@pkg.ant.expanded.name@
+
+installer.buildfile=etc/xml/install.xml
+installer.rcfilename=.ctierrc
