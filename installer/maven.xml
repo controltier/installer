@@ -75,20 +75,12 @@
       </filterset>
       <fileset dir="${basedir}/doc" includes="*"/>
     </copy>
-    <copy todir="${installer.workspace}"
-	  overwrite="true" filtering="true">
-      <filterset>
-	<filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
-	<filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
-      </filterset>
-      <fileset dir="${src.dir}/sh" includes="install.sh"/>
-    </copy>
 
 
     <!--
 	copy installer source packages into pkgs directory
     -->
-    <echo>Downloading dependencies from repository to populate the pkgs directory: 
+    <echo>Downloading dependencies from repository to populate the pkgs directory:
     ${installer.workspace}/pkgs
     </echo>
     <j:forEach var="dep" items="${pom.dependencies}">
@@ -98,11 +90,16 @@
 
       <j:if test="${dep.id == 'antdepo'}">
 	<get src="${maven.repo.ctier}/${dep.id}/tgzs/${dep.id}-${dep.version}.tgz"
-	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.tgz"
+	     dest="${target.dir}/${dep.id}-${dep.version}.tgz"
 	     ignoreerrors="false" verbose="true" usetimestamp="true"
 	     />
 	<j:set var="pkg.antdepo.expanded.name" value="${expanded.name}"/>
 	<j:set var="pkg.antdepo.archive.name" value="${expanded.name}.tgz"/>
+          <mkdir dir="${installer.workspace}/pkgs/${dep.id}-${dep.version}"/>
+          <exec executable="tar" dir="${installer.workspace}/pkgs/${dep.id}-${dep.version}"
+              failonerror="true" outputproperty="tar.out">
+              <arg line="xvzf ${target.dir}/${dep.id}-${dep.version}.tgz"/>
+          </exec>
       </j:if>
       <j:if test="${dep.id == 'itnav'}">
 	<get src="${maven.repo.ctier}/${dep.id}/wars/${dep.id}-${dep.version}.war"
@@ -116,17 +113,25 @@
 	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.par"
 	     ignoreerrors="false" verbose="true" usetimestamp="true"
 	     />
-	<j:set var="pkg.headlines.archive.name" value="${expanded.name}.war"/>
+	<j:set var="pkg.headlines.archive.name" value="${expanded.name}.par"/>
       </j:if>
       <j:if test="${dep.id == 'commander-extension'}">
 	<get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
 	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
 	     ignoreerrors="false" verbose="true" usetimestamp="true"
 	     />
-	<j:set var="pkg.commander.archive.name" value="${expanded.name}.war"/>
+	<j:set var="pkg.commander.archive.name" value="${expanded.name}.jar"/>
       </j:if>
-    </j:forEach> 
+    </j:forEach>
 
+      <copy todir="${installer.workspace}"
+          overwrite="true" filtering="true">
+          <filterset>
+              <filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
+              <filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
+          </filterset>
+          <fileset dir="${src.dir}/sh" includes="install.sh"/>
+      </copy>
     <!--
 	** package the properties and templates
 	** into extension workspace
