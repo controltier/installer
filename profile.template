@@ -1,0 +1,18 @@
+BUILDROOT=/path/2/your/checkout/tree
+SF_USER=yourSourceForgeUserName
+
+MAVEN_HOME=$BUILDROOT/maven
+export MAVEN_HOME
+
+JAVA_HOME=/path/2/java/home
+export JAVA_HOME
+
+
+CVSROOT=:ext:${SF_USER}@cvs.sourceforge.net:/cvsroot/controltier
+export CVSROOT
+
+CVS_RSH=ssh
+export CVS_RSH
+
+PATH=$MAVEN_HOME/bin:$JAVA_HOME/bin:$MYSQL_HOME/bin:/bin:/sbin:/usr/bin:/usr/sbin
+export PATH
