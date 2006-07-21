@@ -1,0 +1,90 @@
+###############
+#
+# default.properties
+#
+###############
+#
+#  This file contains the install properties for ControlTier
+#  Server and Client.
+#
+###############
+
+
+###############
+#  Tomcat
+###############
+
+#  the value of CATALINA_BASE
+env.catalina_base =
+
+#  the value of CATALINA_HOME
+env.catalina_home =
+
+#  the listen port used by Tomcat
+server.tomcat.port =
+
+# the hostname used by tomcat
+server.tomcat.hostname =
+
+#  the application context path for the webdav app
+server.tomcat.webdav.path = webdav
+
+# Should the installer replace the Xerces jars included with Tomcat
+# with newer versions required by ControlTier Server?  
+# If you choose not to, ControlTier Server will not function.
+# See: http://open.controltier.com/Docs/tomcat41-filesonly.html#Update+Tomcat+Libraries
+
+tomcat.replace-xerces-jars = true
+
+################
+# User access
+#
+# Tomcat uses the "tomcat-users.xml" file to define users, passwords and roles.
+#  
+# ControlTier Server and Client require that the users with access to 
+# the server belong to certain named "roles" that are not present in the 
+# default Tomcat installation.
+# 
+# If you want the installer to provide a default tomcat-users.xml file for you, 
+# and backup your existing one, set the following property to be "true":
+# It is RECOMMENDED that you set this to "true" unless you have modified the
+# tomcat-users.xml file yourself.
+
+users.install-default = true
+
+# If you choose to maintain your old tomcat-users.xml file, then be sure that 
+# the user named below belongs to these roles: "user,admin".
+#
+################
+
+# the name of the default user
+tomcat.user.name = default
+ 
+# the password of the default user
+tomcat.user.password = default
+
+################
+# ControlTier Server
+################
+
+# RDF datastore path
+server.rdfdata.path = ${env.catalina_base}/rdfdata
+
+# Report logs datastore path
+server.reports.path = ${env.catalina_base}/index
+
+################
+# ControlTier Client
+################
+
+# Base install of AntDepo, ANTDEPO_BASE.  E.g.: /usr/local/adbase
+env.antdepo_base = ${user.home}/antdepo_base
+
+# Location of AntDepo home, ANTDEPO_HOME.  E.g.: /usr/local/adhome
+env.antdepo_home = ${user.home}/antdepo-@antdepo.version@
+
+# Hostname used by the machine for the ControlTier client
+client.hostname =
+
+
+
