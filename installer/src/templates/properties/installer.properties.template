@@ -22,3 +22,4 @@ ANT_HOME=pkgs/@pkg.antdepo.expanded.name@/pkgs/@pkg.ant.expanded.name@
 
 installer.buildfile=etc/xml/install.xml
 installer.rcfilename=.ctierrc
+installer.rcbatfilename=ctier.bat
