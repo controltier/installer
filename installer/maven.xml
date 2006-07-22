@@ -134,7 +134,7 @@
               <filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
               <filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
           </filterset>
-          <fileset dir="${src.dir}/sh" includes="install.sh"/>
+          <fileset dir="${src.dir}/sh" includes="install.sh,install.bat"/>
       </copy>
     <!--
 	** package the properties and templates
