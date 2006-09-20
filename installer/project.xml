@@ -17,7 +17,7 @@
    <id>depo</id>
      -->
    <id>ControlTier</id>
-   <currentVersion>3.0b3</currentVersion>
+   <currentVersion>3.0b3p1</currentVersion>
 
 
    <!--
@@ -172,7 +172,7 @@
       <!-- the Workbench Server (ITNav) jar -->
       <dependency>
          <id>itnav</id>
-         <version>3.0b3</version> 
+         <version>3.0b3p1</version> 
          <url>http://www.controltier.com/</url>
           <type>war</type>
          <properties>
