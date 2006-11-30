@@ -2,7 +2,7 @@
 <!--
 $Id$
 -->
-<project name="controltier-installer" default="execute">
+<project name="controltier-installer" default="execute" basedir=".">
     <description>
     Build script to install ControlTier Server and Client. Used by the install.sh script.
     </description>
@@ -205,6 +205,7 @@ export PATH=$ANTDEPO_HOME/bin:$CATALINA_HOME/bin:$PATH
             <param name="password" expression="${tomcat.user.password}"/>
         </xslt>
 
+
         <!-- load properties and determine whether user is present and valid -->
         <property file="temp/tomcat-users.properties" prefix="tomcat-users-xml2"/>
         <if>
@@ -286,8 +287,12 @@ function until they are replaced.</echo>
         <!-- expand tomcat-users into properties using xsl -->
         <xslt in="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/WEB-INF/web.xml"
             out="temp/webdav-web.properties"
-            style="etc/xml/web.xsl"
+            style="${basedir}/etc/xml/web.xsl"
             force="true">
+            <xmlcatalog> 
+               <dtd publicId="-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+                    location="${basedir}/etc/xml/web-app_2_3.dtd"/> 
+            </xmlcatalog>
         </xslt>
 
         <!-- load properties and determine whether user is present and valid -->
