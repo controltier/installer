@@ -268,10 +268,10 @@ function until they are replaced.</echo>
             </then>
             <else>
                 <copy tofile="${env.catalina_home}/common/endorsed/xercesImpl.jar" overwrite="true">
-                    <fileset file="${env.catalina_base}/webapps/itnav/WEB-INF/lib/xerces-2.6.1.jar"/>
+                    <fileset file="${env.catalina_base}/webapps/itnav/WEB-INF/lib/xerces-2.7.1.jar"/>
                 </copy>
                 <copy tofile="${env.catalina_home}/common/endorsed/xmlParserAPIs.jar" overwrite="true">
-                    <fileset file="${env.catalina_base}/webapps/itnav/WEB-INF/lib/xml-apis-2.6.1.jar"/>
+                    <fileset file="${env.catalina_base}/webapps/itnav/WEB-INF/lib/xml-apis-2.7.1.jar"/>
                 </copy>
                 <copy tofile="${env.catalina_home}/common/endorsed/xalan.jar" overwrite="true">
                     <fileset file="${env.catalina_base}/webapps/itnav/WEB-INF/lib/xalan-2.6.0.jar"/>
