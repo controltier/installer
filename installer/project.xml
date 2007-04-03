@@ -205,7 +205,7 @@
       <!-- needed in compile and runtime of ant tasks -->
       <dependency>
          <id>apache-ant</id>
-         <version>1.6.5</version>
+         <version>1.7.0</version>
          <properties>
             <war.bundle.jar>false</war.bundle.jar>
          </properties>
