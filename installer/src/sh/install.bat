@@ -19,7 +19,7 @@ IF NOT EXIST "%JAVA_HOME%\bin\java.exe" (
 )
 
 ::echo Classpath is %cp%
-SET cp=lib\installer.jar;%ANT_HOME%\lib\ant.jar;%ANT_HOME%\lib\ant-launcher.jar;%ANT_HOME%\lib\regexp-1.2.jar;%ANT_HOME%\lib\ant-apache-regexp.jar;%ANT_HOME%\lib\ant-contrib-1.0b1.jar;%ANT_HOME%\lib\ant-nodeps.jar;%ANT_HOME%\lib\ant-trax.jar
+SET cp=lib\installer.jar;%ANT_HOME%\lib\ant.jar;%ANT_HOME%\lib\ant-launcher.jar;%ANT_HOME%\lib\regexp-1.5.jar;%ANT_HOME%\lib\ant-apache-regexp.jar;%ANT_HOME%\lib\ant-contrib-1.0b3.jar;%ANT_HOME%\lib\ant-nodeps.jar;%ANT_HOME%\lib\ant-trax.jar
 
 ::
 :: run Commander
