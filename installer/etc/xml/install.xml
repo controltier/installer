@@ -9,7 +9,7 @@ $Id$
 
     <taskdef resource="net/sf/antcontrib/antlib.xml">
         <classpath>
-            <pathelement location="${ant.home}/lib/ant-contrib-1.0b3.jar"/>
+            <pathelement location="${ant.home}/lib/ant-contrib-1.0b1.jar"/>
         </classpath>
     </taskdef>
 
