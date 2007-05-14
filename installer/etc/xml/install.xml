@@ -217,6 +217,10 @@ fi
                     pattern="^framework\.node *=(.*)$"
                     replace="framework.node = ${server.tomcat.hostname}"
                 />
+                <replaceregex flags="si"
+                              pattern="^app\.log4j\.appender\.CommonLog\.port *=(.*)$"
+                              replace="app.log4j.appender.CommonLog.port = ${server.reports.port}"
+                    />
             </filterchain>
             <fileset file="${env.catalina_base}/${itnav.configpath}/runtime.properties.orig"/>
         </copy>
