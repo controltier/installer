@@ -562,6 +562,59 @@ framework.pkgRepo.rootdir =
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.rootdir *=(.*)$"
                     replace="framework.pkgRepo.rootdir = ${regex-escaped.framework.pkgRepo.rootdir}"/>
+
+                <!-- email properties -->
+                <!--
+# recipient addresses to send email (comma separated)
+framework.email.tolist = root
+
+# email address appearing in message "from" field
+framework.email.from = root
+
+# email address replies should go
+framework.email.replyto = do-not-reply
+
+# The antdepo email relay host. must be a functioning smtp relay server
+framework.email.mailhost = mail
+framework.email.mailport = 25
+
+# User/pass info if the smtp server requires it
+framework.email.user =
+framework.email.password =
+framework.email.ssl = true
+
+# Fail if there is an error
+framework.email.failonerror = true
+                -->
+                <replaceregex flags="si"
+                              pattern="^framework\.email\.tolist *=(.*)$"
+                              replace="framework.email.tolist = ${framework.email.tolist}"/>
+                <replaceregex flags="si"
+                              pattern="^framework\.email\.from *=(.*)$"
+                              replace="framework.email.from = ${framework.email.from}"/>
+                <replaceregex flags="si"
+                              pattern="^framework\.email\.replyto *=(.*)$"
+                              replace="framework.email.replyto = ${framework.email.replyto}"/>
+                <replaceregex flags="si"
+                              pattern="^framework\.email\.mailhost *=(.*)$"
+                              replace="framework.email.mailhost = ${framework.email.mailhost}"/>
+                <replaceregex flags="si"
+                              pattern="^framework\.email\.mailport *=(.*)$"
+                              replace="framework.email.mailport = ${framework.email.mailport}"/>
+                <replaceregex flags="si"
+                              pattern="^framework\.email\.user *=(.*)$"
+                              replace="framework.email.user = ${framework.email.user}"/>
+                <replaceregex flags="si"
+                              pattern="^framework\.email\.password *=(.*)$"
+                              replace="framework.email.password = ${framework.email.password}"/>
+                <replaceregex flags="si"
+                              pattern="^framework\.email\.ssl *=(.*)$"
+                              replace="framework.email.ssl = ${framework.email.ssl}"/>
+                <replaceregex flags="si"
+                              pattern="^framework\.email\.failonerror *=(.*)$"
+                              replace="framework.email.failonerror = ${framework.email.failonerror}"/>
+
+
             </filterchain>
             <fileset file="${env.antdepo_base}/etc/framework.properties.orig"/>
         </copy>
@@ -612,6 +665,13 @@ log4j.appender.CommonLog.port=${server.reports.port}
 
         <!-- default property values -->
         <property name="server.reports.port" value="1055"/>
+        <property name="framework.email.tolist" value="root"/>
+        <property name="framework.email.from" value="root"/>
+        <property name="framework.email.replyto" value="do-not-reply"/>
+        <property name="framework.email.mailhost" value="mail"/>
+        <property name="framework.email.mailport" value="25"/>
+        <property name="framework.email.ssl" value="true"/>
+        <property name="framework.email.failonerror" value="true"/>
 
         <!-- verify values to be non-empty -->
         <if>
