@@ -614,6 +614,10 @@ framework.email.failonerror = true
                               pattern="^framework\.email\.failonerror *=(.*)$"
                               replace="framework.email.failonerror = ${framework.email.failonerror}"/>
 
+                <!-- ssh path -->
+                <replaceregex flags="si"
+                              pattern="^framework\.ssh\.keypath *=(.*)$"
+                              replace="framework.ssh.keypath = ${framework.ssh.keypath}"/>
 
             </filterchain>
             <fileset file="${env.antdepo_base}/etc/framework.properties.orig"/>
@@ -672,6 +676,7 @@ log4j.appender.CommonLog.port=${server.reports.port}
         <property name="framework.email.mailport" value="25"/>
         <property name="framework.email.ssl" value="true"/>
         <property name="framework.email.failonerror" value="true"/>
+        <property name="framework.ssh.keypath" value="${user.home}/.ssh/id_dsa"/>
 
         <!-- verify values to be non-empty -->
         <if>
@@ -734,6 +739,13 @@ log4j.appender.CommonLog.port=${server.reports.port}
             <equals arg1="" arg2="${server.reports.port}"/>
             <then>
                 <fail>server.reports.port is empty: '${server.reports.port}'</fail>
+            </then>
+        </if>
+
+        <if>
+            <equals arg1="" arg2="${framework.ssh.keypath}"/>
+            <then>
+                <fail>framework.ssh.keypath is empty: '${framework.ssh.keypath}'</fail>
             </then>
         </if>
 
