@@ -93,5 +93,31 @@ env.antdepo_home = ${user.home}/antdepo-@antdepo.version@
 # value to the hostname specified in the Tomcat section above.
 client.hostname = ${server.tomcat.hostname}
 
+################
+# Client email settings
+################
+
+# recipient addresses to send email (comma separated)
+framework.email.tolist = root
+
+# email address appearing in message "from" field
+framework.email.from = root
+
+# email address replies should go to
+framework.email.replyto = do-not-reply
+
+# The antdepo email relay host. must be a functioning smtp relay server
+framework.email.mailhost = mail
+framework.email.mailport = 25
+
+# User/pass info if the smtp server requires it
+framework.email.user =
+framework.email.password =
+framework.email.ssl = true
+
+# Fail if there is an error
+framework.email.failonerror = true
+
+
 
 
