@@ -562,6 +562,33 @@ framework.pkgRepo.rootdir =
             <fileset file="${env.antdepo_base}/etc/framework.properties.orig"/>
         </copy>
 
+
+
+        <!-- duplicate original log4j.properties -->
+        <copy tofile="${env.antdepo_base}/etc/log4j.properties.orig">
+            <fileset file="${env.antdepo_base}/etc/log4j.properties"/>
+        </copy>
+
+        <!-- overwrite file -->
+        <copy tofile="${env.antdepo_base}/etc/log4j.properties">
+            <filterchain>
+                <!--
+
+log4j.appender.CommonLog.remoteHost=${server.tomcat.hostname}
+log4j.appender.CommonLog.port=${server.reports.port}
+
+ -->
+                <replaceregex flags="si"
+                              pattern="^log4j\.appender\.CommonLog\.remoteHost *=(.*)$"
+                              replace="log4j.appender.CommonLog.remoteHost = ${server.tomcat.hostname}"/>
+                <replaceregex flags="si"
+                              pattern="^log4j\.appender\.CommonLog\.port *=(.*)$"
+                              replace="log4j.appender.CommonLog.port = ${server.reports.port}"/>
+
+            </filterchain>
+            <fileset file="${env.antdepo_base}/etc/log4j.properties.orig"/>
+        </copy>
+
     </target>
 
     <target name="check-client-env">
@@ -573,6 +600,16 @@ framework.pkgRepo.rootdir =
         <fail unless="env.antdepo_base">env.antdepo_base is not defined in default.properties</fail>
         <fail unless="env.antdepo_home">env.antdepo_home is not defined in default.properties</fail>
         <fail unless="client.hostname">client.hostname is not defined in default.properties</fail>
+        <fail unless="server.tomcat.port">server.tomcat.port is not defined in default.properties</fail>
+        <fail unless="server.tomcat.hostname">server.tomcat.hostname is not defined in default.properties</fail>
+        <fail unless="server.tomcat.webdav.path">server.tomcat.webdav.path is not defined in default.properties</fail>
+        <fail unless="tomcat.user.name">tomcat.user.name is not defined in default.properties</fail>
+        <fail unless="tomcat.user.password">tomcat.user.password is not defined in default.properties</fail>
+
+        <!-- default property values -->
+        <property name="server.reports.port" value="1055"/>
+
+        <!-- verify values to be non-empty -->
         <if>
             <equals arg1="" arg2="${env.antdepo_home}"/>
             <then>
@@ -591,6 +628,48 @@ framework.pkgRepo.rootdir =
             <equals arg1="" arg2="${client.hostname}"/>
             <then>
                 <fail>client.hostname is empty: '${client.hostname}'</fail>
+            </then>
+        </if>
+
+        <if>
+            <equals arg1="" arg2="${server.tomcat.port}"/>
+            <then>
+                <fail>server.tomcat.port is empty: '${server.tomcat.port}'</fail>
+            </then>
+        </if>
+
+        <if>
+            <equals arg1="" arg2="${server.tomcat.hostname}"/>
+            <then>
+                <fail>server.tomcat.hostname is empty: '${server.tomcat.hostname}'</fail>
+            </then>
+        </if>
+
+        <if>
+            <equals arg1="" arg2="${server.tomcat.webdav.path}"/>
+            <then>
+                <fail>server.tomcat.webdav.path is empty: '${server.tomcat.webdav.path}'</fail>
+            </then>
+        </if>
+
+        <if>
+            <equals arg1="" arg2="${tomcat.user.name}"/>
+            <then>
+                <fail>tomcat.user.name is empty: '${tomcat.user.name}'</fail>
+            </then>
+        </if>
+
+        <if>
+            <equals arg1="" arg2="${tomcat.user.password}"/>
+            <then>
+                <fail>tomcat.user.password is empty: '${tomcat.user.password}'</fail>
+            </then>
+        </if>
+
+        <if>
+            <equals arg1="" arg2="${server.reports.port}"/>
+            <then>
+                <fail>server.reports.port is empty: '${server.reports.port}'</fail>
             </then>
         </if>
 
