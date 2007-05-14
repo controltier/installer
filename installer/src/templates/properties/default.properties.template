@@ -118,6 +118,12 @@ framework.email.ssl = true
 # Fail if there is an error
 framework.email.failonerror = true
 
+################
+# Client SSH settings
+################
+
+# Path to the SSH private key
+framework.ssh.keypath = ${user.home}/.ssh/id_dsa
 
 
 
