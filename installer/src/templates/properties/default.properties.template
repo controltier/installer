@@ -29,6 +29,9 @@ server.tomcat.hostname = localhost
 #  the application context path for the webdav app
 server.tomcat.webdav.path = webdav
 
+#  the listen port used by the Report server. (Default is 1055)
+server.reports.port = 1055
+
 # Should the installer replace the Xerces jars included with Tomcat
 # with newer versions required by ControlTier Server?  
 # If you choose not to, ControlTier Server will not function.
