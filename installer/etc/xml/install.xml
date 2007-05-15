@@ -7,6 +7,8 @@ $Id$
     Build script to install ControlTier Server and Client. Used by the install.sh script.
     </description>
 
+    <tstamp />
+    
     <taskdef resource="net/sf/antcontrib/antlib.xml">
         <classpath>
             <pathelement location="${ant.home}/lib/ant-contrib-1.0b1.jar"/>
@@ -132,8 +134,14 @@ fi
     </target>
 
 
-    <target name="install-server" depends="check-server-env,expand-server,configure-server,install-sample-par" >
+    <target name="install-server" depends="check-server-env,-backup-server-config,expand-server,configure-server,install-sample-par" >
         <echo>ControlTier Server installed.</echo>
+    </target>
+    
+    <target name="-backup-server-config" description="backup config files that would get overwritten">
+        <property name="itnav.configpath" value="webapps/itnav/WEB-INF/classes"/>
+        <backup-file-with-datestamp file="${env.catalina_base}/${itnav.configpath}/bootstrap.properties"/>
+        <backup-file-with-datestamp file="${env.catalina_base}/${itnav.configpath}/runtime.properties"/>
     </target>
 
     <target name="expand-server">
@@ -161,12 +169,12 @@ fi
         <property name="itnav.configpath" value="webapps/itnav/WEB-INF/classes"/>
 
         <!-- duplicate original -->
-        <copy tofile="${env.catalina_base}/${itnav.configpath}/bootstrap.properties.orig">
+        <copy tofile="${env.catalina_base}/${itnav.configpath}/bootstrap.properties.orig" overwrite="true">
             <fileset file="${env.catalina_base}/${itnav.configpath}/bootstrap.properties"/>
         </copy>
 
         <!-- overwrite file -->
-        <copy tofile="${env.catalina_base}/${itnav.configpath}/bootstrap.properties">
+        <copy tofile="${env.catalina_base}/${itnav.configpath}/bootstrap.properties" overwrite="true">
             <filterchain >
                 <!-- ngps.workbench.backend.type = fs    -->
                 <replaceregex flags="si"
@@ -184,12 +192,12 @@ fi
         <!-- modify the runtime.properties to include the correct settings -->
 
         <!-- duplicate original -->
-        <copy tofile="${env.catalina_base}/${itnav.configpath}/runtime.properties.orig">
+        <copy tofile="${env.catalina_base}/${itnav.configpath}/runtime.properties.orig" overwrite="true">
             <fileset file="${env.catalina_base}/${itnav.configpath}/runtime.properties"/>
         </copy>
 
         <!-- overwrite file -->
-        <copy tofile="${env.catalina_base}/${itnav.configpath}/runtime.properties">
+        <copy tofile="${env.catalina_base}/${itnav.configpath}/runtime.properties" overwrite="true">
             <filterchain>
                 <replaceregex flags="si"
                     pattern="^app\.external\.uri *=(.*)$"
@@ -260,25 +268,15 @@ fi
                 <if>
                     <equals arg1="true" arg2="${users.install-default}"/>
                     <then>
-                        <if>
-                            <available file="${env.catalina_base}/conf/tomcat-users.xml.backup"/>
-                            <then>
-                                <fail>Backup already exists, not overwriting: "${env.catalina_base}/conf/tomcat-users.xml.backup".  Please move this out of the way to continue.</fail>
-                            </then>
-                            <else>
-                                <copy tofile="${env.catalina_base}/conf/tomcat-users.xml.backup">
-                                    <fileset file="${env.catalina_base}/conf/tomcat-users.xml"/>
-                                </copy>
+                        <backup-file-with-datestamp file="${env.catalina_base}/conf/tomcat-users.xml"/>
 
-                                <copy tofile="${env.catalina_base}/conf/tomcat-users.xml" overwrite="true">
-                                    <filterset>
-                                        <filter token="tomcat.user.name" value="${tomcat.user.name}"/>
-                                        <filter token="tomcat.user.password" value="${tomcat.user.password}"/>
-                                    </filterset>
-                                    <fileset file="${basedir}/etc/xml/tomcat-users.xml"/>
-                                </copy>
-                            </else>
-                        </if>
+                        <copy tofile="${env.catalina_base}/conf/tomcat-users.xml" overwrite="true">
+                            <filterset>
+                                <filter token="tomcat.user.name" value="${tomcat.user.name}"/>
+                                <filter token="tomcat.user.password" value="${tomcat.user.password}"/>
+                            </filterset>
+                            <fileset file="${basedir}/etc/xml/tomcat-users.xml"/>
+                        </copy>
                     </then>
                 </if>
             </then>
@@ -399,6 +397,20 @@ or equivalent:
         </if>
     </target>
 
+    <macrodef name="backup-file-with-datestamp">
+        <attribute name="file"/>
+        <sequential >
+            <if>
+                <available file="@{file}"/>
+                <then>
+                    <copy tofile="@{file}.${DSTAMP}-${TSTAMP}.backup" overwrite="true">
+                        <fileset file="@{file}"/>
+                    </copy>
+                </then>
+            </if>
+        </sequential>
+    </macrodef>
+
     <target name="configure-client">
         <!--
         set executable flag on bin scripts
@@ -508,12 +520,10 @@ or equivalent:
         </if>
 
         <!-- duplicate original -->
-        <copy tofile="${env.antdepo_base}/etc/framework.properties.orig">
-            <fileset file="${env.antdepo_base}/etc/framework.properties"/>
-        </copy>
+        <backup-file-with-datestamp file="${env.antdepo_base}/etc/framework.properties"/>
 
         <!-- overwrite file -->
-        <copy tofile="${env.antdepo_base}/etc/framework.properties">
+        <copy tofile="${env.antdepo_base}/etc/framework.properties" overwrite="true">
             <filterchain>
                 <!--
 framework.dav.rootDir =
@@ -620,18 +630,25 @@ framework.email.failonerror = true
                               replace="framework.ssh.keypath = ${framework.ssh.keypath}"/>
 
             </filterchain>
-            <fileset file="${env.antdepo_base}/etc/framework.properties.orig"/>
+            <fileset file="${env.antdepo_base}/etc/framework.properties.${DSTAMP}-${TSTAMP}.backup"/>
         </copy>
 
 
 
+        <if>
+            <available file="${env.antdepo_base}/etc/log4j.properties.orig"/>
+            <then>
+                <move
+                    file="${env.antdepo_base}/etc/log4j.properties.orig"
+                    tofile="${env.antdepo_base}/etc/log4j.properties.orig-${DSTAMP}.${TSTAMP}"/>
+            </then>
+        </if>
         <!-- duplicate original log4j.properties -->
-        <copy tofile="${env.antdepo_base}/etc/log4j.properties.orig">
-            <fileset file="${env.antdepo_base}/etc/log4j.properties"/>
-        </copy>
+
+        <backup-file-with-datestamp file="${env.antdepo_base}/etc/log4j.properties"/>
 
         <!-- overwrite file -->
-        <copy tofile="${env.antdepo_base}/etc/log4j.properties">
+        <copy tofile="${env.antdepo_base}/etc/log4j.properties" overwrite="true">
             <filterchain>
                 <!--
 
@@ -647,7 +664,7 @@ log4j.appender.CommonLog.port=${server.reports.port}
                               replace="log4j.appender.CommonLog.port = ${server.reports.port}"/>
 
             </filterchain>
-            <fileset file="${env.antdepo_base}/etc/log4j.properties.orig"/>
+            <fileset file="${env.antdepo_base}/etc/log4j.properties.${DSTAMP}-${TSTAMP}.backup"/>
         </copy>
 
     </target>
