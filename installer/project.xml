@@ -180,7 +180,7 @@
          </properties>
       </dependency>
 
-       <!-- headlines sample par-->
+       <!-- 
        <dependency>
            <id>headlines</id>
            <version>20060929161527</version>
@@ -190,8 +190,9 @@
                <war.bundle.jar>true</war.bundle.jar>
            </properties>
        </dependency>
+headlines sample par-->
 
-       <!-- headlines sample par-->
+       <!-- commander extension-->
        <dependency>
            <id>commander-extension</id>
            <version>3.0rc4</version>
