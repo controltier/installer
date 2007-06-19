@@ -345,9 +345,17 @@ function until they are replaced.</echo>
 
     <target name="install-sample-par">
         <!-- copy the headlines par into webdav archive directory -->
-        <copy tofile="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/archive/headlines/${pkgs.headlines.archive}" >
-            <fileset file="${basedir}/${pkgs.root}/${pkgs.headlines.archive}"/>
-        </copy>
+        <if>
+            <and>
+                <isset property="pkgs.headlines.archive"/>
+                <available file="${basedir}/${pkgs.root}/${pkgs.headlines.archive}"/>
+            </and>
+            <then>
+                <copy tofile="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/archive/headlines/${pkgs.headlines.archive}" >
+                    <fileset file="${basedir}/${pkgs.root}/${pkgs.headlines.archive}"/>
+                </copy>
+            </then>
+        </if>
     </target>
 
     <target name="-install-client" depends="check-client-env,expand-client,configure-client" description="Internal client install target" >
