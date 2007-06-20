@@ -75,8 +75,8 @@ tomcat.user.password = default
 # RDF datastore path
 server.rdfdata.path = ${env.catalina_base}/rdfdata
 
-# Report logs datastore path
-server.reports.path = ${env.catalina_base}/index
+# Webdav root path
+server.dav.basedir = ${env.catalina_base}/webapps/webdav
 
 ################
 # ControlTier Client
