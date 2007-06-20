@@ -218,8 +218,8 @@ fi
                     replace="dav.passwd = ${tomcat.user.password}"
                     />
                 <replaceregex flags="si"
-                    pattern="^(# )?app\.common\.log\.indexpath *=(.*)$"
-                    replace="app.common.log.indexpath = ${regex-escaped.server.reports.path}"
+                    pattern="^dav\.baseDir*=(.*)$"
+                    replace="dav.baseDir = ${regex-escaped.server.dav.path}"
                 />
                 <replaceregex flags="si"
                     pattern="^framework\.node *=(.*)$"
@@ -789,7 +789,7 @@ log4j.appender.CommonLog.port=${server.reports.port}
         <fail unless="server.tomcat.webdav.path">server.tomcat.webdav.path is not defined in default.properties</fail>
         <fail unless="tomcat.user.name">tomcat.user.name is not defined in default.properties</fail>
         <fail unless="tomcat.user.password">tomcat.user.password is not defined in default.properties</fail>
-        <fail unless="server.reports.path">server.reports.path is not defined in default.properties</fail>
+        <fail unless="server.dav.basedir">server.dav.basedir is not defined in default.properties</fail>
         <fail unless="server.rdfdata.path">server.rdfdata.path is not defined in default.properties</fail>
         <if>
             <and>
@@ -903,23 +903,23 @@ log4j.appender.CommonLog.port=${server.reports.port}
             </then>
         </if>
         <if>
-            <equals arg1="" arg2="${server.reports.path}"/>
+            <equals arg1="" arg2="${server.dav.basedir}"/>
             <then>
-                <fail>server.reports.path is empty in default.properties</fail>
+                <fail>server.dav.basedir is empty in default.properties</fail>
             </then>
         </if>
-        <pathconvert property="converted.server.reports.path">
-            <path path="${server.reports.path}"/>
+        <pathconvert property="converted.server.dav.basedir">
+            <path path="${server.dav.basedir}"/>
         </pathconvert>
         <if>
             <os family="windows"/>
             <then>
-                <pathconvert property="regex-escaped.server.reports.path" dirsep="\\\\\\\\">
-                    <path path="${server.reports.path}"/>
+                <pathconvert property="regex-escaped.server.dav.path" dirsep="\\\\\\\\">
+                    <path path="${server.dav.basedir}"/>
                 </pathconvert>
             </then>
             <else>
-                <property name="regex-escaped.server.reports.path" value="${converted.server.reports.path}"/>
+                <property name="regex-escaped.server.dav.path" value="${converted.server.dav.basedir}"/>
             </else>
         </if>
 
