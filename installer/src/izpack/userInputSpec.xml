@@ -1,0 +1,42 @@
+<!--
+  User Inputs section.
+-->
+<userInput>
+  <panel order="0">
+
+     <field type="text" variable="INSTALL_TOMCAT_HOSTNAME">
+        <description align="left" txt="the hostname used by tomcat" id="description 4"/>
+        <spec txt="Tomcat Server Host" id="tomcatserver.host" size="25" set="localhost"/>
+      </field>
+
+     <field type="text" variable="INSTALL_TOMCAT_PORT">
+       <description align="left" txt="the listen port used by Tomcat (Tomcat default is 8080)" id="description 3"/>
+       <spec txt="Tomcat Server Port" id="tomcatserver.port" size="25" set="8080"/>
+     </field>
+
+     <field type="text" variable="INSTALL_REPORTS_PORT">
+       <description align="left" txt="the listen port used by the Report server. (Default is 1055)" id="description 5"/>
+       <spec txt="Report Server Port" id="reportserver.port" size="25" set="1055"/>
+     </field>
+
+     <field type="text" variable="INSTALL_JOBCENTER_PORT">
+       <description align="left" txt="the listen port used by Jobcenter (default is 9090)" id="description 10"/>
+       <spec txt="Jobcenter Server Port" id="jobcenter.port" size="25" set="9090"/>
+     </field>
+
+    <field type="text" variable="INSTALL_TOMCAT_USERNAME">
+      <description align="left" txt="the name of the default ControlTier user" id="description 8"/>
+      <spec txt="tomcat server user" id="install.path" size="25" set="default"/>
+    </field>
+
+    <field type="text" variable="INSTALL_TOMCAT_PASSWORD">
+      <description align="left" txt="the password of the default ControlTier user" id="description 9"/>
+      <spec txt="tomcat server password" id="install.path" size="25" set="default"/>
+    </field>
+    <field type="divider"/>
+    <field type="check" variable="POST_INSTALL_START_SERVICES">
+      <description align="left" txt="Start the application services after installation?" id="description11"/>
+      <spec txt="Start services" id="install.path" true="true" false="" set="false"/>
+    </field>
+  </panel>
+</userInput>

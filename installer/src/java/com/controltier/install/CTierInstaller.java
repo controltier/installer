@@ -35,12 +35,12 @@ public class CTierInstaller {
     private String buildfile;
     private File install;
     private File manifest;
+    private File ctierRoot;
     String installTarget;
     public static final String INSTALL_BUILD_FILE_PROP = "installer.buildfile";
     public static final String ANT_HOME_PROP = "ANT_HOME";
     public static final String INSTALLER_PROPS_FILE = "etc/installer.properties";
     public static final String BUILD_TARGET_INSTALL_CLIENT = "install-client";
-    public static final String BUILD_TARGET_INSTALL_SERVER = "install-server";
 
     private CTierInstaller(){
         installerProps = new Properties();
@@ -63,6 +63,14 @@ public class CTierInstaller {
         System.exit(exitCode);
     }
 
+    public static void usage(){
+        System.out.println("Usage: install [-client ] [-d <ctier_root>]");
+        System.out.println();
+        System.out.println("\t -client: install client only, as specified in default.properties");
+        System.out.println("\t      -d: specify the ctier_root install directory");
+        System.out.println("\t          or use environment variable CTIER_ROOT");
+        System.out.println("\t-h/-help: show this message");
+    }
     /**
      * Validates the install, generates preference data and then invokes the adminCmd.xml
      *
@@ -71,8 +79,6 @@ public class CTierInstaller {
      * @throws SetupException thrown if error
      */
     public void execute(final String[] args) throws SetupException, IOException {
-        loadProperties();
-        validateEnvironment();
         boolean debug=false;
         if(args.length>0){
             for (int i = 0; i < args.length; i++) {
@@ -84,13 +90,21 @@ public class CTierInstaller {
                     installTarget = args[i];
                 } else if ("-client".equals(arg)) {
                     installTarget = BUILD_TARGET_INSTALL_CLIENT;
-                } else if ("-server".equals(arg)) {
-                    installTarget = BUILD_TARGET_INSTALL_SERVER;
-                }else if(arg.startsWith("-D")){
-
+                }else if("-d".equals(arg)){
+                    i++;
+                    if(i >= args.length) {
+                        throw new SetupException("Expected argument to -d: ctier_root path");
+                    }
+                    ctierRoot = new File(args[i]);
+                    System.setProperty("env.ctier_root", ctierRoot.getAbsolutePath());
+                }else if("-h".equals(arg) || "--help".equals(arg) || "-help".equals(arg)){
+                    usage();
+                    System.exit(0);
                 }
             }
         }
+        loadProperties();
+        validateEnvironment();
         final AntProject project = new AntProject(new File(buildfile), install, debug);
         // Fire the build
         project.execute();
@@ -164,11 +178,7 @@ public class CTierInstaller {
             project.setProperty("ant.home", antHome);
             project.setProperty("ant.file", buildFile.getAbsolutePath());
             project.setProperty("basedir", new File("").getAbsolutePath());
-            final Property ptask = new Property();
-            ptask.setProject(project);
-            ptask.setFile(propFile);
-            ptask.maybeConfigure();
-            ptask.perform();
+            project.setProperty("ctier.installfile", propFile.getAbsolutePath());
             ProjectHelper.configureProject(project, buildFile);
         }
 

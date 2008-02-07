@@ -13,8 +13,14 @@ pkgs.root=pkgs
 
 pkgs.antdepo.expanded=@pkg.antdepo.expanded.name@
 pkgs.commander.archive=@pkg.commander.archive.name@
+pkgs.commander.version=@pkg.commander.version@
 #pkgs.headlines.archive=@pkg.headlines.archive.name@
 pkgs.itnav.archive=@pkg.itnav.archive.name@
+pkgs.itnav.version=@pkg.itnav.version@
+pkgs.jobcenter.archive=@pkg.jobcenter.archive.name@
+pkgs.jobcenter.version=@pkg.jobcenter.version@
+pkgs.tomcat.archive=@pkg.tomcat.archive.name@
+pkgs.tomcat.version=@pkg.tomcat.version@
 
 # ANT_HOME
 

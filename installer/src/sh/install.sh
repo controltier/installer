@@ -32,12 +32,17 @@ then
    exit 1
 fi
 
-
+if [ "${CTIER_ROOT}X" != "X" ]
+then
+   CTIER_ROOT_DEF=-Denv.ctier_root=$CTIER_ROOT
+else
+   CTIER_ROOT_DEF=
+fi
 
 PATH=$JAVA_HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PATH
 
-$JAVA_HOME/bin/java -Dant.home=$ANT_HOME -cp lib/installer.jar:$ANT_HOME/lib/ant.jar:$ANT_HOME/lib/ant-launcher.jar:$ANT_HOME/lib/regexp-1.5.jar:$ANT_HOME/lib/ant-apache-regexp.jar:$ANT_HOME/lib/ant-contrib-1.0b1.jar:$ANT_HOME/lib/ant-nodeps.jar:$ANT_HOME/lib/ant-trax.jar \
+$JAVA_HOME/bin/java $CTIER_ROOT_DEF -Dant.home=$ANT_HOME -cp lib/installer.jar:$ANT_HOME/lib/ant.jar:$ANT_HOME/lib/ant-launcher.jar:$ANT_HOME/lib/regexp-1.5.jar:$ANT_HOME/lib/ant-apache-regexp.jar:$ANT_HOME/lib/ant-contrib-1.0b1.jar:$ANT_HOME/lib/ant-nodeps.jar:$ANT_HOME/lib/ant-trax.jar \
      com.controltier.install.CTierInstaller $*
 
 if [ $? -ne 0 ]; then

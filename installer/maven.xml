@@ -20,6 +20,7 @@
   <!--builder import metadata-->
    <property name="builder.props.template"
             location="${basedir}/builder.properties.template"/>
+   <property name="work.dir" value="${target.dir}/work"/>
 
 
 
@@ -32,13 +33,38 @@
 
 
   <goal name="installer:create-zip">
-    <!--<zip destfile="${target.dir}/${pom.id}-${pom.currentVersion}.zip"
-	basedir="${target.dir}" includes="${pom.id}-${pom.currentVersion}/**"/>-->
-    <echo>Creating zip file ${target.dir}/${pom.id}-${pom.currentVersion}.zip ...</echo>
-    <exec executable="zip" dir="${target.dir}" failonerror="true" outputproperty="zip.out">
-      <arg line=" -r -9 -v ${pom.id}-${pom.currentVersion}.zip ${pom.id}-${pom.currentVersion}"/>
-    </exec>
+      <echo>Creating zip file ${target.dir}/dist/${pom.id}/zips/${pom.id}-${pom.currentVersion}.zip ...</echo>
+      <mkdir dir="${target.dir}/dist/${pom.id}/zips"/>
+      <exec executable="zip" dir="${work.dir}" failonerror="true" outputproperty="zip.out">
+          <arg line=" -r -9 -v ${target.dir}/dist/${pom.id}/zips/${pom.id}-${pom.currentVersion}.zip ${pom.id}-${pom.currentVersion}"/>
+      </exec>
   </goal>
+
+    <goal name="installer:create-gui-installer">
+        <echo>Creating izpack installer ${target.dir}/dist/${pom.id}-Installer/jars/${pom.id}-Installer-${pom.currentVersion}.jar ...</echo>
+
+        <copy todir="${work.dir}"  filtering="true">
+            <fileset dir="${src.dir}/izpack" includes="*.txt,*.properties,*.bat,*.sh,*.xml,*.xml_eng,*.xml_spa,*.html"/>
+            <filterset >
+                <filter token="controltier.version" value="${pom.currentVersion}"/>
+                <filter token="antdepo.version" value="${antdepo.version}"/>
+                <filter token="jobcenter.version" value="${jobcenter.version}"/>
+                <filter token="tomcat.version" value="${pkg.tomcat.version}"/>
+            </filterset>
+        </copy>
+        <copy todir="${work.dir}"  filtering="false">
+            <fileset dir="${src.dir}/izpack" includes="imgs/*"/>
+        </copy>
+        
+        <!-- invoke ant via java call, so that we can use ant 1.7, since maven uses 1.5 -->
+        <java classname="org.apache.tools.ant.launch.Launcher" fork="true">
+            <arg line="-f ${work.dir}/izpackBuild.xml -Dsrc.dir=${work.dir} -Dtarget.dir=${work.dir} -Dbuild.version=${pom.currentVersion} -Dbasedir=${work.dir}"/>
+            <classpath refid="maven.dependency.classpath"/>
+        </java>
+        <mkdir dir="${target.dir}/dist/${pom.id}-Installer/jars"/>
+        <move file="${work.dir}/${pom.id}-Installer-${pom.currentVersion}.jar" todir="${target.dir}/dist/${pom.id}-Installer/jars/"/>
+    </goal>
+
 
   <goal name="installer:create" prereqs="java:jar"
 	description="builds the extension archive from a temporary workspace and deploys into target dir">
@@ -47,7 +73,7 @@
 	** workspace to build the reference extension
     -->
     <property name="installer.workspace"
-	      value="${target.dir}/${pom.id}-${pom.currentVersion}"/>
+	      value="${work.dir}/${pom.id}-${pom.currentVersion}"/>
 
     <!--
 	** create the workspace
@@ -111,6 +137,7 @@
 	     ignoreerrors="false" verbose="true" usetimestamp="true"
 	     />
 	<j:set var="pkg.itnav.archive.name" value="${expanded.name}.war"/>
+	<j:set var="pkg.itnav.version" value="${dep.version}"/>
       </j:if>
       <j:if test="${dep.id == 'headlines'}">
 	<get src="${maven.repo.ctier}/${dep.id}/pars/${dep.id}-${dep.version}.par"
@@ -125,7 +152,25 @@
 	     ignoreerrors="false" verbose="true" usetimestamp="true"
 	     />
 	<j:set var="pkg.commander.archive.name" value="${expanded.name}.jar"/>
+	<j:set var="pkg.commander.version" value="${dep.version}"/>
       </j:if>
+        <j:if test="${dep.id == 'jobcenter'}">
+            <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+                 dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
+                 ignoreerrors="false" verbose="true" usetimestamp="true"
+                />
+            <j:set var="pkg.jobcenter.archive.name" value="${expanded.name}.zip"/>
+            <j:set var="pkg.jobcenter.version" value="${dep.version}"/>
+        </j:if>
+        <j:if test="${dep.id == 'apache-tomcat'}">
+            <mkdir dir="${target.dir}/pkgs"/>
+            <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+                 dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
+                 ignoreerrors="false" verbose="true" usetimestamp="true"
+                />
+            <j:set var="pkg.tomcat.archive.name" value="${expanded.name}.zip"/>
+            <j:set var="pkg.tomcat.version" value="${dep.version}"/>
+        </j:if>
     </j:forEach>
 
       <copy todir="${installer.workspace}"
@@ -144,11 +189,16 @@
 	  overwrite="true" filtering="true">
       <filterset>
 	<filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
-	<!-- XXX: use real values -->
 	<filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
 	<filter token="pkg.commander.archive.name" value="${pkg.commander.archive.name}"/>
+	<filter token="pkg.commander.version" value="${pkg.commander.version}"/>
 	<filter token="pkg.headlines.archive.name" value="${pkg.headlines.archive.name}"/>
 	<filter token="pkg.itnav.archive.name" value="${pkg.itnav.archive.name}"/>
+	<filter token="pkg.itnav.version" value="${pkg.itnav.version}"/>
+	<filter token="pkg.jobcenter.archive.name" value="${pkg.jobcenter.archive.name}"/>
+	<filter token="pkg.jobcenter.version" value="${pkg.jobcenter.version}"/>
+	<filter token="pkg.tomcat.version" value="${pkg.tomcat.version}"/>
+	<filter token="pkg.tomcat.archive.name" value="${pkg.tomcat.archive.name}"/>
       </filterset>
 
       <fileset dir="${src.dir}/templates/properties" includes="installer.properties.template"/>
@@ -159,29 +209,21 @@
       <j:if test="${dep.id == 'antdepo'}">
 	<property name="antdepo.version" value="${dep.version}"/>
       </j:if>
+      <j:if test="${dep.id == 'jobcenter'}">
+	<property name="jobcenter.version" value="${dep.version}"/>
+      </j:if>
     </j:forEach>
 
     <copy tofile="${installer.workspace}/default.properties"
 	  overwrite="true" filtering="true">
       <filterset>
-	<!-- XXX: use real values -->
 	<filter token="antdepo.version" value="${antdepo.version}"/>
+	<filter token="jobcenter.version" value="${jobcenter.version}"/>
       </filterset>
       <fileset dir="${src.dir}/templates/properties" includes="default.properties.template"/>
     </copy>
 
 
-    <copy file="${builder.props.template}" filtering="true" overwrite="true"
-            tofile="${target.dir}/builder.properties">
-        <filterset>
-          <filter token="default.classname" value="CT_zip_installer"/>
-          <filter token="default.description" value="${pom.shortDescription}"/>
-          <filter token="default.package-base" value="${pom.id}"/>
-          <filter token="default.package-filetype" value="zip"/>
-          <filter token="default.package-release" value="1"/>
-          <filter token="default.package-version" value="${pom.currentVersion}"/>
-        </filterset>
-      </copy>
 
     <!--
 	** archive date for the to be built extension archive
@@ -193,6 +235,32 @@
 
 
     <attainGoal name="installer:create-zip"/>
+
+      <copy file="${builder.props.template}" filtering="true" overwrite="true"
+            tofile="${target.dir}/dist/${pom.id}/zips/builder.properties">
+          <filterset>
+              <filter token="default.classname" value="CT_zip_installer"/>
+              <filter token="default.description" value="${pom.shortDescription}"/>
+              <filter token="default.package-base" value="${pom.id}"/>
+              <filter token="default.package-filetype" value="zip"/>
+              <filter token="default.package-release" value="1"/>
+              <filter token="default.package-version" value="${pom.currentVersion}"/>
+          </filterset>
+      </copy>
+      
+    <attainGoal name="installer:create-gui-installer"/>
+
+      <copy file="${builder.props.template}" filtering="true" overwrite="true"
+            tofile="${target.dir}/dist/${pom.id}-Installer/jars/builder.properties">
+          <filterset>
+              <filter token="default.classname" value="CT_jar_gui_installer"/>
+              <filter token="default.description" value="${pom.shortDescription}"/>
+              <filter token="default.package-base" value="${pom.id}-Installer"/>
+              <filter token="default.package-filetype" value="jar"/>
+              <filter token="default.package-release" value="1"/>
+              <filter token="default.package-version" value="${pom.currentVersion}"/>
+          </filterset>
+      </copy>
   </goal>
 
 </project>
