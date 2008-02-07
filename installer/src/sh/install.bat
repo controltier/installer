@@ -13,6 +13,13 @@ IF NOT DEFINED JAVA_HOME (
    GOTO:EOF
 )
 
+IF DEFINED CTIER_ROOT (
+   set CTIER_ROOT_DEF=-Denv.ctier_root="%CTIER_ROOT%"
+)
+IF NOT DEFINED CTIER_ROOT (
+   set CTIER_ROOT_DEF=
+)
+
 IF NOT EXIST "%JAVA_HOME%\bin\java.exe" (
     ECHO JAVA_HOME not set or set incorrectly: %JAVA_HOME%
    GOTO:EOF
@@ -28,6 +35,7 @@ SET cp=lib\installer.jar;%ANT_HOME%\lib\ant.jar;%ANT_HOME%\lib\ant-launcher.jar;
 call "%JAVA_HOME%\bin\java.exe" ^
 	-classpath "%cp%" ^
 	-Dant.home="%ANT_HOME%" ^
+	%CTIER_ROOT_DEF% ^
 	com.controltier.install.CTierInstaller %*
 
 GOTO:EOF

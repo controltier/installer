@@ -1,0 +1,15 @@
+Contratulations, ControlTier is installed
+
+You may now visit Workbench at:
+
+    http://$INSTALL_TOMCAT_HOSTNAME:$INSTALL_TOMCAT_PORT/itnav
+
+Jobcenter is available at:
+
+    http://$INSTALL_TOMCAT_HOSTNAME:$INSTALL_JOBCENTER_PORT/jobcenter
+
+The software was installed in:
+
+    $INSTALL_PATH
+
+where you may find additional information and documentation.

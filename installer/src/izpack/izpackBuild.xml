@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+$Id: install.xml 7629 2007-11-20 01:41:32Z gschueler $
+-->
+<project name="controltier-installer" default="execute" basedir="." >
+    <description>
+        Build script to create IzPack installer.
+    </description>
+    <tstamp />
+
+    <taskdef name="izpack"  classname="com.izforge.izpack.ant.IzPackTask"/>
+
+    <!--
+     imported properties:
+     target.dir
+     build.version
+
+    -->
+    <target name="execute">
+        <echo>Creating izpack installer ${target.dir}/ControlTier-Installer-${build.version}.jar ...</echo>
+        <fail unless="target.dir">target.dir is not defined</fail>
+        <fail unless="src.dir">src.dir is not defined</fail>
+        <fail unless="build.version">build.version is not defined</fail>
+
+        <izpack input="${src.dir}/install.xml"
+                output="${target.dir}/ControlTier-Installer-${build.version}.jar"
+                installerType="standard"
+                basedir="${src.dir}"
+            />
+    </target>
+</project>

@@ -1,0 +1,24 @@
+<!--
+  Processing section.
+-->
+<processing>
+  <!-- Invoke the Control-Tier custom installer. -->
+  <job name="Configuring ControlTier...">
+      <os family="windows"/>
+      <executefile name="$INSTALL_PATH/pkgs/ControlTier-${CTVERSION}/install-ctier.bat" />
+  </job>
+  <job name="Configuring ControlTier...">
+      <os family="unix"/>
+      <executefile name="$INSTALL_PATH/pkgs/ControlTier-${CTVERSION}/install-ctier.sh"/>
+  </job>
+
+  <!-- Setting ENV variables and starting ApacheTomcat server -->
+  <job name="Starting ControlTier">
+    <os family="windows"/>
+    <executefile name="$INSTALL_PATH/pkgs/$CONTROL_TIER/start-ctier.bat"/>
+  </job>
+  <job name="Starting ControlTier">
+    <os family="unix"/>
+    <executefile name="$INSTALL_PATH/pkgs/$CONTROL_TIER/start-ctier.sh"/>
+  </job>
+</processing>
