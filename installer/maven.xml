@@ -47,7 +47,7 @@
             <fileset dir="${src.dir}/izpack" includes="*.txt,*.properties,*.bat,*.sh,*.xml,*.xml_eng,*.xml_spa,*.html"/>
             <filterset >
                 <filter token="controltier.version" value="${pom.currentVersion}"/>
-                <filter token="antdepo.version" value="${antdepo.version}"/>
+                <filter token="ctl.version" value="${ctl.version}"/>
                 <filter token="jobcenter.version" value="${jobcenter.version}"/>
                 <filter token="tomcat.version" value="${pkg.tomcat.version}"/>
             </filterset>
@@ -118,13 +118,13 @@
       <j:set var="dep.version" value="${dep.getVersion()}"/>
       <j:set var="expanded.name" value="${dep.id}-${dep.version}"/>
 
-      <j:if test="${dep.id == 'antdepo'}">
+      <j:if test="${dep.id == 'ctl'}">
 	<get src="${maven.repo.ctier}/${dep.id}/tgzs/${dep.id}-${dep.version}.tgz"
 	     dest="${target.dir}/${dep.id}-${dep.version}.tgz"
 	     ignoreerrors="false" verbose="true" usetimestamp="true"
 	     />
-	<j:set var="pkg.antdepo.expanded.name" value="${expanded.name}"/>
-	<j:set var="pkg.antdepo.archive.name" value="${expanded.name}.tgz"/>
+	<j:set var="pkg.ctl.expanded.name" value="${expanded.name}"/>
+	<j:set var="pkg.ctl.archive.name" value="${expanded.name}.tgz"/>
           <mkdir dir="${installer.workspace}/pkgs/${dep.id}-${dep.version}"/>
           <exec executable="tar" dir="${installer.workspace}/pkgs/${dep.id}-${dep.version}"
               failonerror="true" outputproperty="tar.out">
@@ -176,8 +176,8 @@
       <copy todir="${installer.workspace}"
           overwrite="true" filtering="true">
           <filterset>
-              <filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
-              <filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
+              <filter token="pkg.ctl.expanded.name" value="${pkg.ctl.expanded.name}"/>
+              <filter token="pkg.ant.expanded.name" value="apache-ant-${ctl.ant.version}"/>
           </filterset>
           <fileset dir="${src.dir}/sh" includes="install.sh,install.bat"/>
       </copy>
@@ -188,8 +188,8 @@
     <copy tofile="${installer.workspace}/etc/installer.properties"
 	  overwrite="true" filtering="true">
       <filterset>
-	<filter token="pkg.ant.expanded.name" value="apache-ant-${antdepo.ant.version}"/>
-	<filter token="pkg.antdepo.expanded.name" value="${pkg.antdepo.expanded.name}"/>
+	<filter token="pkg.ant.expanded.name" value="apache-ant-${ctl.ant.version}"/>
+	<filter token="pkg.ctl.expanded.name" value="${pkg.ctl.expanded.name}"/>
 	<filter token="pkg.commander.archive.name" value="${pkg.commander.archive.name}"/>
 	<filter token="pkg.commander.version" value="${pkg.commander.version}"/>
 	<filter token="pkg.headlines.archive.name" value="${pkg.headlines.archive.name}"/>
@@ -204,10 +204,10 @@
       <fileset dir="${src.dir}/templates/properties" includes="installer.properties.template"/>
     </copy>
 
-    <!-- determine antdepo version -->
+    <!-- determine ctl version -->
     <j:forEach var="dep" items="${pom.dependencies}">
-      <j:if test="${dep.id == 'antdepo'}">
-	<property name="antdepo.version" value="${dep.version}"/>
+      <j:if test="${dep.id == 'ctl'}">
+	<property name="ctl.version" value="${dep.version}"/>
       </j:if>
       <j:if test="${dep.id == 'jobcenter'}">
 	<property name="jobcenter.version" value="${dep.version}"/>
@@ -217,7 +217,7 @@
     <copy tofile="${installer.workspace}/default.properties"
 	  overwrite="true" filtering="true">
       <filterset>
-	<filter token="antdepo.version" value="${antdepo.version}"/>
+	<filter token="ctl.version" value="${ctl.version}"/>
 	<filter token="jobcenter.version" value="${jobcenter.version}"/>
       </filterset>
       <fileset dir="${src.dir}/templates/properties" includes="default.properties.template"/>

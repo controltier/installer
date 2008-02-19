@@ -21,12 +21,12 @@
     </info>
     <variables>
       <variable name="CTVERSION" value="@controltier.version@"/>
-      <variable name="ADVERSION" value="@antdepo.version@"/>
+      <variable name="CTLVERSION" value="@ctl.version@"/>
       <variable name="JCVERSION" value="@jobcenter.version@"/>
       <variable name="CONTROL_TIER" value="ControlTier-@controltier.version@"/>
       <variable name="INSTALL_CATALINA_BASE" value="$INSTALL_PATH/workbench"/>
       <variable name="INSTALL_CATALINA_HOME" value="$INSTALL_PATH/workbench"/>
-      <variable name="ANTDEPOT" value="antdepo-@antdepo.version@"/>
+      <variable name="CTL" value="ctl-@ctl.version@"/>
       <variable name="APACHE_ANT" value="apache-ant-1.7.0p1"/>
         <variable name="JDKPathPanel.minVersion" value="1.4.2"/>
         <variable name="JDKPathPanel.skipIfValid" value="yes"/>
@@ -34,19 +34,19 @@
 
     <!-- Library files required to run ControlTier Installer script -->
     <jar src="ControlTier-@controltier.version@/lib/installer.jar"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/antdepo-@antdepo.version@/pkgs/apache-ant-1.7.0p1/lib/ant.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.7.0p1/lib/ant.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/antdepo-@antdepo.version@/pkgs/apache-ant-1.7.0p1/lib/ant-launcher.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.7.0p1/lib/ant-launcher.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/antdepo-@antdepo.version@/pkgs/apache-ant-1.7.0p1/lib/regexp-1.5.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.7.0p1/lib/regexp-1.5.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/antdepo-@antdepo.version@/pkgs/apache-ant-1.7.0p1/lib/ant-apache-regexp.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.7.0p1/lib/ant-apache-regexp.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/antdepo-@antdepo.version@/pkgs/apache-ant-1.7.0p1/lib/ant-contrib-1.0b1.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.7.0p1/lib/ant-contrib-1.0b1.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/antdepo-@antdepo.version@/pkgs/apache-ant-1.7.0p1/lib/ant-nodeps.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.7.0p1/lib/ant-nodeps.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/antdepo-@antdepo.version@/pkgs/apache-ant-1.7.0p1/lib/ant-trax.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.7.0p1/lib/ant-trax.jar"
          stage="install"/>
 
     <!--

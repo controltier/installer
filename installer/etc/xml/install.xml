@@ -92,8 +92,8 @@ public key has been added to the authorized_keys file.
 
 set CTIER_ROOT=${env.ctier_root.converted}
 
-set ANTDEPO_HOME=${env.antdepo_home.converted}
-set ANTDEPO_BASE=${env.antdepo_base.converted}
+set CTL_HOME=${env.ctl_home.converted}
+set CTL_BASE=${env.ctl_base.converted}
 </echo>
                         <if >
                             <isset property="task.check-server-env.executed"/>
@@ -106,10 +106,10 @@ set CATALINA_BASE=${env.catalina_base.converted}
 
 set JAVA_HOME=${USER_ENV.JAVA_HOME}
 </echo>
-                                <property name="rcfile.path" value="%JOBCENTER_HOME%\bin;%ANTDEPO_HOME%\bin;%CATALINA_HOME%\bin;%Path%"/>
+                                <property name="rcfile.path" value="%JOBCENTER_HOME%\bin;%CTL_HOME%\bin;%CATALINA_HOME%\bin;%Path%"/>
                             </then>
                             <else>
-                                <property name="rcfile.path" value="%ANTDEPO_HOME%\bin;%Path%"/>
+                                <property name="rcfile.path" value="%CTL_HOME%\bin;%Path%"/>
                             </else>
                         </if>
                         <echo  file="${user.home}/${installer.rcbatfilename}" append="true">
@@ -131,8 +131,8 @@ set Path=${rcfile.path}
                     
 export CTIER_ROOT=${env.ctier_root}
 
-export ANTDEPO_HOME=${env.antdepo_home}
-export ANTDEPO_BASE=${env.antdepo_base}
+export CTL_HOME=${env.ctl_home}
+export CTL_BASE=${env.ctl_base}
 </echo>
                 <if>
                     <isset property="task.check-server-env.executed"/>
@@ -145,10 +145,10 @@ export CATALINA_BASE=${env.catalina_base}
 
 export JAVA_HOME=${USER_ENV.JAVA_HOME}
 </echo>
-                        <property name="rcfile.path" value="$JOBCENTER_HOME/bin:$ANTDEPO_HOME/bin:$CATALINA_HOME/bin:$PATH"/>
+                        <property name="rcfile.path" value="$JOBCENTER_HOME/bin:$CTL_HOME/bin:$CATALINA_HOME/bin:$PATH"/>
                     </then>
                     <else>
-                        <property name="rcfile.path" value="$ANTDEPO_HOME/bin:$PATH"/>
+                        <property name="rcfile.path" value="$CTL_HOME/bin:$PATH"/>
                     </else>
                 </if>
                 <echo file="${user.home}/${installer.rcfilename}" append="true">
@@ -156,11 +156,11 @@ export JAVA_HOME=${USER_ENV.JAVA_HOME}
 export PATH=${rcfile.path}
 
 if [ -n "$BASH" ] ; then
-    . $ANTDEPO_HOME/etc/bash_completion.sh ;
-    if [ -t 0 -a -z "$ANTDEPO_CLI_TERSE" ]
+    . $CTL_HOME/etc/bash_completion.sh ;
+    if [ -t 0 -a -z "$CTL_CLI_TERSE" ]
     then
-      ANTDEPO_CLI_TERSE=true
-      export ANTDEPO_CLI_TERSE
+      CTL_CLI_TERSE=true
+      export CTL_CLI_TERSE
     fi
 fi
 
@@ -187,8 +187,8 @@ fi
         <!--
             expands the jobcenter package, and executes the build.xml install script with the appropriate properties
         -->
-        <fail-if-blank name="env.antdepo_home"/>
-        <fail-if-blank name="env.antdepo_base"/>
+        <fail-if-blank name="env.ctl_home"/>
+        <fail-if-blank name="env.ctl_base"/>
 
         <!--<mkdir dir="${pkgs.root}/jobcenter"/>-->
         <unzip dest="${pkgs.root}/" src="${pkgs.root}/${pkgs.jobcenter.archive}"/>
@@ -196,9 +196,9 @@ fi
             <available file="${pkgs.root}/jobcenter-${pkgs.jobcenter.version}/build.xml" type="file"/>
             <then>
                 <ant dir="${pkgs.root}/jobcenter-${pkgs.jobcenter.version}">
-                    <property name="antdepo.base" value="${env.antdepo_base}"/>
-                    <property name="antdepo.home" value="${env.antdepo_home}"/>
-                    <property name="install.ant.home" value="${env.antdepo_home}/pkgs/apache-ant-${package.ant.version}"/>
+                    <property name="ctl.base" value="${env.ctl_base}"/>
+                    <property name="ctl.home" value="${env.ctl_home}"/>
+                    <property name="install.ant.home" value="${env.ctl_home}/pkgs/apache-ant-${package.ant.version}"/>
                     <property name="jetty.home" value="${server.jobcenter.base_path}"/>
                     <property name="jetty.server.httpPort" value="${server.jetty.port}"/>
                     <property name="jetty.server.ajpPort" value="${server.jetty.ajpPort}"/>
@@ -256,16 +256,16 @@ fi
     <target name="-prepare-configure-server">
         <if>
             <and>
-                <isset property="env.antdepo_base"/>
+                <isset property="env.ctl_base"/>
                 <not>
-                    <equals arg1="" arg2="env.antdepo_base"/>
+                    <equals arg1="" arg2="env.ctl_base"/>
                 </not>
             </and>
             <then>
-                <property name="antdepo.integration.enabled" value="true"/>
+                <property name="ctl.integration.enabled" value="true"/>
             </then>
             <else>
-                <property name="antdepo.integration.enabled" value="false"/>
+                <property name="ctl.integration.enabled" value="false"/>
             </else>
         </if>
     </target>
@@ -359,12 +359,12 @@ fi
                               replace="app.log4j.appender.CommonLog.port = ${server.reports.port}"
                     />
                 <replaceregex flags="si"
-                              pattern="^antdepo\.base *=(.*)$"
-                              replace="antdepo.base = ${env.antdepo_base.forwardslash}"
+                              pattern="^ctl\.base *=(.*)$"
+                              replace="ctl.base = ${env.ctl_base.forwardslash}"
                     />
                 <replaceregex flags="si"
-                              pattern="^antdepo\.integration\.enabled *=(.*)$"
-                              replace="antdepo.integration.enabled = ${antdepo.integration.enabled}"
+                              pattern="^ctl\.integration\.enabled *=(.*)$"
+                              replace="ctl.integration.enabled = ${ctl.integration.enabled}"
                     />
             </filterchain>
             <fileset file="${env.catalina_base}/${itnav.configpath}/runtime.properties.orig"/>
@@ -547,20 +547,20 @@ or equivalent:
 
         <if>
             <not>
-                <available file="${env.antdepo_home}" type="dir"/>
+                <available file="${env.ctl_home}" type="dir"/>
             </not>
             <then>
-                <mkdir dir="${env.antdepo_home}"/>
+                <mkdir dir="${env.ctl_home}"/>
             </then>
         </if>
-        <!-- copy the expanded antdepo to the ANTDEPO_HOME -->
+        <!-- copy the expanded ctl to the CTL_HOME -->
         <if>
             <not>
                 <isset property="dontexpand"/>
             </not>
             <then>
-                <copy todir="${env.antdepo_home}">
-                    <fileset dir="${pkgs.root}/${pkgs.antdepo.expanded}"/>
+                <copy todir="${env.ctl_home}">
+                    <fileset dir="${pkgs.root}/${pkgs.ctl.expanded}"/>
                 </copy>
             </then>
         </if>
@@ -584,51 +584,51 @@ or equivalent:
         <!--
         set executable flag on bin scripts
                 -->
-        <chmod dir="${env.antdepo_home}/bin" perm="ugo+rx" includes="*"/>
+        <chmod dir="${env.ctl_home}/bin" perm="ugo+rx" includes="*"/>
 
 
         <if>
             <not>
-                <available file="${env.antdepo_base}" type="dir"/>
+                <available file="${env.ctl_base}" type="dir"/>
             </not>
             <then>
-                <mkdir dir="${env.antdepo_base}"/>
+                <mkdir dir="${env.ctl_base}"/>
             </then>
         </if>
 
-        <pathconvert property="converted.env.antdepo_home">
-            <path path="${env.antdepo_home}"/>
+        <pathconvert property="converted.env.ctl_home">
+            <path path="${env.ctl_home}"/>
         </pathconvert>
-        <pathconvert property="converted.env.antdepo_base">
-            <path path="${env.antdepo_base}"/>
+        <pathconvert property="converted.env.ctl_base">
+            <path path="${env.ctl_base}"/>
         </pathconvert>
 
 	<!-- cleanup the download directory to remove any old module jars -->
-	<delete dir="${converted.env.antdepo_base}/var/tmp/downloads" quiet="true"/>
-	<mkdir dir="${converted.env.antdepo_base}/var/tmp/downloads"/>
-	<!-- remove previously downloaded module jars under "antdepo.base/var/projectName/" -->
+	<delete dir="${converted.env.ctl_base}/var/tmp/downloads" quiet="true"/>
+	<mkdir dir="${converted.env.ctl_base}/var/tmp/downloads"/>
+	<!-- remove previously downloaded module jars under "ctl.base/var/projectName/" -->
 	 <delete>
-	   <fileset dir="${converted.env.antdepo_base}/var" 
+	   <fileset dir="${converted.env.ctl_base}/var"
 		    includes="**/*-head.jar,**/*-0.jar,**/*-1*.jar,**/*-2*.jar,**/*-3*.jar, **/*-4*.jar, **/*-5*.jar, **/*-6*.jar, **/*-7*.jar, **/*-8*.jar, **/*-9*.jar, "/>
 	 </delete>
 
-        <!-- run "$ANTDEPO_HOME/bin/ad-setup -n hostname" -->
+        <!-- run "$CTL_HOME/bin/ctl-setup -n hostname" -->
         <if>
             <os family="unix"/>
             <then>
                 <dirname property="anthome.dir" file="${ant.home}"/>
                 <basename property="anthome.base" file="${ant.home}"/>
 
-                <exec executable="${converted.env.antdepo_home}/bin/ad-setup" dir="${converted.env.antdepo_base}" newenvironment="true" failonerror="true">
-                    <env key="ANTDEPO_HOME" value="${converted.env.antdepo_home}"/>
-                    <env key="ANTDEPO_BASE" value="${converted.env.antdepo_base}"/>
+                <exec executable="${converted.env.ctl_home}/bin/ctl-setup" dir="${converted.env.ctl_base}" newenvironment="true" failonerror="true">
+                    <env key="CTL_HOME" value="${converted.env.ctl_home}"/>
+                    <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
                     <env key="ANT_HOME" value="${anthome.dir}/${anthome.base}"/>
                     <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
                     <arg line="-f -n ${client.hostname}"/>
                 </exec>
-                <exec executable="${converted.env.antdepo_home}/bin/ext-setup" dir="${converted.env.antdepo_base}" newenvironment="true" failonerror="true">
-                    <env key="ANTDEPO_HOME" value="${converted.env.antdepo_home}"/>
-                    <env key="ANTDEPO_BASE" value="${converted.env.antdepo_base}"/>
+                <exec executable="${converted.env.ctl_home}/bin/ext-setup" dir="${converted.env.ctl_base}" newenvironment="true" failonerror="true">
+                    <env key="CTL_HOME" value="${converted.env.ctl_home}"/>
+                    <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
                     <env key="ANT_HOME" value="${anthome.dir}/${anthome.base}"/>
                     <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
                     <arg line="-S -f ${basedir}/${pkgs.root}/${pkgs.commander.archive} -D workbench.server=${server.tomcat.hostname} -D workbench.port=${server.tomcat.port} --overwrite"/>
@@ -638,16 +638,16 @@ or equivalent:
                 <os family="windows"/>
                 <then>
 
-                    <exec executable="${converted.env.antdepo_home}\bin\ad-setup.bat" dir="${converted.env.antdepo_base}" newenvironment="true" failonerror="true">
-                        <env key="ANTDEPO_HOME" value="${converted.env.antdepo_home}"/>
-                        <env key="ANTDEPO_BASE" value="${converted.env.antdepo_base}"/>
+                    <exec executable="${converted.env.ctl_home}\bin\ctl-setup.bat" dir="${converted.env.ctl_base}" newenvironment="true" failonerror="true">
+                        <env key="CTL_HOME" value="${converted.env.ctl_home}"/>
+                        <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
 <!--                        <env key="ANT_HOME" value="${ant.home}"/>-->
                         <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
                         <arg line="-f -n ${client.hostname}"/>
                     </exec>
-                    <exec executable="${converted.env.antdepo_home}\bin\ext-setup.bat" dir="${converted.env.antdepo_base}" newenvironment="true" failonerror="true">
-                        <env key="ANTDEPO_HOME" value="${converted.env.antdepo_home}"/>
-                        <env key="ANTDEPO_BASE" value="${converted.env.antdepo_base}"/>
+                    <exec executable="${converted.env.ctl_home}\bin\ext-setup.bat" dir="${converted.env.ctl_base}" newenvironment="true" failonerror="true">
+                        <env key="CTL_HOME" value="${converted.env.ctl_home}"/>
+                        <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
 <!--                        <env key="ANT_HOME" value="${ant.home}"/>-->
                         <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
                         <arg line='-S -f "${basedir}\${pkgs.root}\${pkgs.commander.archive}" -D workbench.server=${server.tomcat.hostname} -D workbench.port=${server.tomcat.port}'/>
@@ -698,14 +698,14 @@ or equivalent:
         </if>
 
         <!-- duplicate original -->
-        <backup-file-with-datestamp file="${env.antdepo_base}/etc/framework.properties"/>
+        <backup-file-with-datestamp file="${env.ctl_base}/etc/framework.properties"/>
 
         <!-- overwrite file -->
-        <copy tofile="${env.antdepo_base}/etc/framework.properties" overwrite="true">
+        <copy tofile="${env.ctl_base}/etc/framework.properties" overwrite="true">
             <filterchain>
                 <replaceregex flags="si"
                    pattern="^ant\.home *=(.*)$"
-                   replace="ant.home = ${env.antdepo_home}/pkgs/apache-ant-${package.ant.version}"
+                   replace="ant.home = ${env.ctl_home}/pkgs/apache-ant-${package.ant.version}"
                 />
                 <!--
 framework.dav.rootDir =
@@ -770,7 +770,7 @@ framework.email.from = root
 # email address replies should go
 framework.email.replyto = do-not-reply
 
-# The antdepo email relay host. must be a functioning smtp relay server
+# The ctl email relay host. must be a functioning smtp relay server
 framework.email.mailhost = mail
 framework.email.mailport = 25
 
@@ -821,25 +821,25 @@ framework.email.failonerror = true
                               replace="framework.ssh.user = ${framework.ssh.user}"/>
 
             </filterchain>
-            <fileset file="${env.antdepo_base}/etc/framework.properties.${DSTAMP}-${TSTAMP}.backup"/>
+            <fileset file="${env.ctl_base}/etc/framework.properties.${DSTAMP}-${TSTAMP}.backup"/>
         </copy>
 
 
 
         <if>
-            <available file="${env.antdepo_base}/etc/log4j.properties.orig"/>
+            <available file="${env.ctl_base}/etc/log4j.properties.orig"/>
             <then>
                 <move
-                    file="${env.antdepo_base}/etc/log4j.properties.orig"
-                    tofile="${env.antdepo_base}/etc/log4j.properties.orig-${DSTAMP}.${TSTAMP}"/>
+                    file="${env.ctl_base}/etc/log4j.properties.orig"
+                    tofile="${env.ctl_base}/etc/log4j.properties.orig-${DSTAMP}.${TSTAMP}"/>
             </then>
         </if>
         <!-- duplicate original log4j.properties -->
 
-        <backup-file-with-datestamp file="${env.antdepo_base}/etc/log4j.properties"/>
+        <backup-file-with-datestamp file="${env.ctl_base}/etc/log4j.properties"/>
 
         <!-- overwrite file -->
-        <copy tofile="${env.antdepo_base}/etc/log4j.properties" overwrite="true">
+        <copy tofile="${env.ctl_base}/etc/log4j.properties" overwrite="true">
             <filterchain>
                 <!--
 
@@ -855,7 +855,7 @@ log4j.appender.CommonLog.port=${server.reports.port}
                               replace="log4j.appender.CommonLog.port = ${server.reports.port}"/>
 
             </filterchain>
-            <fileset file="${env.antdepo_base}/etc/log4j.properties.${DSTAMP}-${TSTAMP}.backup"/>
+            <fileset file="${env.ctl_base}/etc/log4j.properties.${DSTAMP}-${TSTAMP}.backup"/>
         </copy>
 
     </target>
@@ -906,8 +906,8 @@ log4j.appender.CommonLog.port=${server.reports.port}
         <property name="framework.ssh.user" value="${user.name}"/>
 
         <!-- verify values to be non-empty -->
-        <fail-if-blank name="env.antdepo_home"/>
-        <fail-if-blank name="env.antdepo_base"/>
+        <fail-if-blank name="env.ctl_home"/>
+        <fail-if-blank name="env.ctl_base"/>
         <fail-if-blank name="client.hostname"/>
         <fail-if-blank name="server.tomcat.port"/>
         <fail-if-blank name="server.tomcat.hostname"/>
@@ -920,14 +920,14 @@ log4j.appender.CommonLog.port=${server.reports.port}
         <fail-if-blank name="framework.ssh.keypath"/>
 
 
-        <pathconvert property="env.antdepo_home.converted">
-            <path path="${env.antdepo_home}"/>
+        <pathconvert property="env.ctl_home.converted">
+            <path path="${env.ctl_home}"/>
         </pathconvert>
-        <pathconvert property="env.antdepo_base.converted">
-            <path path="${env.antdepo_base}"/>
+        <pathconvert property="env.ctl_base.converted">
+            <path path="${env.ctl_base}"/>
         </pathconvert>
-        <pathconvert property="env.antdepo_base.forwardslash" dirsep="/">
-            <path path="${env.antdepo_base}"/>
+        <pathconvert property="env.ctl_base.forwardslash" dirsep="/">
+            <path path="${env.ctl_base}"/>
         </pathconvert>
     </target>
 

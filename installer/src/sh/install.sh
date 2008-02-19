@@ -6,7 +6,7 @@
 # installs ControlTier server and client
 #
 
-ANT_HOME=pkgs/@pkg.antdepo.expanded.name@/pkgs/@pkg.ant.expanded.name@
+ANT_HOME=pkgs/@pkg.ctl.expanded.name@/pkgs/@pkg.ant.expanded.name@
 
 errorMsg() {
    echo "$1" 1>&2

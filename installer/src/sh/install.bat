@@ -6,7 +6,7 @@
 setlocal
 
 
-SET ANT_HOME=pkgs\@pkg.antdepo.expanded.name@\pkgs\@pkg.ant.expanded.name@
+SET ANT_HOME=pkgs\@pkg.ctl.expanded.name@\pkgs\@pkg.ant.expanded.name@
 
 IF NOT DEFINED JAVA_HOME (
    ECHO JAVA_HOME not set

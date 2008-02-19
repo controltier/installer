@@ -160,8 +160,8 @@
    <dependencies>
 
       <dependency>
-         <id>antdepo</id>
-         <version>1.3.1-rc2</version>
+         <id>ctl</id>
+         <version>0.9</version>
          <url>http://www.antdepo.org/</url>
           <type>tgz</type>
          <properties>
@@ -214,7 +214,7 @@ headlines sample par-->
 
        <dependency>
            <id>jobcenter</id>
-           <version>0.7</version>
+           <version>1.0-snapshot</version>
            <url>http://www.controltier.com</url>
            <type>zip</type>
            <properties>
