@@ -8,6 +8,10 @@ Jobcenter is available at:
 
     http://$INSTALL_TOMCAT_HOSTNAME:$INSTALL_JOBCENTER_PORT/jobcenter
 
+Reportcenter is available at:
+
+    http://$INSTALL_TOMCAT_HOSTNAME:$INSTALL_REPORTCENTER_PORT/reportcenter
+
 The software was installed in:
 
     $INSTALL_PATH
