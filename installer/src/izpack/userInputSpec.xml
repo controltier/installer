@@ -14,9 +14,15 @@
        <spec txt="Tomcat Server Port" id="tomcatserver.port" size="25" set="8080"/>
      </field>
 
+      <field type="text" variable="INSTALL_REPORTCENTER_PORT">
+          <description align="left" txt="the HTTP port used by Reportcenter. (Default is 9091)"
+                       id="description 5"/>
+          <spec txt="Reportcenter Port" id="reportserver.httpport" size="25" set="9091"/>
+      </field>
+
      <field type="text" variable="INSTALL_REPORTS_PORT">
-       <description align="left" txt="the listen port used by the Report server. (Default is 1055)" id="description 5"/>
-       <spec txt="Report Server Port" id="reportserver.port" size="25" set="1055"/>
+       <description align="left" txt="the reports listen port used by the Reportcenter server. (Default is 1055)" id="description 5"/>
+       <spec txt="Reportcenter Listen Port" id="reportserver.port" size="25" set="1055"/>
      </field>
 
      <field type="text" variable="INSTALL_JOBCENTER_PORT">
