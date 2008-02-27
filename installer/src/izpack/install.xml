@@ -23,12 +23,13 @@
       <variable name="CTVERSION" value="@controltier.version@"/>
       <variable name="CTLVERSION" value="@ctl.version@"/>
       <variable name="JCVERSION" value="@jobcenter.version@"/>
+      <variable name="RCVERSION" value="@reportcenter.version@"/>
       <variable name="CONTROL_TIER" value="ControlTier-@controltier.version@"/>
       <variable name="INSTALL_CATALINA_BASE" value="$INSTALL_PATH/workbench"/>
       <variable name="INSTALL_CATALINA_HOME" value="$INSTALL_PATH/workbench"/>
       <variable name="CTL" value="ctl-@ctl.version@"/>
       <variable name="APACHE_ANT" value="apache-ant-1.7.0p1"/>
-        <variable name="JDKPathPanel.minVersion" value="1.4.2"/>
+        <variable name="JDKPathPanel.minVersion" value="1.5"/>
         <variable name="JDKPathPanel.skipIfValid" value="yes"/>
     </variables>
 
