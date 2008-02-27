@@ -44,9 +44,10 @@ $Id$
                 -->
                 <equals arg1="1.2" arg2="${ant.java.version}"/>
                 <equals arg1="1.3" arg2="${ant.java.version}"/>
+                <equals arg1="1.4" arg2="${ant.java.version}"/>
             </or>
             <then>
-                <fail>Unable to install: Java version 1.4+ required. (ant.java.version = "${ant.java.version}")</fail>
+                <fail>Unable to install: Java version 1.5+ required. (ant.java.version = "${ant.java.version}")</fail>
             </then>
             <else>
                 <echo>Using compatible Java version: ${ant.java.version}</echo>
@@ -56,7 +57,7 @@ $Id$
 
 <!--    <property name="dontexpand" value="true"/>-->
 
-    <target name="execute" depends="-check-prereqs,-load-props,check-client-env,check-server-env,-install-client,-install-server,install-jobcenter,generate-rcfile,echo-rcfile-info" >
+    <target name="execute" depends="-check-prereqs,-load-props,check-client-env,check-server-env,-install-client,-install-server,install-jobcenter,install-reportcenter,generate-rcfile,echo-rcfile-info" >
         <echo>
 Once you have started Tomcat, visit this URL to access ControlTier
 Workbench:
@@ -203,6 +204,9 @@ fi
                     <property name="jetty.server.httpPort" value="${server.jetty.port}"/>
                     <property name="jetty.server.ajpPort" value="${server.jetty.ajpPort}"/>
                     <property name="jobcenter.base.path" value="${server.jobcenter.data_path}"/>
+                    <property name="reportcenter.baseUrl" value="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}/reportcenter"/>
+                    <property name="reportcenter.host" value="${server.reportcenter.host}"/>
+                    <property name="reportcenter.port" value="${server.reportcenter.port}"/>
                     <property name="grails.datasource.path" value="${server.jobcenter.data_path}/grailsdb"/>
                     <property name="quartz.datasource.path" value="${server.jobcenter.data_path}/quartzdb"/>
                     <property name="default.username" value="${tomcat.user.name}"/>
@@ -212,6 +216,38 @@ fi
         </if>
     </target>
 
+    <target name="install-reportcenter">
+        <!--
+            expands the reportcenter package, and executes the build.xml install script with the appropriate properties
+        -->
+        <fail-if-blank name="server.reportcenter.home_path"/>
+        <fail-if-blank name="server.reportcenter.base_path"/>
+        <fail-if-blank name="server.reportcenter.host"/>
+        <fail-if-blank name="server.reportcenter.jetty.port"/>
+        <fail-if-blank name="server.reportcenter.jetty.ajpPort"/>
+        <fail-if-blank name="server.reportcenter.port"/>
+
+        <unzip dest="${pkgs.root}/" src="${pkgs.root}/${pkgs.reportcenter.archive}"/>
+        <if>
+            <available file="${pkgs.root}/reportcenter-${pkgs.reportcenter.version}/build.xml" type="file"/>
+            <then>
+                <ant dir="${pkgs.root}/reportcenter-${pkgs.reportcenter.version}">
+                    <property name="jetty.home" value="${server.reportcenter.home_path}"/>
+                    <property name="jetty.server.httpPort" value="${server.reportcenter.jetty.port}"/>
+                    <property name="jetty.server.ajpPort" value="${server.reportcenter.jetty.ajpPort}"/>
+                    <property name="reportcenter.base.path" value="${server.reportcenter.base_path}"/>
+                    <property name="reportcenter.host" value="${server.reportcenter.host}"/>
+                    <property name="reportcenter.port" value="${server.reportcenter.port}"/>
+                    <property name="jobcenter.server.httpPort" value="${server.jetty.port}"/>
+                    <property name="jobcenter.server.host" value="${server.tomcat.hostname}"/>
+                    <property name="workbench.server.httpPort" value="${server.tomcat.port}"/>
+                    <property name="workbench.server.host" value="${server.tomcat.hostname}"/>
+                    <property name="default.username" value="${tomcat.user.name}"/>
+                    <property name="default.password" value="${tomcat.user.password}"/>
+                </ant>
+            </then>
+        </if>
+    </target>
     <target name="-valid-tomcat" description="Expands tomcat zip if necessary">
         <if>
             <and>
@@ -356,7 +392,7 @@ fi
                 />
                 <replaceregex flags="si"
                               pattern="^app\.log4j\.appender\.CommonLog\.port *=(.*)$"
-                              replace="app.log4j.appender.CommonLog.port = ${server.reports.port}"
+                              replace="app.log4j.appender.CommonLog.port = ${server.reportcenter.port}"
                     />
                 <replaceregex flags="si"
                               pattern="^ctl\.base *=(.*)$"
@@ -365,6 +401,18 @@ fi
                 <replaceregex flags="si"
                               pattern="^ctl\.integration\.enabled *=(.*)$"
                               replace="ctl.integration.enabled = ${ctl.integration.enabled}"
+                    />
+                <replaceregex flags="si"
+                              pattern="^app\.reportcenter\.baseUrl *=(.*)$"
+                              replace="app.reportcenter.baseUrl = http://${server.reportcenter.host}:${server.reportcenter.jetty.port}/reportcenter"
+                    />
+                <replaceregex flags="si"
+                              pattern="^app\.reportcenter\.host *=(.*)$"
+                              replace="app.reportcenter.host = ${server.reportcenter.host}"
+                    />
+                <replaceregex flags="si"
+                              pattern="^app\.reportcenter\.port *=(.*)$"
+                              replace="app.reportcenter.port = ${server.reportcenter.port}"
                     />
             </filterchain>
             <fileset file="${env.catalina_base}/${itnav.configpath}/runtime.properties.orig"/>
@@ -844,15 +892,15 @@ framework.email.failonerror = true
                 <!--
 
 log4j.appender.CommonLog.remoteHost=${server.tomcat.hostname}
-log4j.appender.CommonLog.port=${server.reports.port}
+log4j.appender.CommonLog.port=${server.reportcenter.port}
 
  -->
                 <replaceregex flags="si"
                               pattern="^log4j\.appender\.CommonLog\.remoteHost *=(.*)$"
-                              replace="log4j.appender.CommonLog.remoteHost = ${server.tomcat.hostname}"/>
+                              replace="log4j.appender.CommonLog.remoteHost = ${server.reportcenter.host}"/>
                 <replaceregex flags="si"
                               pattern="^log4j\.appender\.CommonLog\.port *=(.*)$"
-                              replace="log4j.appender.CommonLog.port = ${server.reports.port}"/>
+                              replace="log4j.appender.CommonLog.port = ${server.reportcenter.port}"/>
 
             </filterchain>
             <fileset file="${env.ctl_base}/etc/log4j.properties.${DSTAMP}-${TSTAMP}.backup"/>
@@ -894,7 +942,7 @@ log4j.appender.CommonLog.port=${server.reports.port}
         -->
 
         <!-- default property values -->
-        <property name="server.reports.port" value="1055"/>
+        <property name="server.reportcenter.port" value="1055"/>
         <property name="framework.email.tolist" value="root"/>
         <property name="framework.email.from" value="root"/>
         <property name="framework.email.replyto" value="do-not-reply"/>
@@ -915,7 +963,7 @@ log4j.appender.CommonLog.port=${server.reports.port}
         <fail-if-blank name="tomcat.user.name"/>
         <fail-if-blank name="tomcat.user.password"/>
 
-        <fail-if-blank name="server.reports.port"/>
+        <fail-if-blank name="server.reportcenter.port"/>
         <fail-if-blank name="framework.ssh.user"/>
         <fail-if-blank name="framework.ssh.keypath"/>
 
