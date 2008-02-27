@@ -16,4 +16,7 @@ cd $INSTALL_PATH/workbench/bin
 cd $INSTALL_PATH/pkgs/jobcenter-$JCVERSION/bin
 ./start-jobcenter.sh
 
+cd $INSTALL_PATH/pkgs/reportcenter-$RCVERSION/bin
+./start-reportcenter.sh
+
 exit 0
