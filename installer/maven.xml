@@ -113,65 +113,74 @@
     <echo>Downloading dependencies from repository to populate the pkgs directory:
     ${installer.workspace}/pkgs
     </echo>
-    <j:forEach var="dep" items="${pom.dependencies}">
-      <j:set var="dep.id" value="${dep.getId()}"/>
-      <j:set var="dep.version" value="${dep.getVersion()}"/>
-      <j:set var="expanded.name" value="${dep.id}-${dep.version}"/>
+      <j:forEach var="dep" items="${pom.dependencies}">
+          <j:set var="dep.id" value="${dep.getId()}"/>
+          <j:set var="dep.version" value="${dep.getVersion()}"/>
+          <j:set var="expanded.name" value="${dep.id}-${dep.version}"/>
 
-      <j:if test="${dep.id == 'ctl'}">
-	<get src="${maven.repo.ctier}/${dep.id}/tgzs/${dep.id}-${dep.version}.tgz"
-	     dest="${target.dir}/${dep.id}-${dep.version}.tgz"
-	     ignoreerrors="false" verbose="true" usetimestamp="true"
-	     />
-	<j:set var="pkg.ctl.expanded.name" value="${expanded.name}"/>
-	<j:set var="pkg.ctl.archive.name" value="${expanded.name}.tgz"/>
-          <mkdir dir="${installer.workspace}/pkgs/${dep.id}-${dep.version}"/>
-          <exec executable="tar" dir="${installer.workspace}/pkgs/${dep.id}-${dep.version}"
-              failonerror="true" outputproperty="tar.out">
-              <arg line="xvzf ${target.dir}/${dep.id}-${dep.version}.tgz"/>
-          </exec>
-      </j:if>
-      <j:if test="${dep.id == 'itnav'}">
-	<get src="${maven.repo.ctier}/${dep.id}/wars/${dep.id}-${dep.version}.war"
-	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.war"
-	     ignoreerrors="false" verbose="true" usetimestamp="true"
-	     />
-	<j:set var="pkg.itnav.archive.name" value="${expanded.name}.war"/>
-	<j:set var="pkg.itnav.version" value="${dep.version}"/>
-      </j:if>
-      <j:if test="${dep.id == 'headlines'}">
-	<get src="${maven.repo.ctier}/${dep.id}/pars/${dep.id}-${dep.version}.par"
-	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.par"
-	     ignoreerrors="false" verbose="true" usetimestamp="true"
-	     />
-	<j:set var="pkg.headlines.archive.name" value="${expanded.name}.par"/>
-      </j:if>
-      <j:if test="${dep.id == 'commander-extension'}">
-	<get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
-	     dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
-	     ignoreerrors="false" verbose="true" usetimestamp="true"
-	     />
-	<j:set var="pkg.commander.archive.name" value="${expanded.name}.jar"/>
-	<j:set var="pkg.commander.version" value="${dep.version}"/>
-      </j:if>
-        <j:if test="${dep.id == 'jobcenter'}">
-            <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
-                 dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
-                 ignoreerrors="false" verbose="true" usetimestamp="true"
-                />
-            <j:set var="pkg.jobcenter.archive.name" value="${expanded.name}.zip"/>
-            <j:set var="pkg.jobcenter.version" value="${dep.version}"/>
-        </j:if>
-        <j:if test="${dep.id == 'apache-tomcat'}">
-            <mkdir dir="${target.dir}/pkgs"/>
-            <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
-                 dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
-                 ignoreerrors="false" verbose="true" usetimestamp="true"
-                />
-            <j:set var="pkg.tomcat.archive.name" value="${expanded.name}.zip"/>
-            <j:set var="pkg.tomcat.version" value="${dep.version}"/>
-        </j:if>
-    </j:forEach>
+          <j:if test="${dep.id == 'ctl'}">
+              <get src="${maven.repo.ctier}/${dep.id}/tgzs/${dep.id}-${dep.version}.tgz"
+                   dest="${target.dir}/${dep.id}-${dep.version}.tgz"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.ctl.expanded.name" value="${expanded.name}"/>
+              <j:set var="pkg.ctl.archive.name" value="${expanded.name}.tgz"/>
+              <property name="ctl.version" value="${dep.version}"/>
+              <mkdir dir="${installer.workspace}/pkgs/${dep.id}-${dep.version}"/>
+              <exec executable="tar" dir="${installer.workspace}/pkgs/${dep.id}-${dep.version}"
+                    failonerror="true" outputproperty="tar.out">
+                  <arg line="xvzf ${target.dir}/${dep.id}-${dep.version}.tgz"/>
+              </exec>
+          </j:if>
+          <j:if test="${dep.id == 'itnav'}">
+              <get src="${maven.repo.ctier}/${dep.id}/wars/${dep.id}-${dep.version}.war"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.war"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.itnav.archive.name" value="${expanded.name}.war"/>
+              <j:set var="pkg.itnav.version" value="${dep.version}"/>
+          </j:if>
+          <j:if test="${dep.id == 'headlines'}">
+              <get src="${maven.repo.ctier}/${dep.id}/pars/${dep.id}-${dep.version}.par"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.par"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.headlines.archive.name" value="${expanded.name}.par"/>
+          </j:if>
+          <j:if test="${dep.id == 'commander-extension'}">
+              <get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.commander.archive.name" value="${expanded.name}.jar"/>
+              <j:set var="pkg.commander.version" value="${dep.version}"/>
+          </j:if>
+          <j:if test="${dep.id == 'jobcenter'}">
+              <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.jobcenter.archive.name" value="${expanded.name}.zip"/>
+              <j:set var="pkg.jobcenter.version" value="${dep.version}"/>
+          </j:if>
+          <j:if test="${dep.id == 'reportcenter'}">
+              <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.reportcenter.archive.name" value="${expanded.name}.zip"/>
+              <j:set var="pkg.reportcenter.version" value="${dep.version}"/>
+          </j:if>
+          <j:if test="${dep.id == 'apache-tomcat'}">
+              <mkdir dir="${target.dir}/pkgs"/>
+              <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.tomcat.archive.name" value="${expanded.name}.zip"/>
+              <j:set var="pkg.tomcat.version" value="${dep.version}"/>
+          </j:if>
+      </j:forEach>
 
       <copy todir="${installer.workspace}"
           overwrite="true" filtering="true">
@@ -197,6 +206,8 @@
 	<filter token="pkg.itnav.version" value="${pkg.itnav.version}"/>
 	<filter token="pkg.jobcenter.archive.name" value="${pkg.jobcenter.archive.name}"/>
 	<filter token="pkg.jobcenter.version" value="${pkg.jobcenter.version}"/>
+	<filter token="pkg.reportcenter.archive.name" value="${pkg.reportcenter.archive.name}"/>
+	<filter token="pkg.reportcenter.version" value="${pkg.reportcenter.version}"/>
 	<filter token="pkg.tomcat.version" value="${pkg.tomcat.version}"/>
 	<filter token="pkg.tomcat.archive.name" value="${pkg.tomcat.archive.name}"/>
       </filterset>
@@ -204,21 +215,12 @@
       <fileset dir="${src.dir}/templates/properties" includes="installer.properties.template"/>
     </copy>
 
-    <!-- determine ctl version -->
-    <j:forEach var="dep" items="${pom.dependencies}">
-      <j:if test="${dep.id == 'ctl'}">
-	<property name="ctl.version" value="${dep.version}"/>
-      </j:if>
-      <j:if test="${dep.id == 'jobcenter'}">
-	<property name="jobcenter.version" value="${dep.version}"/>
-      </j:if>
-    </j:forEach>
-
     <copy tofile="${installer.workspace}/default.properties"
 	  overwrite="true" filtering="true">
       <filterset>
 	<filter token="ctl.version" value="${ctl.version}"/>
-	<filter token="jobcenter.version" value="${jobcenter.version}"/>
+	<filter token="jobcenter.version" value="${pkg.jobcenter.version}"/>
+	<filter token="reportcenter.version" value="${pkg.reportcenter.version}"/>
       </filterset>
       <fileset dir="${src.dir}/templates/properties" includes="default.properties.template"/>
     </copy>
