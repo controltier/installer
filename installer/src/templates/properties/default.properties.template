@@ -33,9 +33,6 @@ server.tomcat.hostname = localhost
 #  the application context path for the webdav app
 server.tomcat.webdav.path = webdav
 
-#  the listen port used by the Report server. (Default is 1055)
-server.reports.port = 1055
-
 # Should the installer replace the Xerces jars included with Tomcat
 # with newer versions required by ControlTier Server?
 # If you choose not to, ControlTier Server will not function.
@@ -148,3 +145,25 @@ server.jetty.port=9090
 
 # jetty server AJP port (Note: should be different than tomcat default ajp port 8009)
 server.jetty.ajpPort=8010
+
+##############
+# Reportcenter server installation
+##############
+
+# install path for reportcenter
+server.reportcenter.home_path = ${env.ctier_root}/pkgs/reportcenter-@reportcenter.version@
+
+# data path for reportcenter
+server.reportcenter.base_path = ${env.ctier_root}/reportcenter
+
+# the jetty server hostname
+server.reportcenter.host=localhost
+
+# the jetty server HTTP port
+server.reportcenter.jetty.port = 9091
+
+# the jetty server AJP port
+server.reportcenter.jetty.ajpPort = 8011
+
+#  the listen port used by the Report server. (Default is 1055)
+server.reportcenter.port = 1055

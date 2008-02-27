@@ -21,6 +21,8 @@ pkgs.jobcenter.archive=@pkg.jobcenter.archive.name@
 pkgs.jobcenter.version=@pkg.jobcenter.version@
 pkgs.tomcat.archive=@pkg.tomcat.archive.name@
 pkgs.tomcat.version=@pkg.tomcat.version@
+pkgs.reportcenter.archive=@pkg.reportcenter.archive.name@
+pkgs.reportcenter.version=@pkg.reportcenter.version@
 
 # ANT_HOME
 
