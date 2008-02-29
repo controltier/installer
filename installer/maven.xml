@@ -48,7 +48,7 @@
             <filterset >
                 <filter token="controltier.version" value="${pom.currentVersion}"/>
                 <filter token="ctl.version" value="${ctl.version}"/>
-                <filter token="jobcenter.version" value="${jobcenter.version}"/>
+                <filter token="jobcenter.version" value="${pkg.jobcenter.version}"/>
                 <filter token="tomcat.version" value="${pkg.tomcat.version}"/>
             </filterset>
         </copy>
