@@ -798,6 +798,9 @@ framework.pkgRepo.upload-url = http://localhost:8080/webdav/pkgs
                     pattern="^framework\.webdav\.password *=(.*)$"
                     replace="framework.webdav.password = ${tomcat.user.password}"/>
                 <replaceregex flags="si"
+                    pattern="^framework\.webdav\.rootdir *=(.*)$"
+                    replace="framework.webdav.rootdir = ${regex-escaped.framework.dav.rootDir}"/>
+                <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.uri *=(.*)$"
                     replace="framework.pkgRepo.uri = http://${server.tomcat.hostname}:${server.tomcat.port}/${server.tomcat.webdav.path}/pkgs"/>
                 <replaceregex flags="si"
