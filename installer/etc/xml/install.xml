@@ -679,7 +679,7 @@ or equivalent:
                     <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
                     <env key="ANT_HOME" value="${anthome.dir}/${anthome.base}"/>
                     <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                    <arg line="-S -f ${basedir}/${pkgs.root}/${pkgs.commander.archive} -D workbench.server=${server.tomcat.hostname} -D workbench.port=${server.tomcat.port} --overwrite"/>
+                    <arg line="-f ${basedir}/${pkgs.root}/${pkgs.commander.archive} -D workbench.server=${server.tomcat.hostname} -D workbench.port=${server.tomcat.port} --overwrite"/>
                 </exec>
             </then>
             <elseif>
@@ -698,7 +698,7 @@ or equivalent:
                         <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
 <!--                        <env key="ANT_HOME" value="${ant.home}"/>-->
                         <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                        <arg line='-S -f "${basedir}\${pkgs.root}\${pkgs.commander.archive}" -D workbench.server=${server.tomcat.hostname} -D workbench.port=${server.tomcat.port}'/>
+                        <arg line='-f "${basedir}\${pkgs.root}\${pkgs.commander.archive}" -D workbench.server=${server.tomcat.hostname} -D workbench.port=${server.tomcat.port}'/>
                     </exec>
                 </then>
             </elseif>
