@@ -756,6 +756,7 @@ or equivalent:
                    replace="ant.home = ${env.ctl_home}/pkgs/apache-ant-${package.ant.version}"
                 />
                 <!--
+framework.workbench.integration.enabled = true
 framework.dav.rootDir =
 framework.server.username = user2
 framework.server.password = user2pass
@@ -772,6 +773,10 @@ framework.pkgRepo.upload-url = http://localhost:8080/webdav/pkgs
 
  -->
 
+                <replaceregex flags="si"
+                    pattern="^framework\.workbench\.integration\.enabled *=(.*)$"
+                    replace="framework.workbench.integration.enabled = true"
+                />
                 <replaceregex flags="si"
                     pattern="^framework\.dav\.rootDir *=(.*)$"
                     replace="framework.dav.rootDir = ${regex-escaped.framework.dav.rootDir}"
@@ -893,11 +898,14 @@ framework.email.failonerror = true
         <copy tofile="${env.ctl_base}/etc/log4j.properties" overwrite="true">
             <filterchain>
                 <!--
-
+log4j.logger.com.controltier.log.common=INFO,CommonLog
 log4j.appender.CommonLog.remoteHost=${server.tomcat.hostname}
 log4j.appender.CommonLog.port=${server.reportcenter.port}
 
  -->
+                <replaceregex flags="si"
+                              pattern="^# *log4j\.logger\.com\.controltier\.log\.common *=(.*)$"
+                              replace="log4j.logger.com.controltier.log.common = INFO,CommonLog"/>
                 <replaceregex flags="si"
                               pattern="^log4j\.appender\.CommonLog\.remoteHost *=(.*)$"
                               replace="log4j.appender.CommonLog.remoteHost = ${server.reportcenter.host}"/>
