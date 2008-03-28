@@ -89,10 +89,15 @@ env.ctl_base = ${env.ctier_root}/ctl
 # Location of AntDepo home, CTL_HOME.  (e.g.: $HOME/ctl-version)
 env.ctl_home = ${env.ctier_root}/pkgs/ctl-@ctl.version@
 
-# Hostname used by the ControlTier client. This is the
-# name that will appear in Workbench. ${server.tomcat.hostname} sets this
-# value to the hostname specified in the Tomcat section above.
-client.hostname = ${server.tomcat.hostname}
+# Administrative hostname used by the ControlTier client. This is the 
+# hostname that will appear in Workbench. ${server.tomcat.hostname} sets this 
+# value to the hostname specified in the Tomcat section above. 
+client.hostname = ${server.tomcat.hostname} 
+
+# Object name used by the ControlTier client. This is the 
+# name that will appear in Workbench. ${server.tomcat.hostname} sets this 
+# value to the hostname specified in the Tomcat section above. 
+client.node.name = ${server.tomcat.hostname} 
 
 ################
 # Client email settings

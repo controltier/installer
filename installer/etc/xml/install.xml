@@ -390,6 +390,15 @@ fi
                     pattern="^framework\.node *=(.*)$"
                     replace="framework.node = ${server.tomcat.hostname}"
                 />
+		<replaceregex flags="si"
+                    pattern="^framework\.node\.hostname *=(.*)$"
+                    replace="framework.node.hostname = ${server.tomcat.hostname}"
+                />
+               <!-- node object name --> 
+               <replaceregex flags="si" 
+                             pattern="^framework\.node\.name *=(.*)$" 
+                    replace="framework.node.name = ${client.node.name}" 
+               /> 
                 <replaceregex flags="si"
                               pattern="^app\.log4j\.appender\.CommonLog\.port *=(.*)$"
                               replace="app.log4j.appender.CommonLog.port = ${server.reportcenter.port}"
@@ -814,6 +823,7 @@ framework.pkgRepo.upload-url = http://localhost:8080/webdav/pkgs
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.upload-url *=(.*)$"
                     replace="framework.pkgRepo.upload-url = http://${server.tomcat.hostname}:${server.tomcat.port}/${server.tomcat.webdav.path}/pkgs"/>
+		
 
                 <!-- email properties -->
                 <!--
@@ -875,6 +885,12 @@ framework.email.failonerror = true
                 <replaceregex flags="si"
                               pattern="^framework\.ssh\.user *=(.*)$"
                               replace="framework.ssh.user = ${framework.ssh.user}"/>
+
+               <!-- node object name --> 
+               <replaceregex flags="si" 
+                             pattern="^framework\.node\.name *=(.*)$" 
+                    replace="framework.node.name = ${client.node.name}" 
+               /> 
 
             </filterchain>
             <fileset file="${env.ctl_base}/etc/framework.properties.${DSTAMP}-${TSTAMP}.backup"/>
