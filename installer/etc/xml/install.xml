@@ -896,7 +896,27 @@ framework.email.failonerror = true
             <fileset file="${env.ctl_base}/etc/framework.properties.${DSTAMP}-${TSTAMP}.backup"/>
         </copy>
 
+        <!-- duplicate original -->
+        <backup-file-with-datestamp file="${env.ctl_base}/etc/node.properties"/>
 
+        <!-- overwrite file -->
+        <copy tofile="${env.ctl_base}/etc/node.properties" overwrite="true">
+            <filterchain>
+               <replaceregex flags="si" 
+                             pattern="^.node\.name *=(.*)$" 
+                    replace="node.name = ${client.node.name}" 
+               /> 
+	       <replaceregex flags="si" 
+                             pattern="^.node\.hostname *=(.*)$" 
+			     replace="node.hostname = ${client.node.hostname}" 
+		    /> 
+	       <replaceregex flags="si" 
+			     pattern="^.node\.description *=(.*)$" 
+			     replace="node.description = ${client.node.description}" 
+		    /> 
+	    </filterchain>
+            <fileset file="${env.ctl_base}/etc/node.properties.${DSTAMP}-${TSTAMP}.backup"/>
+	</copy>
 
         <if>
             <available file="${env.ctl_base}/etc/log4j.properties.orig"/>
