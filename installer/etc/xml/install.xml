@@ -102,7 +102,7 @@ set CTL_BASE=${env.ctl_base.converted}
                                 <echo  file="${user.home}/${installer.rcbatfilename}" append="true">
 :: Server settings
 set JOBCENTER_HOME=${converted.server.jobcenter.base_path}
-set REPORTCENTER_HOME=${converted.server.reportcenter.base_path}
+set REPORTCENTER_HOME=${converted.server.reportcenter.home_path}
 set CATALINA_HOME=${env.catalina_home.converted}
 set CATALINA_BASE=${env.catalina_base.converted}
 
@@ -142,7 +142,7 @@ export CTL_BASE=${env.ctl_base}
                         <echo file="${user.home}/${installer.rcfilename}" append="true">
 # Server settings
 export JOBCENTER_HOME=${server.jobcenter.base_path}
-export REPORTCENTER_HOME=${server.reportcenter.base_path}
+export REPORTCENTER_HOME=${server.reportcenter.home_path}
 export CATALINA_HOME=${env.catalina_home}
 export CATALINA_BASE=${env.catalina_base}
 
