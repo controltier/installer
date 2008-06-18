@@ -206,7 +206,7 @@ headlines sample par-->
       <!-- needed in compile and runtime of ant tasks -->
       <dependency>
          <id>apache-ant</id>
-         <version>1.7.0p1</version>
+         <version>1.7.0p3</version>
          <properties>
             <war.bundle.jar>false</war.bundle.jar>
          </properties>
