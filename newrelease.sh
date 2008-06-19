@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] ; then
-    echo "usage: newrelease <ctl-version> <ctl-path> <ctier-version> <ct-path> <jc-version> <jc-path>"
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ] || [ -z "$8" ] ; then
+    echo "usage: newrelease <ctl-version> <ctl-path> <ctier-version> <ct-path> <jc-version> <jc-path> <rc-version> <rc-path>"
     exit 1
 fi
 
@@ -11,10 +11,15 @@ CTVER=$3
 CTPATH=$4
 JCVER=$5
 JCPATH=$6
+RCVER=$7
+RCPATH=$8
 
 # update ctl version 
 
 perl  -i'.orig' -p -e "s#<currentVersion>.*?</currentVersion>#<currentVersion>$CTLVER</currentVersion>#s" $CTLPATH/project.xml
+perl  -i'.orig' -p -e "s#<currentVersion>.*?</currentVersion>#<currentVersion>$CTLVER</currentVersion>#s" $CTLPATH/bundle/project.xml
+perl  -0777 -i'.orig' -p -e "s#(<id>ctl-dispatch</id>\s*)<version>.*?</version>#\$1<version>$CTLVER</version>#s" $CTLPATH/bundle/project.xml
+perl  -0777 -i'.orig' -p -e "s#(<id>commander-extension</id>\s*)<version>.*?</version>#\$1<version>$CTVER</version>#sg" $CTLPATH/bundle/project.xml
 
 
 # update ctier versions and dependencies
@@ -42,6 +47,7 @@ perl  -0777 -i'.orig' -p -e "s#(<id>ctl</id>\s*)<version>.*?</version>#\$1<versi
 perl  -0777 -i'.orig' -p -e "s#(<id>itnav</id>\s*)<version>.*?</version>#\$1<version>$CTVER</version>#sg" $CTPATH/installer/project.xml
 perl  -0777 -i'.orig' -p -e "s#(<id>commander-extension</id>\s*)<version>.*?</version>#\$1<version>$CTVER</version>#sg" $CTPATH/installer/project.xml
 perl  -0777 -i'.orig' -p -e "s#(<id>jobcenter</id>\s*)<version>.*?</version>#\$1<version>$JCVER</version>#sg" $CTPATH/installer/project.xml
+perl  -0777 -i'.orig' -p -e "s#(<id>reportcenter</id>\s*)<version>.*?</version>#\$1<version>$RCVER</version>#sg" $CTPATH/installer/project.xml
 
 # update jobcenter version
 
@@ -51,12 +57,22 @@ perl  -i'.orig' -p -e "s#<property\s+name=\"jobcenter.version\"\s+value=\".*?\"#
 perl  -i'.orig' -p -e "s#<property\s+name=\"commander.version\"\s+value=\".*?\"#<property name=\"commander.version\" value=\"$CTVER\"#" $JCPATH/etc/install.xml
 perl  -i'.orig' -p -e "s#<property\s+name=\"ctl.version\"\s+value=\".*?\"#<property name=\"ctl.version\" value=\"$CTLVER\"#" $JCPATH/etc/install.xml
 
+# update reportcenter version
 
-if [ "$7" == "-commit" ] ; then
-    svn commit -m "update version to $CTLVER" $CTLPATH/project.xml
+perl  -i'.orig' -p -e "s#^app\.version=.*\$#app.version=$RCVER#" $RCPATH/application.properties
+perl  -i'.orig' -p -e "s#^reportcenter\.version\.num=.*\$#reportcenter.version.num=$RCVER#" $RCPATH/grails-app/i18n/messages.properties
+perl  -i'.orig' -p -e "s#<property\s+name=\"reportcenter.version\"\s+value=\".*?\"#<property name=\"reportcenter.version\" value=\"$RCVER\"#" $RCPATH/etc/install.xml
+perl  -i'.orig' -p -e "s#<property\s+name=\"commander.version\"\s+value=\".*?\"#<property name=\"commander.version\" value=\"$CTVER\"#" $RCPATH/etc/install.xml
+perl  -i'.orig' -p -e "s#<property\s+name=\"ctl.version\"\s+value=\".*?\"#<property name=\"ctl.version\" value=\"$CTLVER\"#" $RCPATH/etc/install.xml
+
+
+
+if [ "$9" == "-commit" ] ; then
+    svn commit -m "update version to $CTLVER, update dependencies" $CTLPATH/project.xml $CTLPATH/bundle/project.xml
     svn commit -m "update version to $CTVER, update dependencies" $CTPATH/common/project.xml
     svn commit -m "update version to $CTVER, update dependencies" $CTPATH/commander/project.xml
     svn commit -m "update version to $CTVER, update dependencies" $CTPATH/workbench/project.xml
     svn commit -m "update version to $CTVER, update dependencies" $CTPATH/installer/project.xml
     svn commit -m "update version to $JCVER" $JCPATH/application.properties $JCPATH/grails-app/i18n/messages.properties $JCPATH/etc/install.xml
+    svn commit -m "update version to $RCVER" $RCPATH/application.properties $RCPATH/grails-app/i18n/messages.properties $RCPATH/etc/install.xml
 fi
