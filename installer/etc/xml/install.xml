@@ -229,6 +229,10 @@ fi
         <fail-if-blank name="server.reportcenter.jetty.ajpPort"/>
         <fail-if-blank name="server.reportcenter.port"/>
 
+        <pathconvert property="converted.server.reportcenter.home_path">
+            <path path="${server.reportcenter.home_path}"/>
+        </pathconvert>
+
         <unzip dest="${pkgs.root}/" src="${pkgs.root}/${pkgs.reportcenter.archive}"/>
         <if>
             <available file="${pkgs.root}/reportcenter-${pkgs.reportcenter.version}/build.xml" type="file"/>
