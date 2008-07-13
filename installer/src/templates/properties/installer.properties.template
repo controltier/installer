@@ -19,10 +19,19 @@ pkgs.itnav.archive=@pkg.itnav.archive.name@
 pkgs.itnav.version=@pkg.itnav.version@
 pkgs.jobcenter.archive=@pkg.jobcenter.archive.name@
 pkgs.jobcenter.version=@pkg.jobcenter.version@
-pkgs.tomcat.archive=@pkg.tomcat.archive.name@
-pkgs.tomcat.version=@pkg.tomcat.version@
+pkgs.jetty.archive=@pkg.jetty.archive.name@
+pkgs.jetty.version=@pkg.jetty.version@
 pkgs.reportcenter.archive=@pkg.reportcenter.archive.name@
 pkgs.reportcenter.version=@pkg.reportcenter.version@
+pkgs.jackrabbit.archive=@pkg.jackrabbit.archive.name@
+pkgs.jackrabbit.version=@pkg.jackrabbit.version@
+pkgs.jcr.archive=@pkg.jcr.archive.name@
+pkgs.jcr.version=@pkg.jcr.version@
+pkgs.jasper-compiler.archive=@pkg.jasper-compiler.archive.name@
+pkgs.jasper-compiler.version=@pkg.jasper-compiler.version@
+pkgs.jasper-runtime.archive=@pkg.jasper-runtime.archive.name@
+pkgs.jasper-runtime.version=@pkg.jasper-runtime.version@
+
 
 # ANT_HOME
 

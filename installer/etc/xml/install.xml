@@ -59,14 +59,10 @@ $Id$
 
     <target name="execute" depends="-check-prereqs,-load-props,check-client-env,check-server-env,-install-client,-install-server,install-jobcenter,install-reportcenter,generate-rcfile,echo-rcfile-info" >
         <echo>
-Once you have started Tomcat, visit this URL to access ControlTier
+Once you have started Jetty, visit this URL to access ControlTier
 Workbench:
 
-    http://${server.tomcat.hostname}:${server.tomcat.port}/itnav
-
-Instructions for the Headlines demo can be found here:
-
-    http://open.controltier.com/Docs/headlines_install.html
+    http://${server.jetty.hostname}:${server.jetty.port}/itnav
 
 NOTE: ControlTier Client requires that SSH is configured to allow
 key-based authentication from the local host.  Ensure that the
@@ -101,14 +97,15 @@ set CTL_BASE=${env.ctl_base.converted}
                             <then>
                                 <echo  file="${user.home}/${installer.rcbatfilename}" append="true">
 :: Server settings
-set JOBCENTER_HOME=${converted.server.jobcenter.base_path}
-set REPORTCENTER_HOME=${converted.server.reportcenter.home_path}
-set CATALINA_HOME=${env.catalina_home.converted}
-set CATALINA_BASE=${env.catalina_base.converted}
 
+set JETTY_HOME=${server.jetty.home.converted}
+set JETTY_LOGS=${server.jetty.home.converted}\logs
+set JETTY_RUN=%JETTY_LOGS%
+set CONFIG_PROPS="-Djobcenter.config.location=${env.ctier_root}\jobcenter\jobcenter-config.properties"
 set JAVA_HOME=${USER_ENV.JAVA_HOME}
+set JAVA_OPTIONS="-XX:MaxPermSize=128m -Xmx2048m -Xms256m -Djava.io.tmpdir=${server.jetty.home.converted}\logs %CONFIG_PROPS%"
 </echo>
-                                <property name="rcfile.path" value="%JOBCENTER_HOME%\bin;%CTL_HOME%\bin;%REPORTCENTER_HOME%\bin;%CATALINA_HOME%\bin;%Path%"/>
+                                <property name="rcfile.path" value="%CTL_HOME%\bin;%JETTY_HOME%\bin;%Path%"/>
                             </then>
                             <else>
                                 <property name="rcfile.path" value="%CTL_HOME%\bin;%Path%"/>
@@ -141,14 +138,15 @@ export CTL_BASE=${env.ctl_base}
                     <then>
                         <echo file="${user.home}/${installer.rcfilename}" append="true">
 # Server settings
-export JOBCENTER_HOME=${server.jobcenter.base_path}
-export REPORTCENTER_HOME=${server.reportcenter.home_path}
-export CATALINA_HOME=${env.catalina_home}
-export CATALINA_BASE=${env.catalina_base}
 
+export JETTY_HOME=${server.jetty.home}
+export JETTY_LOGS=${server.jetty.home.converted}/logs
+export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${USER_ENV.JAVA_HOME}
+CONFIG_PROPS="-Djobcenter.config.location=${env.ctier_root}/jobcenter/jobcenter-config.properties"
+export JAVA_OPTIONS="-XX:MaxPermSize=128m -Xmx2048m -Xms256m -Djava.io.tmpdir=$JETTY_LOGS $CONFIG_PROPS"
 </echo>
-                        <property name="rcfile.path" value="$JOBCENTER_HOME/bin:$CTL_HOME/bin:$CATALINA_HOME/bin:$REPORTCENTER_HOME/bin:$PATH"/>
+                        <property name="rcfile.path" value="$CTL_HOME/bin:$JETTY_HOME/bin:$PATH"/>
                     </then>
                     <else>
                         <property name="rcfile.path" value="$CTL_HOME/bin:$PATH"/>
@@ -174,7 +172,7 @@ fi
     </target>
 
 
-    <target name="-install-server" depends="check-server-env,-backup-server-config,expand-server,configure-server,install-sample-par" >
+    <target name="-install-server" depends="check-server-env,-backup-server-config,expand-itnav,expand-jackrabbit,configure-server,install-sample-par" >
         <echo>ControlTier Server installed.</echo>
     </target>
     <target name="install-server" depends="-check-prereqs,-load-props,-install-server" >
@@ -182,18 +180,19 @@ fi
     
     <target name="-backup-server-config" description="backup config files that would get overwritten">
         <property name="itnav.configpath" value="webapps/itnav/WEB-INF/classes"/>
-        <backup-file-with-datestamp file="${env.catalina_base}/${itnav.configpath}/bootstrap.properties"/>
-        <backup-file-with-datestamp file="${env.catalina_base}/${itnav.configpath}/runtime.properties"/>
+        <backup-file-with-datestamp file="${server.jetty.base}/${itnav.configpath}/bootstrap.properties"/>
+        <backup-file-with-datestamp file="${server.jetty.base}/${itnav.configpath}/runtime.properties"/>
     </target>
 
     <target name="install-jobcenter">
+      <echo>Setting jobcenter jetty.home='${server.jetty.home}'</echo>
+
         <!--
             expands the jobcenter package, and executes the build.xml install script with the appropriate properties
         -->
         <fail-if-blank name="env.ctl_home"/>
         <fail-if-blank name="env.ctl_base"/>
 
-        <!--<mkdir dir="${pkgs.root}/jobcenter"/>-->
         <unzip dest="${pkgs.root}/" src="${pkgs.root}/${pkgs.jobcenter.archive}"/>
         <if>
             <available file="${pkgs.root}/jobcenter-${pkgs.jobcenter.version}/build.xml" type="file"/>
@@ -202,17 +201,16 @@ fi
                     <property name="ctl.base" value="${env.ctl_base}"/>
                     <property name="ctl.home" value="${env.ctl_home}"/>
                     <property name="install.ant.home" value="${env.ctl_home}/pkgs/apache-ant-${package.ant.version}"/>
-                    <property name="jetty.home" value="${server.jobcenter.base_path}"/>
+                    <property name="jetty.home" value="${server.jetty.home}"/>
                     <property name="jetty.server.httpPort" value="${server.jetty.port}"/>
-                    <property name="jetty.server.ajpPort" value="${server.jetty.ajpPort}"/>
                     <property name="jobcenter.base.path" value="${server.jobcenter.data_path}"/>
                     <property name="reportcenter.baseUrl" value="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}/reportcenter"/>
                     <property name="reportcenter.host" value="${server.reportcenter.host}"/>
                     <property name="reportcenter.port" value="${server.reportcenter.port}"/>
                     <property name="grails.datasource.path" value="${server.jobcenter.data_path}/grailsdb"/>
                     <property name="quartz.datasource.path" value="${server.jobcenter.data_path}/quartzdb"/>
-                    <property name="default.username" value="${tomcat.user.name}"/>
-                    <property name="default.password" value="${tomcat.user.password}"/>
+                    <property name="default.username" value="${jetty.user.name}"/>
+                    <property name="default.password" value="${jetty.user.password}"/>
                 </ant>
             </then>
         </if>
@@ -226,7 +224,6 @@ fi
         <fail-if-blank name="server.reportcenter.base_path"/>
         <fail-if-blank name="server.reportcenter.host"/>
         <fail-if-blank name="server.reportcenter.jetty.port"/>
-        <fail-if-blank name="server.reportcenter.jetty.ajpPort"/>
         <fail-if-blank name="server.reportcenter.port"/>
 
         <pathconvert property="converted.server.reportcenter.home_path">
@@ -238,59 +235,143 @@ fi
             <available file="${pkgs.root}/reportcenter-${pkgs.reportcenter.version}/build.xml" type="file"/>
             <then>
                 <ant dir="${pkgs.root}/reportcenter-${pkgs.reportcenter.version}">
-                    <property name="jetty.home" value="${server.reportcenter.home_path}"/>
+                    <property name="jetty.home" value="${server.jetty.home}"/>
                     <property name="jetty.server.httpPort" value="${server.reportcenter.jetty.port}"/>
-                    <property name="jetty.server.ajpPort" value="${server.reportcenter.jetty.ajpPort}"/>
                     <property name="reportcenter.base.path" value="${server.reportcenter.base_path}"/>
                     <property name="reportcenter.host" value="${server.reportcenter.host}"/>
                     <property name="reportcenter.port" value="${server.reportcenter.port}"/>
                     <property name="jobcenter.server.httpPort" value="${server.jetty.port}"/>
-                    <property name="jobcenter.server.host" value="${server.tomcat.hostname}"/>
-                    <property name="workbench.server.httpPort" value="${server.tomcat.port}"/>
-                    <property name="workbench.server.host" value="${server.tomcat.hostname}"/>
-                    <property name="default.username" value="${tomcat.user.name}"/>
-                    <property name="default.password" value="${tomcat.user.password}"/>
+                    <property name="jobcenter.server.host" value="${server.jetty.hostname}"/>
+                    <property name="workbench.server.httpPort" value="${server.jetty.port}"/>
+                    <property name="workbench.server.host" value="${server.jetty.hostname}"/>
+                    <property name="default.username" value="${jetty.user.name}"/>
+                    <property name="default.password" value="${jetty.user.password}"/>
                 </ant>
             </then>
         </if>
     </target>
-    <target name="-valid-tomcat" description="Expands tomcat zip if necessary">
-        <if>
-            <and>
-                <isset property="pkgs.tomcat.archive"/>
-                <not>
-                    <equals arg1="" arg2="${pkgs.tomcat.archive}"/>
-                </not>
-                <available file="${pkgs.root}/${pkgs.tomcat.archive}" type="file"/>
+    <target name="-valid-jetty" description="Expands jetty zip if necessary">
+      <if>
+	<and>
+	  <isset property="pkgs.jetty.archive"/>
+	  <not>
+	    <equals arg1="" arg2="${pkgs.jetty.archive}"/>
+	  </not>
+	  <available file="${pkgs.root}/${pkgs.jetty.archive}" type="file"/>
 
-                <isset property="pkgs.tomcat.version"/>
-                <not>
-                    <equals arg1="" arg2="${pkgs.tomcat.version}"/>
-                </not>
-            </and>
-            <then>
-                <unzip src="${pkgs.root}/${pkgs.tomcat.archive}" dest="${pkgs.root}" overwrite="true"/>
-                <move file="${pkgs.root}/apache-tomcat-${pkgs.tomcat.version}" tofile="${env.catalina_home}"/>
-                <copy file="${env.catalina_home}/bin/startup.sh" tofile="${env.catalina_home}/bin/startup.sh.orig"/>
-                <copy file="${env.catalina_home}/bin/startup.bat" tofile="${env.catalina_home}/bin/startup.bat.orig"/>
-                <copy file="${basedir}/etc/templates/tomcat-startup.sh.template" tofile="${env.catalina_home}/bin/startup.sh" overwrite="true"/>
-                <copy file="${basedir}/etc/templates/tomcat-startup.bat.template" tofile="${env.catalina_home}/bin/startup.bat" overwrite="true"/>
-                <chmod dir="${env.catalina_home}/bin" includes="*.sh" perm="ugo+rx"/>
-            </then>
-        </if>
+	  <isset property="pkgs.jetty.version"/>
+	  <not>
+	    <equals arg1="" arg2="${pkgs.jetty.version}"/>
+	  </not>
+	</and>
+	<then>
+	  <unzip src="${pkgs.root}/${pkgs.jetty.archive}" 
+		 dest="${env.ctier_root}/${pkgs.root}" overwrite="true"/>
+
+	</then>
+      </if>
+      <!-- chmod it the utility scripts -->
+      <chmod dir="${server.jetty.home}/bin" perm="ugo+rx" includes="*.sh"/>
+      <!-- create logs directory -->
+      <mkdir dir="${server.jetty.base}/logs"/>
+      <!-- copy in jasper libs as itnav still needs them -->
+      <echo>Adding in jasper dependencies: ${pkgs.jasper-runtime.archive}, ${pkgs.jasper-compiler.archive} ...</echo>
+      <copy todir="${server.jetty.home}/lib">
+	<filelist 
+	    dir="${pkgs.root}"
+	    files="${pkgs.jasper-runtime.archive},${pkgs.jasper-compiler.archive}"
+	    />
+      </copy>
     </target>
 
-    <target name="expand-server" depends="-valid-tomcat">
-        <!--
-        expand itnav.war into $CATALINA_BASE/webapps/itnav
-        -->
-        <echo>Expanding itnav war file: ${pkgs.root}/${pkgs.itnav.archive} to ${env.catalina_home}/webapps/itnav</echo>
+    <!--
+	expand jackrabbit.war into $JETTY_BASE/webapps/jackrabbit
+    -->
+    <target name="expand-jackrabbit" depends="-valid-jetty">
+        <pathconvert property="converted.jackrabbit.repository.config">
+            <path path="${server.jetty.base}/webapps/jackrabbit/WEB-INF/repository.xml"/>
+        </pathconvert>
+        <pathconvert property="converted.jackrabbit.repository.home">
+            <path path="${env.ctier_root}/jackrabbit/webdav"/>
+        </pathconvert>
+        <pathconvert property="converted.jackrabbit.bootstrap.properties">
+            <path path="${server.jetty.base}/webapps/jackrabbit/WEB-INF/templates/bootstrap.properties"/>
+        </pathconvert>
+
         <if>
             <not>
                 <isset property="dontexpand"/>
             </not>
             <then>
-                <unjar dest="${env.catalina_base}/webapps/itnav" src="${pkgs.root}/${pkgs.itnav.archive}"/>
+	      <echo>Preparing WebDAV installation ...</echo>
+	      <unjar dest="${server.jetty.base}/webapps/jackrabbit" src="${pkgs.root}/${pkgs.jackrabbit.archive}"/>
+	      <!-- copy the JCR interface jar -->
+	      <copy todir="${server.jetty.base}/webapps/jackrabbit/WEB-INF/lib"
+		    file="${pkgs.root}/${pkgs.jcr.archive}"/>
+	      <!-- Replace the web.xml -->
+	      <copy tofile="${server.jetty.base}/webapps/jackrabbit/WEB-INF/web.xml" overwrite="true">
+		<filterset>
+		  <filter token="jackrabbit.repository.config" value="/WEB-INF/templates/bootstrap.properties"/>
+		  <filter token="jackrabbit.repository.home" value="${converted.jackrabbit.repository.home}"/>
+		  <filter token="jackrabbit.bootstrap.properties" value="${converted.jackrabbit.bootstrap.properties}"/>
+		</filterset>
+		<fileset file="${basedir}/etc/templates/jackrabbit/web.xml.template"/>
+	      </copy>
+	      <!-- create context/jackrabbit.xml to add the correct realm information -->
+	      <copy tofile="${server.jetty.base}/contexts/jackrabbit.xml" overwrite="true">
+		<filterchain >
+		  <expandproperties />
+		</filterchain>
+		<fileset file="${basedir}/etc/templates/jackrabbit/context.xml.template"/>
+	      </copy>
+	      <!-- copy in a config.xml that turns off XML processing -->
+	      <copy tofile="${server.jetty.home}/webapps/jackrabbit/WEB-INF/config.xml" overwrite="true">
+		<filterchain >
+		  <expandproperties />
+		</filterchain>
+		<fileset file="${basedir}/etc/templates/jackrabbit/config.xml.template"/>
+	      </copy>
+	      <!-- Generate bootstrap.properties -->
+	      <copy tofile="${converted.jackrabbit.bootstrap.properties}" overwrite="true">
+		<filterset>
+		  <filter token="jackrabbit.repository.config" value="${converted.jackrabbit.repository.config}"/>
+		  <filter token="jackrabbit.repository.home" value="${converted.jackrabbit.repository.home}"/>
+		</filterset>
+		<fileset file="${basedir}/etc/templates/jackrabbit/bootstrap.properties.template"/>
+	      </copy>
+	      <!-- Generate repository.xml -->
+	      <copy tofile="${converted.jackrabbit.repository.config}" overwrite="true">
+		<filterset>
+		  <filter token="jackrabbit.repository.config" value="${converted.jackrabbit.repository.config}"/>
+		  <filter token="jackrabbit.repository.home" value="${converted.jackrabbit.repository.home}"/>
+		  <filter token="jackrabbit.bootstrap.properties" value="${converted.jackrabbit.bootstrap.properties}"/>
+		</filterset>
+		<fileset file="${basedir}/etc/templates/jackrabbit/repository.xml.template"/>
+	      </copy>
+            </then>
+        </if>
+
+    </target>
+
+
+    <target name="expand-itnav" depends="-valid-jetty">
+        <!--
+        expand itnav.war into $JETTY_BASE/webapps/itnav
+        -->
+        <if>
+            <not>
+                <isset property="dontexpand"/>
+            </not>
+            <then>
+	      <echo>Preparing workbench installation ...</echo>
+	      <unjar dest="${server.jetty.base}/webapps/itnav" src="${pkgs.root}/${pkgs.itnav.archive}"/>
+	      <!-- create context for the webapp to add the correct realm information -->
+	      <copy tofile="${server.jetty.base}/contexts/itnav.xml" overwrite="true">
+		<filterchain >
+		  <expandproperties />
+		</filterchain>
+		<fileset file="${basedir}/etc/templates/jetty6/itnav-context.xml.template"/>
+	      </copy>
             </then>
         </if>
     </target>
@@ -316,16 +397,16 @@ fi
 
         <!-- update server port -->
         <!-- duplicate original -->
-        <copy tofile="${env.catalina_base}/conf/server.xml.orig" overwrite="true">
-            <fileset file="${env.catalina_base}/conf/server.xml"/>
+        <copy tofile="${server.jetty.base}/etc/jetty.xml.orig" overwrite="true">
+            <fileset file="${server.jetty.base}/etc/jetty.xml"/>
         </copy>
 
         <!-- overwrite file -->
-        <copy tofile="${env.catalina_base}/conf/server.xml" overwrite="true" filtering="true">
+        <copy tofile="${server.jetty.base}/etc/jetty.xml" overwrite="true" filtering="true" verbose="true">
             <filterset >
-                <filter token="tomcat.server.port" value="${server.tomcat.port}"/>
+                <filter token="jetty.server.port" value="${server.jetty.port}"/>
             </filterset>
-            <fileset file="${basedir}/etc/templates/server.xml.template"/>
+            <fileset file="${basedir}/etc/templates/jetty6/jetty.xml.template"/>
         </copy>
 
         <!-- create the RDF data dir -->
@@ -336,57 +417,57 @@ fi
         <property name="itnav.configpath" value="webapps/itnav/WEB-INF/classes"/>
 
         <!-- duplicate original -->
-        <copy tofile="${env.catalina_base}/${itnav.configpath}/bootstrap.properties.orig" overwrite="true">
-            <fileset file="${env.catalina_base}/${itnav.configpath}/bootstrap.properties"/>
+        <copy tofile="${server.jetty.base}/${itnav.configpath}/bootstrap.properties.orig" overwrite="true">
+            <fileset file="${server.jetty.base}/${itnav.configpath}/bootstrap.properties"/>
         </copy>
 
         <!-- overwrite file -->
-        <copy tofile="${env.catalina_base}/${itnav.configpath}/bootstrap.properties" overwrite="true">
+        <copy tofile="${server.jetty.base}/${itnav.configpath}/bootstrap.properties" overwrite="true">
             <filterchain >
                 <!-- ngps.workbench.backend.type = fs    -->
                 <replaceregex flags="si"
                     pattern="^ngps\.workbench\.backend\.type *=(.*)$"
                     replace="ngps.workbench.backend.type = fs"/>
-                <!-- ngps.workbench.backend.fs.base = /usr/local/tomcat/rdfdata -->
+                <!-- ngps.workbench.backend.fs.base = /usr/local/jetty/rdfdata -->
                 <replaceregex flags="si"
                     pattern="^ngps\.workbench\.backend\.fs\.base *=(.*)$"
                     replace="ngps.workbench.backend.fs.base = ${regex-escaped.server.rdfdata.path}" />
             </filterchain>
-            <fileset file="${env.catalina_base}/${itnav.configpath}/bootstrap.properties.orig"/>
+            <fileset file="${server.jetty.base}/${itnav.configpath}/bootstrap.properties.orig"/>
         </copy>
 
 
         <!-- modify the runtime.properties to include the correct settings -->
 
         <!-- duplicate original -->
-        <copy tofile="${env.catalina_base}/${itnav.configpath}/runtime.properties.orig" overwrite="true">
-            <fileset file="${env.catalina_base}/${itnav.configpath}/runtime.properties"/>
+        <copy tofile="${server.jetty.base}/${itnav.configpath}/runtime.properties.orig" overwrite="true">
+            <fileset file="${server.jetty.base}/${itnav.configpath}/runtime.properties"/>
         </copy>
 
         <!-- overwrite file -->
-        <copy tofile="${env.catalina_base}/${itnav.configpath}/runtime.properties" overwrite="true">
+        <copy tofile="${server.jetty.base}/${itnav.configpath}/runtime.properties" overwrite="true">
             <filterchain>
                 <replaceregex flags="si"
                     pattern="^app\.external\.uri *=(.*)$"
-                    replace="app.external.uri = http://${server.tomcat.hostname}:${server.tomcat.port}"/>
+                    replace="app.external.uri = http://${server.jetty.hostname}:${server.jetty.port}"/>
                 <replaceregex flags="si"
                     pattern="^dav\.baseUrl *=(.*)$"
-                    replace="dav.baseUrl = http://${server.tomcat.hostname}:${server.tomcat.port}/${server.tomcat.webdav.path}"/>
+                    replace="dav.baseUrl = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}"/>
                 <replaceregex flags="si"
                               pattern="^app\.jobcenter\.baseUrl *=(.*)$"
-                              replace="app.jobcenter.baseUrl = http://${server.tomcat.hostname}:${server.jetty.port}/jobcenter"/>
+                              replace="app.jobcenter.baseUrl = http://${server.jetty.hostname}:${server.jetty.port}/jobcenter"/>
 
                 <replaceregex flags="si"
                     pattern="^order\.package\.defaults\.packageRepoURL\.template *=(.*?)/pkgs(.*)$"
-                    replace="order.package.defaults.packageRepoURL.template=http://${server.tomcat.hostname}:${server.tomcat.port}/${server.tomcat.webdav.path}/pkgs\2"/>
+                    replace="order.package.defaults.packageRepoURL.template=http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs\2"/>
 
                 <replaceregex flags="si"
                     pattern="^dav\.user *=(.*)$"
-                    replace="dav.user = ${tomcat.user.name}"
+                    replace="dav.user = ${jetty.user.name}"
                     />
                 <replaceregex flags="si"
                     pattern="^dav\.passwd *=(.*)$"
-                    replace="dav.passwd = ${tomcat.user.password}"
+                    replace="dav.passwd = ${jetty.user.password}"
                     />
                 <replaceregex flags="si"
                     pattern="^dav\.baseDir *=(.*)$"
@@ -394,11 +475,11 @@ fi
                 />
                 <replaceregex flags="si"
                     pattern="^framework\.node *=(.*)$"
-                    replace="framework.node = ${server.tomcat.hostname}"
+                    replace="framework.node = ${server.jetty.hostname}"
                 />
 		<replaceregex flags="si"
                     pattern="^framework\.node\.hostname *=(.*)$"
-                    replace="framework.node.hostname = ${server.tomcat.hostname}"
+                    replace="framework.node.hostname = ${server.jetty.hostname}"
                 />
                <!-- node object name --> 
                <replaceregex flags="si" 
@@ -430,36 +511,27 @@ fi
                               replace="app.reportcenter.port = ${server.reportcenter.port}"
                     />
             </filterchain>
-            <fileset file="${env.catalina_base}/${itnav.configpath}/runtime.properties.orig"/>
+            <fileset file="${server.jetty.base}/${itnav.configpath}/runtime.properties.orig"/>
         </copy>
 
-        <!-- if the user wants a default tomcat-users.xml, backup the original and copy over our template -->
-
-
-        <!-- expand tomcat-users into properties using xsl -->
-        <xslt in="${env.catalina_base}/conf/tomcat-users.xml"
-            out="temp/tomcat-users.properties"
-            style="etc/xml/tomcat-users.xsl"
-            force="true">
-            <param name="user" expression="${tomcat.user.name}"/>
-            <param name="password" expression="${tomcat.user.password}"/>
-        </xslt>
-
-
-        <!-- load properties and determine whether user is present and valid -->
-        <property file="temp/tomcat-users.properties" prefix="tomcat-users-xml2"/>
+        <!-- load properties and determine whether user is present and valid-->
+        <property file="${server.jetty.base}/etc/realm.properties" prefix="realm"/>
+	<propertycopy property="realm.user.name" from="realm.${jetty.user.name}" silent="true"/>
+	<propertyregex property="realm.user.roles" input="${realm.user.name}"
+		       regexp="${jetty.user.password},(.*)"
+		       select="\1" />
         <if>
             <or>
                 <not>
-                    <isset property="tomcat-users-xml2.user.roles"/>
+                    <isset property="realm.user.roles"/>
                 </not>
 
                 <and>
-                    <isset property="tomcat-users-xml2.user.roles"/>
+                    <isset property="realm.user.roles"/>
                     <not>
                         <and>
-                            <contains string="${tomcat-users-xml2.user.roles}" substring="user"/>
-                            <contains string="${tomcat-users-xml2.user.roles}" substring="admin"/>
+                            <contains string="${realm.user.roles}" substring="user"/>
+                            <contains string="${realm.user.roles}" substring="admin"/>
                         </and>
                     </not>
                 </and>
@@ -468,100 +540,30 @@ fi
                 <if>
                     <equals arg1="true" arg2="${users.install-default}"/>
                     <then>
-                        <backup-file-with-datestamp file="${env.catalina_base}/conf/tomcat-users.xml"/>
+                        <backup-file-with-datestamp file="${server.jetty.base}/etc/realm.properties"/>
 
-                        <copy tofile="${env.catalina_base}/conf/tomcat-users.xml" overwrite="true">
+                        <copy tofile="${server.jetty.base}/etc/realm.properties" overwrite="true">
                             <filterset>
-                                <filter token="tomcat.user.name" value="${tomcat.user.name}"/>
-                                <filter token="tomcat.user.password" value="${tomcat.user.password}"/>
+                                <filter token="jetty.user.name" value="${jetty.user.name}"/>
+                                <filter token="jetty.user.password" value="${jetty.user.password}"/>
                             </filterset>
-                            <fileset file="${basedir}/etc/xml/tomcat-users.xml"/>
+                            <fileset file="${basedir}/etc/templates/jetty6/realm.properties.template"/>
                         </copy>
                     </then>
                 </if>
             </then>
         </if>
 
-
-
-
-        <!--
-        Replace the xerces jars in the tomcat endorsed libs directory with the acceptable versions.
-        -->
-        <if>
-            <not>
-                <equals arg1="true" arg2="${tomcat.replace-xerces-jars}"/>
-            </not>
-            <then>
-                <echo>WARNING: Xerces jars from original Tomcat are not being replaced.  ControlTier Server will not
-function until they are replaced.</echo>
-            </then>
-            <else>
-                <copy tofile="${env.catalina_home}/common/endorsed/xercesImpl.jar" overwrite="true">
-                    <fileset file="${env.catalina_base}/webapps/itnav/WEB-INF/lib/xerces-2.7.1.jar"/>
-                </copy>
-                <copy tofile="${env.catalina_home}/common/endorsed/xmlParserAPIs.jar" overwrite="true">
-                    <fileset file="${env.catalina_base}/webapps/itnav/WEB-INF/lib/xml-apis-2.7.1.jar"/>
-                </copy>
-                <copy tofile="${env.catalina_home}/common/endorsed/xalan.jar" overwrite="true">
-                    <fileset file="${env.catalina_base}/webapps/itnav/WEB-INF/lib/xalan-2.6.0.jar"/>
-                </copy>
-            </else>
-        </if>
-
-
-        <!-- expand tomcat-users into properties using xsl -->
-        <xslt in="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/WEB-INF/web.xml"
-            out="temp/webdav-web.properties"
-            style="${basedir}/etc/xml/web.xsl"
-            force="true">
-            <xmlcatalog> 
-               <dtd publicId="-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
-                    location="${basedir}/etc/xml/web-app_2_3.dtd"/> 
-            </xmlcatalog>
-        </xslt>
-
-        <!-- load properties and determine whether user is present and valid -->
-        <property file="temp/webdav-web.properties" prefix="webdav-web"/>
-<!--        <echoproperties prefix="webdav-web"/>-->
-        <if>
-            <or>
-                <not>
-                    <isset property="webdav-web.readonly"/>
-                </not>
-                <not>
-                    <equals arg1="false" arg2="${webdav-web.readonly}"/>
-                </not>
-            </or>
-            <then>
-                <!-- backup old web.xml to web.xml.orig -->
-                <copy file="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/WEB-INF/web.xml"
-                      tofile="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/WEB-INF/web.xml.orig"
-                      overwrite="true">
-                </copy>
-
-                <!-- filter original web.xml to include the correct init-param readonly=false -->
-                <copy file="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/WEB-INF/web.xml.orig"
-                      tofile="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/WEB-INF/web.xml"
-                      overwrite="true">
-                    <filterchain >
-                        <replaceregex pattern="(&lt;/servlet&gt;)"
-                                      replace="  &lt;init-param&gt;${line.separator}    &lt;param-name&gt;readonly&lt;/param-name&gt;${line.separator}    &lt;param-value&gt;false&lt;/param-value&gt;${line.separator}  &lt;/init-param&gt;${line.separator}${line.separator} \1"/>
-                    </filterchain>
-                </copy>
-
-            </then>
-        </if>
 	<!--
 	Replace the base-seed.jar
 	-->
 	<echo level="info">Copying base-seed.jar to webdav/seeds ...</echo>
-	<mkdir dir="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/seeds"/>
+	<mkdir dir="${server.jetty.base}/webapps/${server.jetty.webdav.path}/seeds"/>
 	<copy
-	      todir="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/seeds" 
+	      todir="${server.jetty.base}/webapps/${server.jetty.webdav.path}/seeds" 
 	      verbose="true" flatten="true">
 	  <zipentry
-	      zipfile="${env.catalina_base}/webapps/itnav/WEB-INF/lib/ctier-common-${pkgs.itnav.version}.jar"
+	      zipfile="${server.jetty.base}/webapps/itnav/WEB-INF/lib/ctier-common-${pkgs.itnav.version}.jar"
 	      name="resources/seeds/base-seed.jar"
 	      />
 	</copy>
@@ -575,7 +577,7 @@ function until they are replaced.</echo>
                 <available file="${basedir}/${pkgs.root}/${pkgs.headlines.archive}"/>
             </and>
             <then>
-                <copy tofile="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/archive/headlines/${pkgs.headlines.archive}" >
+                <copy tofile="${server.jetty.base}/webapps/${server.jetty.webdav.path}/archive/headlines/${pkgs.headlines.archive}" >
                     <fileset file="${basedir}/${pkgs.root}/${pkgs.headlines.archive}"/>
                 </copy>
             </then>
@@ -694,7 +696,7 @@ or equivalent:
                     <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
                     <env key="ANT_HOME" value="${anthome.dir}/${anthome.base}"/>
                     <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                    <arg line="-f ${basedir}/${pkgs.root}/${pkgs.commander.archive} -D workbench.server=${server.tomcat.hostname} -D workbench.port=${server.tomcat.port} --overwrite"/>
+                    <arg line="-f ${basedir}/${pkgs.root}/${pkgs.commander.archive} -D workbench.server=${server.jetty.hostname} -D workbench.port=${server.jetty.port} --overwrite"/>
                 </exec>
             </then>
             <elseif>
@@ -713,7 +715,7 @@ or equivalent:
                         <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
 <!--                        <env key="ANT_HOME" value="${ant.home}"/>-->
                         <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                        <arg line='-f "${basedir}\${pkgs.root}\${pkgs.commander.archive}" -D workbench.server=${server.tomcat.hostname} -D workbench.port=${server.tomcat.port}'/>
+                        <arg line='-f "${basedir}\${pkgs.root}\${pkgs.commander.archive}" -D workbench.server=${server.jetty.hostname} -D workbench.port=${server.jetty.port}'/>
                     </exec>
                 </then>
             </elseif>
@@ -723,7 +725,7 @@ or equivalent:
         </if>
 
 
-        <property name="framework.dav.rootDir" value="${env.catalina_base}/webapps/${server.tomcat.webdav.path}"/>
+        <property name="framework.dav.rootDir" value="${server.jetty.base}/webapps/${server.jetty.webdav.path}"/>
         <pathconvert property="converted.framework.dav.rootDir">
             <path path="${framework.dav.rootDir}"/>
         </pathconvert>
@@ -744,7 +746,7 @@ or equivalent:
                 <property name="regex-escaped.framework.dav.rootDir" value="${converted.framework.dav.rootDir}"/>
             </else>
         </if>
-        <property name="framework.pkgRepo.rootdir" value="${env.catalina_base}/webapps/${server.tomcat.webdav.path}/pkgs"/>
+        <property name="framework.pkgRepo.rootdir" value="${server.jetty.base}/webapps/${server.jetty.webdav.path}/pkgs"/>
         <pathconvert property="converted.framework.pkgRepo.rootdir">
             <path path="${framework.pkgRepo.rootdir}"/>
         </pathconvert>
@@ -798,37 +800,37 @@ framework.pkgRepo.upload-url = http://localhost:8080/webdav/pkgs
                 />
                 <replaceregex flags="si"
                     pattern="^framework\.server\.username *=(.*)$"
-                    replace="framework.server.username = ${tomcat.user.name}"/>
+                    replace="framework.server.username = ${jetty.user.name}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.server\.password *=(.*)$"
-                    replace="framework.server.password = ${tomcat.user.password}"/>
+                    replace="framework.server.password = ${jetty.user.password}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.server\.hostname *=(.*)$"
-                    replace="framework.server.hostname = ${server.tomcat.hostname}"/>
+                    replace="framework.server.hostname = ${server.jetty.hostname}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.server\.url *=(.*)$"
-                    replace="framework.server.url = http://${server.tomcat.hostname}:${server.tomcat.port}/itnav"/>
+                    replace="framework.server.url = http://${server.jetty.hostname}:${server.jetty.port}/itnav"/>
                 <replaceregex flags="si"
                     pattern="^framework\.webdav\.uri *=(.*)$"
-                    replace="framework.webdav.uri = http://${server.tomcat.hostname}:${server.tomcat.port}/${server.tomcat.webdav.path}"/>
+                    replace="framework.webdav.uri = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.webdav\.username *=(.*)$"
-                    replace="framework.webdav.username = ${tomcat.user.name}"/>
+                    replace="framework.webdav.username = ${jetty.user.name}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.webdav\.password *=(.*)$"
-                    replace="framework.webdav.password = ${tomcat.user.password}"/>
+                    replace="framework.webdav.password = ${jetty.user.password}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.webdav\.rootdir *=(.*)$"
                     replace="framework.webdav.rootdir = ${regex-escaped.framework.dav.rootDir}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.uri *=(.*)$"
-                    replace="framework.pkgRepo.uri = http://${server.tomcat.hostname}:${server.tomcat.port}/${server.tomcat.webdav.path}/pkgs"/>
+                    replace="framework.pkgRepo.uri = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.rootdir *=(.*)$"
                     replace="framework.pkgRepo.rootdir = ${regex-escaped.framework.pkgRepo.rootdir}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.upload-url *=(.*)$"
-                    replace="framework.pkgRepo.upload-url = http://${server.tomcat.hostname}:${server.tomcat.port}/${server.tomcat.webdav.path}/pkgs"/>
+                    replace="framework.pkgRepo.upload-url = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
 		
 
                 <!-- email properties -->
@@ -941,7 +943,7 @@ framework.email.failonerror = true
             <filterchain>
                 <!--
 log4j.logger.com.controltier.log.common=INFO,CommonLog
-log4j.appender.CommonLog.remoteHost=${server.tomcat.hostname}
+log4j.appender.CommonLog.remoteHost=${server.jetty.hostname}
 log4j.appender.CommonLog.port=${server.reportcenter.port}
 
  -->
@@ -1010,11 +1012,11 @@ log4j.appender.CommonLog.port=${server.reportcenter.port}
         <fail-if-blank name="env.ctl_home"/>
         <fail-if-blank name="env.ctl_base"/>
         <fail-if-blank name="client.hostname"/>
-        <fail-if-blank name="server.tomcat.port"/>
-        <fail-if-blank name="server.tomcat.hostname"/>
-        <fail-if-blank name="server.tomcat.webdav.path"/>
-        <fail-if-blank name="tomcat.user.name"/>
-        <fail-if-blank name="tomcat.user.password"/>
+        <fail-if-blank name="server.jetty.port"/>
+        <fail-if-blank name="server.jetty.hostname"/>
+        <fail-if-blank name="server.jetty.webdav.path"/>
+        <fail-if-blank name="jetty.user.name"/>
+        <fail-if-blank name="jetty.user.password"/>
 
         <fail-if-blank name="server.reportcenter.port"/>
         <fail-if-blank name="framework.ssh.user"/>
@@ -1039,54 +1041,54 @@ log4j.appender.CommonLog.port=${server.reportcenter.port}
         check environment properties set by input properties
         -->
 
-        <fail-if-blank name="env.catalina_base"/>
-        <fail-if-blank name="env.catalina_home"/>
+        <fail-if-blank name="server.jetty.base"/>
+        <fail-if-blank name="server.jetty.home"/>
         <if>
             <not>
                 <and>
-                    <isset property="pkgs.tomcat.archive"/>
+                    <isset property="pkgs.jetty.archive"/>
                     <not>
-                        <equals arg1="" arg2="${pkgs.tomcat.archive}"/>
+                        <equals arg1="" arg2="${pkgs.jetty.archive}"/>
                     </not>
-                    <available file="${pkgs.root}/${pkgs.tomcat.archive}" type="file"/>
+                    <available file="${pkgs.root}/${pkgs.jetty.archive}" type="file"/>
 
-                    <isset property="pkgs.tomcat.version"/>
+                    <isset property="pkgs.jetty.version"/>
                     <not>
-                        <equals arg1="" arg2="${pkgs.tomcat.version}"/>
+                        <equals arg1="" arg2="${pkgs.jetty.version}"/>
                     </not>
                 </and>
             </not>
             <then>
-                <fail-if-not-dir  name="env.catalina_home" mesg=", env.catalina_home should be a valid Tomcat installation"/>
-                <fail-if-not-dir  name="env.catalina_base" mesg=", env.catalina_base should be a valid Tomcat base"/>
+                <fail-if-not-dir  name="server.jetty.home" mesg=", server.jetty.home should be a valid Jetty installation"/>
+                <fail-if-not-dir  name="server.jetty.base" mesg=", server.jetty.base should be a valid Jetty base"/>
             </then>
             <else>
                 <if>
                     <not>
-                        <equals arg1="${env.catalina_home}" arg2="${env.catalina_base}"/>
+                        <equals arg1="${server.jetty.home}" arg2="${server.jetty.base}"/>
                     </not>
                     <then>
-                        <fail>env.catalina_home and env.catalina_base must be the same for automatic Tomcat installation.</fail>
+                        <fail>server.jetty.home and server.jetty.base must be the same for automatic Jetty installation.</fail>
                     </then>
                 </if>
             </else>
         </if>
 
-        <pathconvert property="env.catalina_home.converted">
-            <path path="${env.catalina_home}"/>
+        <pathconvert property="server.jetty.home.converted">
+            <path path="${server.jetty.home}"/>
         </pathconvert>
 
-        <pathconvert property="env.catalina_base.converted">
-            <path path="${env.catalina_base}"/>
+        <pathconvert property="server.jetty.base.converted">
+            <path path="${server.jetty.base}"/>
         </pathconvert>
 
-        <fail-if-blank name="server.tomcat.port"/>
-        <fail-if-blank name="server.tomcat.hostname"/>
-        <fail-if-blank name="server.tomcat.webdav.path"/>
-        <fail-if-blank name="tomcat.user.name"/>
-        <fail-if-blank name="tomcat.user.password"/>
+        <fail-if-blank name="server.jetty.port"/>
+        <fail-if-blank name="server.jetty.hostname"/>
+        <fail-if-blank name="server.jetty.webdav.path"/>
+        <fail-if-blank name="jetty.user.name"/>
+        <fail-if-blank name="jetty.user.password"/>
 
-        <!-- check tomcat-users.xml file if the users.install-default property is not "true" -->
+        <!-- check realm.properties file if the users.install-default property is not "true" -->
         <if>
             <not>
                 <equals arg1="true" arg2="${users.install-default}"/>
@@ -1094,38 +1096,41 @@ log4j.appender.CommonLog.port=${server.reportcenter.port}
             <then>
                 <if>
                     <not>
-                        <available file="${env.catalina_base}/conf/tomcat-users.xml"/>
+                        <available file="${server.jetty.base}/etc/realm.properties"/>
                     </not>
                     <then>
-                        <fail>The tomcat-users.xml file was not found: ${env.catalina_base}/conf/tomcat-users.xml
- To have a default tomcat-users.xml file used, please set the "users.install-default" property to "true" inside "default.properties".</fail>
+                        <fail>The realm.properties file was not found: ${server.jetty.base}/etc/realm.properties
+ To have a default realm.properties file used, please set the "users.install-default" property to "true" inside "default.properties".</fail>
                     </then>
                 </if>
 
-                <!-- expand tomcat-users into properties using xsl -->
-                <xslt in="${env.catalina_base}/conf/tomcat-users.xml"
-                    out="temp/tomcat-users.properties"
-                    style="etc/xml/tomcat-users.xsl"
+                <!-- expand realm into properties using xsl -->
+<!--
+                <xslt in="${server.jetty.base}/etc/realm.properties"
+                    out="temp/realm.properties"
+                    style="etc/xml/realm.xsl"
                     force="true">
-                    <param name="user" expression="${tomcat.user.name}"/>
-                    <param name="password" expression="${tomcat.user.password}"/>
+                    <param name="user" expression="${jetty.user.name}"/>
+                    <param name="password" expression="${jetty.user.password}"/>
                 </xslt>
-
+-->
                 <!-- load properties and determine whether user is present and valid -->
-                <property file="temp/tomcat-users.properties" prefix="tomcat-users-xml"/>
-                <fail unless="tomcat-users-xml.user.roles">The tomcat-users.xml file does not contain a user matching the username and password from the default.properties file: '${tomcat.user.name}'
-                    Please modify default.properties, or modify your tomcat-users.xml file to match.</fail>
+<!--
+                <property file="temp/realm.properties" prefix="realm-xml"/>
+                <fail unless="realm-xml.user.roles">The realm.properties file does not contain a user matching the username and password from the default.properties file: '${jetty.user.name}'
+                    Please modify default.properties, or modify your realm.properties file to match.</fail>
                 <if>
                     <not>
                         <and>
-                            <contains string="${tomcat-users-xml.user.roles}" substring="user"/>
-                            <contains string="${tomcat-users-xml.user.roles}" substring="admin"/>
+                            <contains string="${realm-xml.user.roles}" substring="user"/>
+                            <contains string="${realm-xml.user.roles}" substring="admin"/>
                         </and>
                     </not>
                     <then>
-                        <fail>The user "${tomcat.user.name}" defined in ${env.catalina_base}/conf/tomcat-users.xml is not a member of the correct roles: "user,admin".  Please modify your tomcat-users.xml to fix this and then run the install script again.</fail>
+                        <fail>The user "${jetty.user.name}" defined in ${server.jetty.base}/etc/realm.properties is not a member of the correct roles: "user,admin".  Please modify your realm.properties to fix this and then run the install script again.</fail>
                     </then>
                 </if>
+-->
             </then>
         </if>
 
@@ -1170,7 +1175,6 @@ log4j.appender.CommonLog.port=${server.reportcenter.port}
 
         <fail-if-blank name="server.jobcenter.data_path"/>
         <fail-if-blank name="server.jetty.port"/>
-        <fail-if-blank name="server.jetty.ajpPort"/>
 
         <property name="task.check-server-env.executed" value="true"/>
     </target>

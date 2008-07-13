@@ -9,45 +9,39 @@
 #
 ###############
 
-
-###############
-#  Tomcat
-###############
-
 # Enter the value of ControlTier root directory here.
 # The value of ${ctier.root.default} is $HOME/ctier on unix, and C:\ctier on windows.
 env.ctier_root = ${ctier.root.default}
 
-#  the value of CATALINA_BASE (e.g. /usr/local/tomcat)
-env.catalina_base = ${env.ctier_root}/workbench
+###############
+#  Jetty
+###############
 
-#  the value of CATALINA_HOME (e.g. /usr/local/tomcat)
-env.catalina_home = ${env.ctier_root}/workbench
+#  the value of JETTY_HOME 
+server.jetty.home = ${env.ctier_root}/pkgs/jetty-@jetty.version@
 
-#  the listen port used by Tomcat (Tomcat default is 8080)
-server.tomcat.port = 8080
+#  the value of JETTY_BASE 
+server.jetty.base = ${server.jetty.home}
 
-# the hostname used by tomcat
-server.tomcat.hostname = localhost
+#  the listen port used by Jetty (Jetty default is 8080)
+server.jetty.port = 8080
+
+# the hostname used by jetty
+server.jetty.hostname = localhost
 
 #  the application context path for the webdav app
-server.tomcat.webdav.path = webdav
+server.jetty.webdav.path = jackrabbit/repository/default
 
-# Should the installer replace the Xerces jars included with Tomcat
-# with newer versions required by ControlTier Server?
-# If you choose not to, ControlTier Server will not function.
-# See: http://open.controltier.com/Docs/tomcat41-filesonly.html#Update+Tomcat+Libraries
 
-tomcat.replace-xerces-jars = true
 
 ################
 # User access
 #
-# Tomcat uses the "tomcat-users.xml" file to define users, passwords and roles.
+# Jetty uses the "realm.properties" file to define users, passwords and roles.
 #
 # ControlTier Server and Client require that the users with access to
 # the server belong to certain named "roles" that are not present in the
-# default Tomcat installation.
+# default Jetty installation.
 #
 # If you want the installer to provide a new ControlTier ready
 # tomcat-users.xml file for you (and backup your existing file), set the
@@ -56,16 +50,15 @@ tomcat.replace-xerces-jars = true
 
 users.install-default = true
 
-# If you choose to maintain your old tomcat-users.xml file, then be sure that
+# If you choose to maintain your own file, then be sure that
 # the user named below belongs to these roles: "user,admin".
-# See: http://open.controltier.com/Docs/tomcat41-filesonly.html#Configure+Tomcat+Realm
 ################
 
 # the name of the default ControlTier user, will also be used for Jobcenter
-tomcat.user.name = default
+jetty.user.name = default
 
 # the password of the default ControlTier user
-tomcat.user.password = default
+jetty.user.password = default
 
 ################
 # ControlTier Server
@@ -74,30 +67,30 @@ tomcat.user.password = default
 #If the following directories don't exist, the installer will create them
 
 # RDF datastore path
-server.rdfdata.path = ${env.catalina_base}/rdfdata
+server.rdfdata.path = ${env.ctier_root}/workbench/rdfdata
 
 # Webdav root path
-server.dav.basedir = ${env.catalina_base}/webapps/webdav
+server.dav.basedir = ${env.ctier_root}/jackrabbit/repository/default
 
 ################
 # ControlTier Client
 ################
 
-# Base install of AntDepo, CTL_BASE.  (e.g.: $HOME/ctl_base)
+# Base install of CTL, CTL_BASE.  (e.g.: $HOME/ctl_base)
 env.ctl_base = ${env.ctier_root}/ctl
 
-# Location of AntDepo home, CTL_HOME.  (e.g.: $HOME/ctl-version)
+# Location of CTL home, CTL_HOME.  (e.g.: $HOME/ctl-version)
 env.ctl_home = ${env.ctier_root}/pkgs/ctl-@ctl.version@
 
 # Administrative hostname used by the ControlTier client. This is the 
-# hostname that will appear in Workbench. ${server.tomcat.hostname} sets this 
-# value to the hostname specified in the Tomcat section above. 
-client.hostname = ${server.tomcat.hostname} 
+# hostname that will appear in Workbench. ${server.jetty.hostname} sets this 
+# value to the hostname specified in the Jetty section above. 
+client.hostname = ${server.jetty.hostname} 
 
 # Object name used by the ControlTier client. This is the 
-# name that will appear in Workbench. ${server.tomcat.hostname} sets this 
-# value to the hostname specified in the Tomcat section above. 
-client.node.name = ${server.tomcat.hostname} 
+# name that will appear in Workbench. ${server.jetty.hostname} sets this 
+# value to the hostname specified in the Jetty section above. 
+client.node.name = ${server.jetty.hostname} 
 
 # Description of this ControlTier client node.  
 client.node.description = ControlTier managed node.
@@ -142,36 +135,31 @@ framework.ssh.keypath = ${user.home}/.ssh/id_dsa
 ################
 
 #  the server install location for job center Jetty server (e.g. /usr/local/jetty)
-server.jobcenter.base_path = ${env.ctier_root}/pkgs/jobcenter-@jobcenter.version@
+server.jobcenter.base_path = ${server.jetty.base}
 
 #  the location for job center data
 server.jobcenter.data_path = ${env.ctier_root}/jobcenter
 
 
-# jetty server HTTP port (Note: should be different than tomcat port above)
-server.jetty.port=9090
+# jobcenter server HTTP port. (Default is 8080)
+server.jetty.port=8080
 
-# jetty server AJP port (Note: should be different than tomcat default ajp port 8009)
-server.jetty.ajpPort=8010
 
 ##############
 # Reportcenter server installation
 ##############
 
 # install path for reportcenter
-server.reportcenter.home_path = ${env.ctier_root}/pkgs/reportcenter-@reportcenter.version@
+server.reportcenter.home_path = ${server.jetty.base}
 
 # data path for reportcenter
 server.reportcenter.base_path = ${env.ctier_root}/reportcenter
 
-# the jetty server hostname
-server.reportcenter.host=localhost
+# the jetty server hostname. (default ${server.jetty.hostname})
+server.reportcenter.host=${server.jetty.hostname}
 
-# the jetty server HTTP port
-server.reportcenter.jetty.port = 9091
+# the reportcenter server HTTP port. (Default is 8080)
+server.reportcenter.jetty.port = 8080
 
-# the jetty server AJP port
-server.reportcenter.jetty.ajpPort = 8011
-
-#  the listen port used by the Report server. (Default is 1055)
+# the reportcenter log4j listen port. (Default is 1055)
 server.reportcenter.port = 1055

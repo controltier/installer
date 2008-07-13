@@ -49,7 +49,7 @@
                 <filter token="controltier.version" value="${pom.currentVersion}"/>
                 <filter token="ctl.version" value="${ctl.version}"/>
                 <filter token="jobcenter.version" value="${pkg.jobcenter.version}"/>
-                <filter token="tomcat.version" value="${pkg.tomcat.version}"/>
+                <filter token="jetty.version" value="${pkg.jetty.version}"/>
             </filterset>
         </copy>
         <copy todir="${work.dir}"  filtering="false">
@@ -171,15 +171,59 @@
               <j:set var="pkg.reportcenter.archive.name" value="${expanded.name}.zip"/>
               <j:set var="pkg.reportcenter.version" value="${dep.version}"/>
           </j:if>
-          <j:if test="${dep.id == 'apache-tomcat'}">
+          <j:if test="${dep.id == 'jetty'}">
               <mkdir dir="${target.dir}/pkgs"/>
               <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
-              <j:set var="pkg.tomcat.archive.name" value="${expanded.name}.zip"/>
-              <j:set var="pkg.tomcat.version" value="${dep.version}"/>
+              <j:set var="pkg.jetty.archive.name" value="${expanded.name}.zip"/>
+              <j:set var="pkg.jetty.version" value="${dep.version}"/>
           </j:if>
+
+          <j:if test="${dep.id == 'jackrabbit-webapp'}">
+              <get src="${maven.repo.ctier}/${dep.id}/wars/${dep.id}-${dep.version}.war"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.war"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.jackrabbit.archive.name" value="${expanded.name}.war"/>
+              <j:set var="pkg.jackrabbit.version" value="${dep.version}"/>
+          </j:if>
+
+          <j:if test="${dep.id == 'jcr'}">
+              <get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.jcr.archive.name" value="${expanded.name}.jar"/>
+              <j:set var="pkg.jcr.version" value="${dep.version}"/>
+          </j:if>
+
+         <j:if test="${dep.id == 'jasper-compiler'}">
+              <get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.jaspercompiler.archive.name" value="${expanded.name}.jar"/>
+              <j:set var="pkg.jaspercompiler.version" value="${dep.version}"/>
+          </j:if>
+        <j:if test="${dep.id == 'jasper-runtime'}">
+              <get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.jasperruntime.archive.name" value="${expanded.name}.jar"/>
+              <j:set var="pkg.jasperruntime.version" value="${dep.version}"/>
+          </j:if>
+
+	  <j:if test="${dep.id == 'commons-cli'}">
+	    <copy file="${maven.home}/repository/${dep.id}/jars/${dep.id}-${dep.version}.jar" 
+		  tofile="${installer.workspace}/lib/commons-cli.jar"
+		  failonerror="true" verbose="true" 
+		  overwrite="true"/>
+	    <echo>Included ${installer.workspace}/lib/commons-cli.jar</echo>
+	  </j:if>
+
       </j:forEach>
 
       <copy todir="${installer.workspace}"
@@ -208,8 +252,16 @@
 	<filter token="pkg.jobcenter.version" value="${pkg.jobcenter.version}"/>
 	<filter token="pkg.reportcenter.archive.name" value="${pkg.reportcenter.archive.name}"/>
 	<filter token="pkg.reportcenter.version" value="${pkg.reportcenter.version}"/>
-	<filter token="pkg.tomcat.version" value="${pkg.tomcat.version}"/>
-	<filter token="pkg.tomcat.archive.name" value="${pkg.tomcat.archive.name}"/>
+	<filter token="pkg.jetty.version" value="${pkg.jetty.version}"/>
+	<filter token="pkg.jetty.archive.name" value="${pkg.jetty.archive.name}"/>
+	<filter token="pkg.jackrabbit.archive.name" value="${pkg.jackrabbit.archive.name}"/>
+	<filter token="pkg.jackrabbit.version" value="${pkg.jackrabbit.version}"/>
+	<filter token="pkg.jcr.archive.name" value="${pkg.jcr.archive.name}"/>
+	<filter token="pkg.jcr.version" value="${pkg.jcr.version}"/>
+	<filter token="pkg.jasper-runtime.archive.name" value="${pkg.jasperruntime.archive.name}"/>
+	<filter token="pkg.jasper-runtime.version" value="${pkg.jasperruntime.version}"/>
+	<filter token="pkg.jasper-compiler.archive.name" value="${pkg.jaspercompiler.archive.name}"/>
+	<filter token="pkg.jasper-compiler.version" value="${pkg.jaspercompiler.version}"/>
       </filterset>
 
       <fileset dir="${src.dir}/templates/properties" includes="installer.properties.template"/>
@@ -219,6 +271,7 @@
 	  overwrite="true" filtering="true">
       <filterset>
 	<filter token="ctl.version" value="${ctl.version}"/>
+	<filter token="jetty.version" value="${pkg.jetty.version}"/>
 	<filter token="jobcenter.version" value="${pkg.jobcenter.version}"/>
 	<filter token="reportcenter.version" value="${pkg.reportcenter.version}"/>
       </filterset>
@@ -238,7 +291,7 @@
 
     <attainGoal name="installer:create-zip"/>
 
-      <copy file="${builder.props.template}" filtering="true" overwrite="true"
+    <copy file="${builder.props.template}" filtering="true" overwrite="true"
             tofile="${target.dir}/dist/${pom.id}/zips/builder.properties">
           <filterset>
               <filter token="default.classname" value="CT_zip_installer"/>
@@ -248,7 +301,7 @@
               <filter token="default.package-release" value="1"/>
               <filter token="default.package-version" value="${pom.currentVersion}"/>
           </filterset>
-      </copy>
+    </copy>
       
     <attainGoal name="installer:create-gui-installer"/>
 

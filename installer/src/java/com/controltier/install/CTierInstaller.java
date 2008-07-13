@@ -13,48 +13,76 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.taskdefs.Property;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.FileOutputStream;
 import java.util.Properties;
+import java.util.Iterator;
 
 
 /**
  * CTierInstaller is ...
  *
  * @author Greg Schueler <a href="mailto:greg@controltier.com">greg@controltier.com</a>
+ * @author Alex Honor <a href="mailto:alex@controltier.com">alex@controltier.com</a>
  * @version $Revision$
  */
 public class CTierInstaller {
+    boolean debug=false;    
     Properties installerProps;
     Properties configProps;
+    Properties overrideProps;
     private String antHome;
     private String buildfile;
-    private File install;
-    private File manifest;
-    private File ctierRoot;
+    private File defaultPropertiesFile;
     String installTarget;
     public static final String INSTALL_BUILD_FILE_PROP = "installer.buildfile";
     public static final String ANT_HOME_PROP = "ANT_HOME";
     public static final String INSTALLER_PROPS_FILE = "etc/installer.properties";
-    public static final String BUILD_TARGET_INSTALL_CLIENT = "install-client";
+    public static final String BUILD_TARGET_INSTALL_CLIENT = "defaultPropertiesFile-client";
+
+    protected CommandLine cli;
+    /**
+     * reference to the command line {@link org.apache.commons.cli.Options} instance.
+     */
+    protected static final Options options = new Options();
+
+    /**
+     * Add the commandline options
+     */
+    static {
+        options.addOption("h", "help", false, "print this message");
+        options.addOption("v", "verbose", false, "verbose mode");
+        options.addOption("f", "defaults", true, "default.properties file");
+        options.addOption("c", "client", false, "install just the client");
+        options.addOption("d", "dir", true, "ctier_root installation directory");
+        options.addOption(OptionBuilder.withArgName("property=value")
+                .hasArgs()
+                .withValueSeparator('=')
+                .withDescription("property=value pair used during software setup")
+                .create("D"));
+    }
+
 
     private CTierInstaller(){
         installerProps = new Properties();
         configProps=new Properties();
+        overrideProps=new Properties();
     }
 
     /**
-     * called from setup shell/bat script. Calls the {@link #execute} method.
+     * called from setup shell/bat script. Calls the {@link #run} method.
+     * @param args the command line arguments
      */
     public static void main(final String args[]) {
         int exitCode = 1;
         final CTierInstaller install = new CTierInstaller();
         try {
-            install.execute(args);
+            install.run(args);
             exitCode = 0;
         } catch (Throwable exc) {
             System.err.println("ERROR: " + exc.getMessage());
@@ -63,52 +91,53 @@ public class CTierInstaller {
         System.exit(exitCode);
     }
 
-    public static void usage(){
-        System.out.println("Usage: install [-client ] [-d <ctier_root>]");
-        System.out.println();
-        System.out.println("\t -client: install client only, as specified in default.properties");
-        System.out.println("\t      -d: specify the ctier_root install directory");
-        System.out.println("\t          or use environment variable CTIER_ROOT");
-        System.out.println("\t-h/-help: show this message");
-    }
+
     /**
-     * Validates the install, generates preference data and then invokes the adminCmd.xml
+     * Validates the defaultPropertiesFile, generates preference data and then invokes the adminCmd.xml
      *
      * @param args Command line args
      *
-     * @throws SetupException thrown if error
      */
-    public void execute(final String[] args) throws SetupException, IOException {
-        boolean debug=false;
-        if(args.length>0){
-            for (int i = 0; i < args.length; i++) {
-                String arg = args[i];
-                if("-v".equals(arg)){
-                    debug=true;
-                }else if("-target".equals(arg)){
-                    i++;
-                    installTarget = args[i];
-                } else if ("-client".equals(arg)) {
-                    installTarget = BUILD_TARGET_INSTALL_CLIENT;
-                }else if("-d".equals(arg)){
-                    i++;
-                    if(i >= args.length) {
-                        throw new SetupException("Expected argument to -d: ctier_root path");
-                    }
-                    ctierRoot = new File(args[i]);
-                    System.setProperty("env.ctier_root", ctierRoot.getAbsolutePath());
-                }else if("-h".equals(arg) || "--help".equals(arg) || "-help".equals(arg)){
-                    usage();
-                    System.exit(0);
-                }
+    public void run(final String[] args) {
+        int exitCode = 1; //pessimistic initial value
+        parseArgs(args);
+       try {
+            go();
+            exitCode = 0;
+        } catch (Throwable e) {
+            if (e.getMessage() == null) {
+                e.printStackTrace();
+            } else {
+                System.err.println("error: " + e.getMessage());
             }
         }
-        loadProperties();
+        exit(exitCode);
+    }
+
+    private void go() {
+       loadProperties();
+        // The props specified via -Dkey=val take precedence over values in the
+        // defaults.properties file.
+        if (overrideProps.size()>0) {
+           for (Iterator iter = overrideProps.keySet().iterator(); iter.hasNext();) {
+               final String key = (String) iter.next();
+               final String val = overrideProps.getProperty(key);
+               configProps.setProperty(key, val);
+           }
+            try {
+                configProps.store(new FileOutputStream(defaultPropertiesFile),
+                        "Merged command line overrides and default.properties");
+            } catch (IOException e) {
+                throw new SetupException("failed merging properties", e);
+            }
+        }
+
         validateEnvironment();
-        final AntProject project = new AntProject(new File(buildfile), install, debug);
+        final AntProject project = new AntProject(new File(buildfile), defaultPropertiesFile, debug);
         // Fire the build
         project.execute();
     }
+
     private static boolean fileExists(String name, boolean assertexists){
         File file = new File(name);
         if (!file.exists() && assertexists) {
@@ -125,36 +154,119 @@ public class CTierInstaller {
         return new File(path).exists();
     }
 
-    private void loadProperties() throws IOException {
+    private void loadProperties() throws SetupException {
         fileExists(INSTALLER_PROPS_FILE, true);
-        fileExists("default.properties", true);
+        fileExists(defaultPropertiesFile.getAbsolutePath(), true);
 
         //load manifest and installer properties
-         manifest = new File(INSTALLER_PROPS_FILE);
-         install = new File("default.properties");
-        installerProps.load(new FileInputStream(manifest));
-        configProps.load(new FileInputStream(install));
-
+        final File manifest = new File(INSTALLER_PROPS_FILE);
+        try {
+            installerProps.load(new FileInputStream(manifest));
+            configProps.load(new FileInputStream(defaultPropertiesFile));
+        } catch (IOException e){
+            throw new SetupException(e);
+        }
         // load required properties for the installer
         antHome = installerProps.getProperty(ANT_HOME_PROP);
         buildfile = installerProps.getProperty(INSTALL_BUILD_FILE_PROP);
-
-
-
     }
 
 
     /**
-     * Checks the basic install assumptions
+     * Checks the basic defaultPropertiesFile assumptions
      */
-    private void validateEnvironment() throws SetupException {
-        // valid ant install
+    private void validateEnvironment() {
+        // valid ant defaultPropertiesFile
         if (!checkIfDir(ANT_HOME_PROP, antHome)) {
-            throw new SetupException(antHome + " is not a valid Ant install");
+            throw new SetupException(antHome + " is not a valid Ant home");
         }
         fileExists(buildfile, true);
 
         //TODO: do we need to verify info from the manifest properties?
+    }
+
+    public CommandLine parseArgs(String[] args) {
+        final int argErrorCode = 2;
+
+        final CommandLineParser parser = new PosixParser();
+        try {
+            cli = parser.parse(options, args);
+        } catch (ParseException e) {
+            help();
+            exit(argErrorCode);
+        }
+        if (cli.hasOption("h")) {
+            help();
+            exit(argErrorCode);
+        }
+
+        if (cli.hasOption('f')) {
+           defaultPropertiesFile = new File(cli.getOptionValue('f'));
+            if (! defaultPropertiesFile.exists()) {
+                error("Specified file does not exist: " + defaultPropertiesFile.getAbsolutePath());
+                exit(argErrorCode);
+            }
+        } else {
+            defaultPropertiesFile = new File("default.properties");
+        }
+
+        if (cli.hasOption('d')) {
+            final File ctierRoot = new File(cli.getOptionValue('d'));
+            System.setProperty("env.ctier_root", ctierRoot.getAbsolutePath());            
+        }
+
+        if (cli.hasOption('c')) {
+            installTarget = BUILD_TARGET_INSTALL_CLIENT;            
+        }
+
+        if (cli.hasOption('v')) {
+            debug=true;
+        }
+
+        if (cli.hasOption('D')) {
+            if (cli.getOptionValues('D').length % 2 != 0) {
+                error("bad property=value pair");
+                help();
+                exit(argErrorCode);
+            }
+            for (int i = 0; i < cli.getOptionValues('D').length; i++) {
+                final String propname = cli.getOptionValues('D')[i];
+                final String value = cli.getOptionValues('D')[++i];
+                log("property: " + propname + "=" + value);
+                overrideProps.put(propname, value);
+            }
+        }
+        return cli;
+    }
+
+    public void exit(int code) {
+        System.exit(code);
+    }
+
+    public void help() {
+       final HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp(80,
+                "install [options]",
+                "options:",
+                options,
+                "Examples:\n"
+                + "\tinstall -client|-server -Dkey=val\n");
+    }
+
+    public void log(String output) {
+        System.out.println(output);
+    }
+
+    public void error(String output) {
+        System.err.println(output);
+    }
+
+    public void warn(String output) {
+        log(output);
+    }
+
+    public void verbose(String output) {
+        log(output);
     }
 
     /**
@@ -169,7 +281,7 @@ public class CTierInstaller {
          *
          * @param buildFile File referenceing the adminCmd.xml buld file
          * @param propFile  Preference properties file
-         * @param params    Command line parms
+         * @param debug    debug flag
          */
         AntProject(final File buildFile, final File propFile, boolean debug) {
             project = new Project();
@@ -261,9 +373,17 @@ public class CTierInstaller {
     /**
      * Exception class
      */
-    public class SetupException extends Exception {
+    public class SetupException extends RuntimeException {
         public SetupException(final String message) {
             super(message);
+        }
+
+        public SetupException(Throwable t) {
+            super(t);
+        }
+
+        public SetupException(final String message, Throwable t) {
+            super(message, t);
         }
     }
 

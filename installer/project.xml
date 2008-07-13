@@ -17,7 +17,7 @@
    <id>depo</id>
      -->
    <id>ControlTier</id>
-   <currentVersion>3.2.0</currentVersion>
+   <currentVersion>3.2.1</currentVersion>
 
 
    <!--
@@ -59,12 +59,12 @@
    <!--
      ** URL to projects home page (not where cvs is located)
      -->
-   <url>http://www.networkgps.com/</url>
+   <url>http://open.controltier.org/</url>
 
    <!--
      ** Projects logo url (can be rel/abs path)
      -->
-   <logo>http://www.opendepo.org/DepO/Drawings/Images/logo.gif</logo>
+   <logo>http://open.controltier.org/images/project-logo.gif</logo>
 
    <!--  Project's issue tracking system OPTIONAL
    <issueTrackingUrl>
@@ -131,20 +131,20 @@
       <developer>
          <name>Chuck Scott</name>
          <id>chuck</id>
-         <email>chuck@networkgps.com</email>
-         <organization>NetworkGPS</organization>
+         <email>chuck@controltier.com</email>
+         <organization>ControlTier</organization>
       </developer>
       <developer>
          <name>Alex Honor</name>
          <id>alexh</id>
-         <email>alex@networkgps.com</email>
-         <organization>NetworkGPS</organization>
+         <email>alex@controltier.com</email>
+         <organization>ControlTier</organization>
       </developer>
       <developer>
          <name>Greg Schueler</name>
          <id>greg</id>
-         <email>greg@networkgps.com</email>
-         <organization>NetworkGPS</organization>
+         <email>greg@controltier.com</email>
+         <organization>ControlTier</organization>
       </developer>
    </developers>
 
@@ -212,9 +212,17 @@ headlines sample par-->
          </properties>
       </dependency>
 
+     <dependency>
+         <id>commons-cli</id>
+         <version>1.0</version>
+         <properties>
+            <war.bundle.jar>true</war.bundle.jar>
+         </properties>
+      </dependency>
+
        <dependency>
            <id>jobcenter</id>
-           <version>1.0</version>
+           <version>1.1</version>
            <url>http://www.controltier.com</url>
            <type>zip</type>
            <properties>
@@ -242,11 +250,49 @@ headlines sample par-->
            </properties>
        </dependency>
 
-       <!-- to build izpack gui installer -->
+       <!-- jetty webapp container -->
        <dependency>
-           <id>apache-tomcat</id>
-           <version>4.1.36</version>
+           <id>jetty</id>
+           <version>6.1.10</version>
            <type>zip</type>
+           <properties>
+               <war.bundle.jar>false</war.bundle.jar>
+           </properties>
+       </dependency>
+
+       <!-- JackRabbit Webdav web application -->
+       <dependency>
+           <id>jackrabbit-webapp</id>
+           <version>1.4</version>
+           <type>war</type>
+           <properties>
+               <war.bundle.jar>false</war.bundle.jar>
+           </properties>
+       </dependency>
+
+      <!-- Java Content Repository (needed by JackRabbit) -->
+       <dependency>
+           <id>jcr</id>
+           <version>1.0</version>
+           <type>jar</type>
+           <properties>
+               <war.bundle.jar>false</war.bundle.jar>
+           </properties>
+       </dependency>
+
+      <!-- Jasper (needed by itnav) -->
+       <dependency>
+           <id>jasper-compiler</id>
+           <version>4.0.6</version>
+           <type>jar</type>
+           <properties>
+               <war.bundle.jar>false</war.bundle.jar>
+           </properties>
+       </dependency>
+       <dependency>
+           <id>jasper-runtime</id>
+           <version>4.0.6</version>
+           <type>jar</type>
            <properties>
                <war.bundle.jar>false</war.bundle.jar>
            </properties>
