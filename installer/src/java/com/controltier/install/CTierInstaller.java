@@ -43,7 +43,7 @@ public class CTierInstaller {
     public static final String INSTALL_BUILD_FILE_PROP = "installer.buildfile";
     public static final String ANT_HOME_PROP = "ANT_HOME";
     public static final String INSTALLER_PROPS_FILE = "etc/installer.properties";
-    public static final String BUILD_TARGET_INSTALL_CLIENT = "defaultPropertiesFile-client";
+    public static final String BUILD_TARGET_INSTALL_CLIENT = "install-client";
 
     protected CommandLine cli;
     /**
@@ -60,6 +60,7 @@ public class CTierInstaller {
         options.addOption("f", "defaults", true, "default.properties file");
         options.addOption("c", "client", false, "install just the client");
         options.addOption("d", "dir", true, "ctier_root installation directory");
+        options.addOption("p", "project", true, "default project depot name");
         options.addOption(OptionBuilder.withArgName("property=value")
                 .hasArgs()
                 .withValueSeparator('=')
@@ -213,6 +214,11 @@ public class CTierInstaller {
         if (cli.hasOption('d')) {
             final File ctierRoot = new File(cli.getOptionValue('d'));
             System.setProperty("env.ctier_root", ctierRoot.getAbsolutePath());            
+        }
+        if (cli.hasOption('p')) {
+            final String depotName = cli.getOptionValue('p');
+            verbose("Project depot name set: '" + depotName+"'");
+            overrideProps.put("depot.default.name", depotName);
         }
 
         if (cli.hasOption('c')) {
