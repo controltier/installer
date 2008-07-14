@@ -131,6 +131,14 @@ framework.ssh.user = ${user.name}
 framework.ssh.keypath = ${user.home}/.ssh/id_dsa
 
 ################
+# Project depot settings
+################
+depot.default.name =
+depot.default.description = 
+depot.default.organization =
+depot.default.create = true
+
+################
 # Job Center server installation
 ################
 
