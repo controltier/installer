@@ -192,7 +192,6 @@ fi
         -->
         <fail-if-blank name="env.ctl_home"/>
         <fail-if-blank name="env.ctl_base"/>
-
         <unzip dest="${pkgs.root}/" src="${pkgs.root}/${pkgs.jobcenter.archive}"/>
         <if>
             <available file="${pkgs.root}/jobcenter-${pkgs.jobcenter.version}/build.xml" type="file"/>
@@ -204,7 +203,7 @@ fi
                     <property name="jetty.home" value="${server.jetty.home}"/>
                     <property name="jetty.server.httpPort" value="${server.jetty.port}"/>
                     <property name="jobcenter.base.path" value="${server.jobcenter.data_path}"/>
-                    <property name="reportcenter.baseUrl" value="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}/reportcenter"/>
+                    <property name="reportcenter.baseUrl" value="${reportcenter.baseUrl}"/>
                     <property name="reportcenter.host" value="${server.reportcenter.host}"/>
                     <property name="reportcenter.port" value="${server.reportcenter.port}"/>
                     <property name="grails.datasource.path" value="${server.jobcenter.data_path}/grailsdb"/>
@@ -229,7 +228,6 @@ fi
         <pathconvert property="converted.server.reportcenter.home_path">
             <path path="${server.reportcenter.home_path}"/>
         </pathconvert>
-
         <unzip dest="${pkgs.root}/" src="${pkgs.root}/${pkgs.reportcenter.archive}"/>
         <if>
             <available file="${pkgs.root}/reportcenter-${pkgs.reportcenter.version}/build.xml" type="file"/>
@@ -242,8 +240,10 @@ fi
                     <property name="reportcenter.port" value="${server.reportcenter.port}"/>
                     <property name="jobcenter.server.httpPort" value="${server.jetty.port}"/>
                     <property name="jobcenter.server.host" value="${server.jetty.hostname}"/>
+                    <property name="jobcenter.baseUrl" value="${jobcenter.baseUrl}"/>
                     <property name="workbench.server.httpPort" value="${server.jetty.port}"/>
                     <property name="workbench.server.host" value="${server.jetty.hostname}"/>
+                    <property name="workbench.baseUrl" value="${workbench.baseUrl}"/>
                     <property name="default.username" value="${jetty.user.name}"/>
                     <property name="default.password" value="${jetty.user.password}"/>
                 </ant>
@@ -429,7 +429,6 @@ fi
         <copy tofile="${server.jetty.base}/${itnav.configpath}/runtime.properties.orig" overwrite="true">
             <fileset file="${server.jetty.base}/${itnav.configpath}/runtime.properties"/>
         </copy>
-
         <!-- overwrite file -->
         <copy tofile="${server.jetty.base}/${itnav.configpath}/runtime.properties" overwrite="true">
             <filterchain>
@@ -450,7 +449,7 @@ fi
                     replace="dav.baseUrl = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}"/>
                 <replaceregex flags="si"
                               pattern="^app\.jobcenter\.baseUrl *=(.*)$"
-                              replace="app.jobcenter.baseUrl = http://${server.jetty.hostname}:${server.jetty.port}/jobcenter"/>
+                              replace="app.jobcenter.baseUrl = ${jobcenter.baseUrl}"/>
 
                 <replaceregex flags="si"
                     pattern="^order\.package\.defaults\.packageRepoURL\.template *=(.*?)/pkgs(.*)$"
@@ -495,7 +494,7 @@ fi
                     />
                 <replaceregex flags="si"
                               pattern="^app\.reportcenter\.baseUrl *=(.*)$"
-                              replace="app.reportcenter.baseUrl = http://${server.reportcenter.host}:${server.reportcenter.jetty.port}/reportcenter"
+                              replace="app.reportcenter.baseUrl = ${reportcenter.baseUrl}"
                     />
                 <replaceregex flags="si"
                               pattern="^app\.reportcenter\.host *=(.*)$"
@@ -1122,34 +1121,6 @@ log4j.appender.CommonLog.port=${server.reportcenter.port}
  To have a default realm.properties file used, please set the "users.install-default" property to "true" inside "default.properties".</fail>
                     </then>
                 </if>
-
-                <!-- expand realm into properties using xsl -->
-<!--
-                <xslt in="${server.jetty.base}/etc/realm.properties"
-                    out="temp/realm.properties"
-                    style="etc/xml/realm.xsl"
-                    force="true">
-                    <param name="user" expression="${jetty.user.name}"/>
-                    <param name="password" expression="${jetty.user.password}"/>
-                </xslt>
--->
-                <!-- load properties and determine whether user is present and valid -->
-<!--
-                <property file="temp/realm.properties" prefix="realm-xml"/>
-                <fail unless="realm-xml.user.roles">The realm.properties file does not contain a user matching the username and password from the default.properties file: '${jetty.user.name}'
-                    Please modify default.properties, or modify your realm.properties file to match.</fail>
-                <if>
-                    <not>
-                        <and>
-                            <contains string="${realm-xml.user.roles}" substring="user"/>
-                            <contains string="${realm-xml.user.roles}" substring="admin"/>
-                        </and>
-                    </not>
-                    <then>
-                        <fail>The user "${jetty.user.name}" defined in ${server.jetty.base}/etc/realm.properties is not a member of the correct roles: "user,admin".  Please modify your realm.properties to fix this and then run the install script again.</fail>
-                    </then>
-                </if>
--->
             </then>
         </if>
 
@@ -1194,6 +1165,44 @@ log4j.appender.CommonLog.port=${server.reportcenter.port}
 
         <fail-if-blank name="server.jobcenter.data_path"/>
         <fail-if-blank name="server.jetty.port"/>
+	<!--
+	** 
+	** Configure the URL values used to switch between applications.
+	** If they are all running in a common container (the assumption),
+	** then no prefix is used.
+	**
+	-->
+	<property name="relativebaseUrl" value=""/><!--empty string-->
+	<if>
+	  <equals arg1="http://${server.jobcenter.host}:${server.jobcenter.jetty.port}" 
+		  arg2="http://${server.jetty.hostname}:${server.jetty.port}"/>
+	  <then>
+	    <property name="jobcenter.baseUrl" value="${relativebaseUrl}/jobcenter"/>
+	  </then>
+	  <else>
+	    <property name="jobcenter.baseUrl" value="http://${server.jobcenter.host}:${server.jobcenter.jetty.port}/jobcenter"/>
+	  </else>
+	</if>
+	<if>
+	  <equals arg1="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}" 
+		  arg2="http://${server.jetty.hostname}:${server.jetty.port}"/>
+	  <then>
+	    <property name="reportcenter.baseUrl" value="${relativebaseUrl}/reportcenter"/>
+	  </then>
+	  <else>
+	    <property name="reportcenter.baseUrl" value="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}/reportcenter"/>
+	  </else>
+	</if>
+	<if>
+	  <equals arg1="http://${server.workbench.host}:${server.workbench.jetty.port}" 
+		  arg2="http://${server.jetty.hostname}:${server.jetty.port}"/>
+	  <then>
+	    <property name="workbench.baseUrl" value="${relativebaseUrl}/itnav"/>
+	  </then>
+	  <else>
+	    <property name="workbench.baseUrl" value="http://${server.workbench.host}:${server.workbench.jetty.port}/itnav"/>
+	  </else>
+	</if>
 
         <property name="task.check-server-env.executed" value="true"/>
     </target>

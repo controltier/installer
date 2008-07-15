@@ -61,8 +61,14 @@ jetty.user.name = default
 jetty.user.password = default
 
 ################
-# ControlTier Server
+# Workbench
 ################
+
+# the jetty server hostname. (default ${server.jetty.hostname})
+server.workbench.host = ${server.jetty.hostname}
+
+# workbench server HTTP port. (Default is ${server.jetty.port})
+server.workbench.jetty.port = ${server.jetty.port}
 
 #If the following directories don't exist, the installer will create them
 
@@ -71,6 +77,43 @@ server.rdfdata.path = ${env.ctier_root}/workbench/rdfdata
 
 # Webdav root path
 server.dav.basedir = ${env.ctier_root}/jackrabbit/repository/default
+
+################
+# Job Center server installation
+################
+
+#  the server install location for job center Jetty server (e.g. /usr/local/jetty)
+server.jobcenter.base_path = ${server.jetty.base}
+
+#  the location for job center data
+server.jobcenter.data_path = ${env.ctier_root}/jobcenter
+
+# the jetty server hostname. (default ${server.jetty.hostname})
+server.jobcenter.host = ${server.jetty.hostname}
+
+# jobcenter server HTTP port. (Default is ${server.jetty.port})
+server.jobcenter.jetty.port = ${server.jetty.port}
+
+
+##############
+# Reportcenter server installation
+##############
+
+# install path for reportcenter
+server.reportcenter.home_path = ${server.jetty.base}
+
+# data path for reportcenter
+server.reportcenter.base_path = ${env.ctier_root}/reportcenter
+
+# the jetty server hostname. (default ${server.jetty.hostname})
+server.reportcenter.host=${server.jetty.hostname}
+
+# the reportcenter server HTTP port. (Default is ${server.jetty.port})
+server.reportcenter.jetty.port = 8080
+
+# the reportcenter log4j listen port. (Default is 1055)
+server.reportcenter.port = 1055
+
 
 ################
 # ControlTier Client
@@ -131,43 +174,10 @@ framework.ssh.user = ${user.name}
 framework.ssh.keypath = ${user.home}/.ssh/id_dsa
 
 ################
-# Project depot settings
+# Project depot settings. Used to bootstrap the default project depot
 ################
 depot.default.name =
 depot.default.description = 
 depot.default.organization =
 depot.default.create = true
 
-################
-# Job Center server installation
-################
-
-#  the server install location for job center Jetty server (e.g. /usr/local/jetty)
-server.jobcenter.base_path = ${server.jetty.base}
-
-#  the location for job center data
-server.jobcenter.data_path = ${env.ctier_root}/jobcenter
-
-
-# jobcenter server HTTP port. (Default is 8080)
-server.jetty.port=8080
-
-
-##############
-# Reportcenter server installation
-##############
-
-# install path for reportcenter
-server.reportcenter.home_path = ${server.jetty.base}
-
-# data path for reportcenter
-server.reportcenter.base_path = ${env.ctier_root}/reportcenter
-
-# the jetty server hostname. (default ${server.jetty.hostname})
-server.reportcenter.host=${server.jetty.hostname}
-
-# the reportcenter server HTTP port. (Default is 8080)
-server.reportcenter.jetty.port = 8080
-
-# the reportcenter log4j listen port. (Default is 1055)
-server.reportcenter.port = 1055
