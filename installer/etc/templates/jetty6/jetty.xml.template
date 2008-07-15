@@ -159,25 +159,25 @@
     <!-- them started.                                               -->
     <!-- =========================================================== -->
 
-    <New id="reportcenter"  class="org.mortbay.jetty.webapp.WebAppContext">      
-      <Arg><Ref id="Contexts"/></Arg>
-      <Arg><SystemProperty name="jetty.home" default="."/>/webapps/reportcenter</Arg>
-      <Arg>/reportcenter</Arg>      
-    </New>
     <New id="jackrabbit"  class="org.mortbay.jetty.webapp.WebAppContext">      
       <Arg><Ref id="Contexts"/></Arg>
       <Arg><SystemProperty name="jetty.home" default="."/>/webapps/jackrabbit</Arg>
       <Arg>/jackrabbit</Arg>      
     </New>
-    <New id="itnav"  class="org.mortbay.jetty.webapp.WebAppContext">      
+    <New id="reportcenter"  class="org.mortbay.jetty.webapp.WebAppContext">      
       <Arg><Ref id="Contexts"/></Arg>
-      <Arg><SystemProperty name="jetty.home" default="."/>/webapps/itnav</Arg>
-      <Arg>/itnav</Arg>      
+      <Arg><SystemProperty name="jetty.home" default="."/>/webapps/reportcenter</Arg>
+      <Arg>/reportcenter</Arg>      
     </New>
     <New id="jobcenter"  class="org.mortbay.jetty.webapp.WebAppContext">      
       <Arg><Ref id="Contexts"/></Arg>
       <Arg><SystemProperty name="jetty.home" default="."/>/webapps/jobcenter</Arg>
       <Arg>/jobcenter</Arg>      
+    </New>
+    <New id="itnav"  class="org.mortbay.jetty.webapp.WebAppContext">      
+      <Arg><Ref id="Contexts"/></Arg>
+      <Arg><SystemProperty name="jetty.home" default="."/>/webapps/itnav</Arg>
+      <Arg>/itnav</Arg>      
     </New>
 
     <!-- =========================================================== -->
