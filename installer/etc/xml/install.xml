@@ -316,14 +316,7 @@ fi
 		  <filter token="jackrabbit.bootstrap.properties" value="${converted.jackrabbit.bootstrap.properties}"/>
 		</filterset>
 		<fileset file="${basedir}/etc/templates/jackrabbit/web.xml.template"/>
-	      </copy>
-	      <!-- create context/jackrabbit.xml to add the correct realm information -->
-	      <copy tofile="${server.jetty.base}/contexts/jackrabbit.xml" overwrite="true">
-		<filterchain >
-		  <expandproperties />
-		</filterchain>
-		<fileset file="${basedir}/etc/templates/jackrabbit/context.xml.template"/>
-	      </copy>
+	      </copy>	 
 	      <!-- copy in a config.xml that turns off XML processing -->
 	      <copy tofile="${server.jetty.home}/webapps/jackrabbit/WEB-INF/config.xml" overwrite="true">
 		<filterchain >
@@ -364,14 +357,7 @@ fi
             </not>
             <then>
 	      <echo>Preparing workbench installation ...</echo>
-	      <unjar dest="${server.jetty.base}/webapps/itnav" src="${pkgs.root}/${pkgs.itnav.archive}"/>
-	      <!-- create context for the webapp to add the correct realm information -->
-	      <copy tofile="${server.jetty.base}/contexts/itnav.xml" overwrite="true">
-		<filterchain >
-		  <expandproperties />
-		</filterchain>
-		<fileset file="${basedir}/etc/templates/jetty6/itnav-context.xml.template"/>
-	      </copy>
+	      <unjar dest="${server.jetty.base}/webapps/itnav" src="${pkgs.root}/${pkgs.itnav.archive}"/>	      
             </then>
         </if>
     </target>

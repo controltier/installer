@@ -158,7 +158,7 @@
     <!-- Define the ControlTier contexts in the order we want        -->
     <!-- them started.                                               -->
     <!-- =========================================================== -->
-    <!--
+
     <New id="reportcenter"  class="org.mortbay.jetty.webapp.WebAppContext">      
       <Arg><Ref id="Contexts"/></Arg>
       <Arg><SystemProperty name="jetty.home" default="."/>/webapps/reportcenter</Arg>
@@ -179,7 +179,7 @@
       <Arg><SystemProperty name="jetty.home" default="."/>/webapps/jobcenter</Arg>
       <Arg>/jobcenter</Arg>      
     </New>
-    -->
+
     <!-- =========================================================== -->
     <!-- Configure Authentication Realms                             -->
     <!-- Realms may be configured for the entire server here, or     -->
@@ -191,7 +191,19 @@
       <Array type="org.mortbay.jetty.security.UserRealm">
         <Item>
           <New class="org.mortbay.jetty.security.HashUserRealm">
-            <Set name="name">ControlTier</Set>
+            <Set name="name">jackrabbit</Set>
+            <Set name="config"><SystemProperty name="jetty.home" default="."/>/etc/realm.properties</Set>
+          </New>
+        </Item>
+       <Item>
+          <New class="org.mortbay.jetty.security.HashUserRealm">
+            <Set name="name">jobcenterrealm</Set>
+            <Set name="config"><SystemProperty name="jetty.home" default="."/>/etc/realm.properties</Set>
+          </New>
+        </Item>
+       <Item>
+          <New class="org.mortbay.jetty.security.HashUserRealm">
+            <Set name="name">Workbench</Set>
             <Set name="config"><SystemProperty name="jetty.home" default="."/>/etc/realm.properties</Set>
           </New>
         </Item>
