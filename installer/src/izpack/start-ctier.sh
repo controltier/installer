@@ -9,14 +9,7 @@ fi
 # @@@TODO
 
 . $USER_HOME/.ctierrc
-echo Starting Workbench server...
-cd $INSTALL_PATH/workbench/bin
-./startup.sh
-
-cd $INSTALL_PATH/pkgs/jobcenter-$JCVERSION/bin
-./start-jobcenter.sh
-
-cd $INSTALL_PATH/pkgs/reportcenter-$RCVERSION/bin
-./start-reportcenter.sh
+echo Starting server...
+./jetty.sh start
 
 exit 0

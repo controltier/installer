@@ -2,15 +2,15 @@ Contratulations, ControlTier is installed
 
 You may now visit Workbench at:
 
-    http://$INSTALL_TOMCAT_HOSTNAME:$INSTALL_TOMCAT_PORT/itnav
+    http://$INSTALL_JETTY_HOSTNAME:$INSTALL_JETTY_PORT/itnav
 
 Jobcenter is available at:
 
-    http://$INSTALL_TOMCAT_HOSTNAME:$INSTALL_JOBCENTER_PORT/jobcenter
+    http://$INSTALL_JETTY_HOSTNAME:$INSTALL_JETTY_PORT/jobcenter
 
 Reportcenter is available at:
 
-    http://$INSTALL_TOMCAT_HOSTNAME:$INSTALL_REPORTCENTER_PORT/reportcenter
+    http://$INSTALL_JETTY_HOSTNAME:$INSTALL_JETTY_PORT/reportcenter
 
 The software was installed in:
 

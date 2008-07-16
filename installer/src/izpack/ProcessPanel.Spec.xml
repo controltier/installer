@@ -12,7 +12,7 @@
       <executefile name="$INSTALL_PATH/pkgs/ControlTier-${CTVERSION}/install-ctier.sh"/>
   </job>
 
-  <!-- Setting ENV variables and starting ApacheTomcat server -->
+  <!-- Setting ENV variables and starting ApacheJetty server -->
   <job name="Starting ControlTier">
     <os family="windows"/>
     <executefile name="$INSTALL_PATH/pkgs/$CONTROL_TIER/start-ctier.bat"/>
