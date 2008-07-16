@@ -1,0 +1,47 @@
+<HTML>
+  <HEAD>
+    <TITLE>ControlTier Server Installation</TITLE>
+    <META http-equiv="Pragma" content="no-cache">
+    <META http-equiv="Cache-Control" content="no-cache,no-store">
+  </HEAD>
+  <BODY>
+    <A HREF="http://open.controltier.org/"><IMG SRC="project-logo.gif"></A>
+    <h1>Welcome</h1>
+<div id="main">
+    <p>
+      This is the ControlTier server installation on host: ${server.jetty.hostname}.
+      For more information about this software, please visit our
+      <a href="http://open.controltier.org">Open.ControlTier</a> site.
+      Commercial support for these applications is available via
+      <a href="http://www.controltier.com">ControlTier Software Inc.</a>
+    </p>
+    <p>
+  This ControlTier ${installer.version} installation includes several applications:</p>
+      <ul>
+	<li><a href="jobcenter/">JobCenter (${pkgs.jobcenter.version})</a></li>
+	<li><a href="itnav/">Workbench (${pkgs.itnav.version})</a></li>
+	<li><a href="reportcenter/">ReportCenter (${pkgs.reportcenter.version})</a></li>
+	<li><a href="/${server.jetty.webdav.path}/">Jackrabbit WebDAV Repository (${pkgs.jackrabbit.version})</a></li>
+      </ul>
+      <p>You can login to these applications with the default user ID (${jetty.user.name}/${jetty.user.password}).
+      You can define your own login IDs in the Jetty configuration: ${server.jetty.base}/etc/realm.properties
+      </p>
+      <p>Software Install Info:<p>
+      <ul>
+	<li>CTIER_ROOT: ${env.ctier_root}</li>
+	<li>JETTY_HOME: ${server.jetty.home}</li>
+	<li>Jetty Version: ${pkgs.jetty.version} </li>
+	<li>Java Version: ${ant.java.version}</li>
+	<li>Java Home: ${USER_ENV.JAVA_HOME} </li>
+	<li>CTL Version: ${pkgs.ctl.version}</li>
+	<li>CTL_HOME: ${env.ctl_home}</li>
+	<li>CTL_BASE: ${env.ctl_base}</li>
+      </ul>
+      </div>
+      <p>User Documentation</p>
+      <ul>
+      <li><a href="http://open.controltier.org/Tutorials/index.html">ControlTier Tutorials</a></li>
+      <li><a href="http://ctl.controltier.org/using/running-overview.html">Running CTL commands</a></li>
+      </ul>
+  </BODY>
+</HTML>
