@@ -391,13 +391,13 @@ fi
 	  <fileset file="${basedir}/web/index.html.template"/>
 	</copy>
 	<!-- configure a context for it -->
-	<copy tofile="${server.jetty.base}/etc/contexts/controltier.xml"
+	<copy tofile="${server.jetty.base}/contexts/controltier.xml"
 	      file="${basedir}/web/context.xml"/>
 	<!-- Rename the test.xml context so it won't interfere with the controltier context.
 	     They both set "/" as their context root. 
 	-->
-        <backup-file-with-datestamp file="${server.jetty.base}/etc/contexts/test.xml"/>
-	<delete file="${server.jetty.base}/etc/contexts/test.xml"/>
+        <backup-file-with-datestamp file="${server.jetty.base}/contexts/test.xml"/>
+	<delete file="${server.jetty.base}/contexts/test.xml"/>
 	
     </target>
 
