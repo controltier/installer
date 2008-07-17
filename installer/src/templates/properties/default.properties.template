@@ -176,7 +176,7 @@ framework.ssh.keypath = ${user.home}/.ssh/id_dsa
 ################
 # Project depot settings. Used to bootstrap the default project depot
 ################
-depot.default.name =
+depot.default.name = default
 depot.default.description = 
 depot.default.organization =
 depot.default.create = true
