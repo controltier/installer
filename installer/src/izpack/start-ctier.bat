@@ -10,7 +10,7 @@ if NOT "$POST_INSTALL_START_SERVICES" == "true" (
 cd "$USER_HOME"
 call CTIER.BAT
 echo "Starting server..."
-cd "$JETTY_HOME\bin"
+cd "${INSTALL_PATH}\pkgs\jetty-${JETTYVERSION}\bin"
 Jetty-Service.exe --start jetty-service.conf
 
 exit 0
