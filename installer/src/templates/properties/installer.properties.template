@@ -11,6 +11,7 @@ pkgs.root=pkgs
 
 # pkgs.ctl.archive=
 
+pkgs.ctl.version=@pkg.ctl.version@
 pkgs.ctl.expanded=@pkg.ctl.expanded.name@
 pkgs.commander.archive=@pkg.commander.archive.name@
 pkgs.commander.version=@pkg.commander.version@
@@ -40,3 +41,4 @@ ANT_HOME=pkgs/@pkg.ctl.expanded.name@/pkgs/@pkg.ant.expanded.name@
 installer.buildfile=etc/xml/install.xml
 installer.rcfilename=.ctierrc
 installer.rcbatfilename=ctier.bat
+installer.version=@installer.version@
