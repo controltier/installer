@@ -59,13 +59,12 @@ $Id$
 
     <target name="execute" depends="-check-prereqs,-load-props,check-client-env,check-server-env,-install-client,-install-server,install-jobcenter,install-reportcenter,generate-rcfile,echo-rcfile-info" >
         <echo>
-Once you have started Jetty, visit this URL to access ControlTier
-Workbench:
+Once you have started Jetty, visit this URL to access ControlTier web applications:
 
-    http://${server.jetty.hostname}:${server.jetty.port}/itnav
+    http://${server.jetty.hostname}:${server.jetty.port}/
 
 NOTE: ControlTier Client requires that SSH is configured to allow
-key-based authentication from the local host.  Ensure that the
+key-based authentication from the ${server.jetty.hostname} host.  Ensure that the
 public key has been added to the authorized_keys file.
  </echo>
 
@@ -172,7 +171,7 @@ fi
     </target>
 
 
-    <target name="-install-server" depends="check-server-env,-backup-server-config,expand-itnav,expand-jackrabbit,configure-server,install-sample-par" >
+    <target name="-install-server" depends="check-server-env,-backup-server-config,expand-itnav,expand-jackrabbit,configure-server,install-sample-par,configure-landingpage" >
         <echo>ControlTier Server installed.</echo>
     </target>
     <target name="install-server" depends="-check-prereqs,-load-props,-install-server" >
@@ -379,6 +378,29 @@ fi
         </if>
     </target>
 
+    <target name="configure-landingpage" depends="configure-server">
+	<!-- copy in the landing page content -->
+	<copy todir="${server.jetty.base}/controltier">
+	  <fileset dir="${basedir}/web"/>
+	</copy>
+	<!-- expand the properties in the landing page -->
+	<copy tofile="${server.jetty.base}/controltier/index.html" overwrite="true">
+	  <filterchain >
+	    <expandproperties/>
+	  </filterchain>
+	  <fileset file="${basedir}/web/index.html.template"/>
+	</copy>
+	<!-- configure a context for it -->
+	<copy tofile="${server.jetty.base}/etc/contexts/controltier.xml"
+	      file="${basedir}/web/context.xml"/>
+	<!-- Rename the test.xml context so it won't interfere with the controltier context.
+	     They both set "/" as their context root. 
+	-->
+        <backup-file-with-datestamp file="${server.jetty.base}/etc/contexts/test.xml"/>
+	<delete file="${server.jetty.base}/etc/contexts/test.xml"/>
+	
+    </target>
+
     <target name="configure-server" depends="-prepare-configure-server">
 
         <!-- update server port -->
@@ -394,6 +416,7 @@ fi
             </filterset>
             <fileset file="${basedir}/etc/templates/jetty6/jetty.xml.template"/>
         </copy>
+
 
         <!-- create the RDF data dir -->
         <mkdir dir="${server.rdfdata.path}"/>

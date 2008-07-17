@@ -97,6 +97,9 @@
     <copy todir="${installer.workspace}/etc">
       <fileset dir="${basedir}/etc" />
     </copy>
+    <copy todir="${installer.workspace}/web">
+      <fileset dir="${basedir}/src/web" />
+    </copy>
     <copy todir="${installer.workspace}"
 	  overwrite="true" filtering="true">
       <filterset>
@@ -243,6 +246,7 @@
       <filterset>
 	<filter token="pkg.ant.expanded.name" value="apache-ant-${ctl.ant.version}"/>
 	<filter token="pkg.ctl.expanded.name" value="${pkg.ctl.expanded.name}"/>
+	<filter token="pkg.ctl.version" value="${ctl.version}"/>
 	<filter token="pkg.commander.archive.name" value="${pkg.commander.archive.name}"/>
 	<filter token="pkg.commander.version" value="${pkg.commander.version}"/>
 	<filter token="pkg.headlines.archive.name" value="${pkg.headlines.archive.name}"/>
@@ -262,6 +266,7 @@
 	<filter token="pkg.jasper-runtime.version" value="${pkg.jasperruntime.version}"/>
 	<filter token="pkg.jasper-compiler.archive.name" value="${pkg.jaspercompiler.archive.name}"/>
 	<filter token="pkg.jasper-compiler.version" value="${pkg.jaspercompiler.version}"/>
+	<filter token="installer.version" value="${installer.version}"/>
       </filterset>
 
       <fileset dir="${src.dir}/templates/properties" includes="installer.properties.template"/>
