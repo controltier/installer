@@ -3,28 +3,61 @@
     <TITLE>ControlTier Server Installation</TITLE>
     <META http-equiv="Pragma" content="no-cache">
     <META http-equiv="Cache-Control" content="no-cache,no-store">
+    <style type="text/css">
+html, body, #main{	
+	
+	height: 100%;
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+    font: 12px verdana, arial, helvetica, sans-serif;
+
+}
+h2, h3, h4, h5, h6 {
+	color: #111;
+	}
+h2 {
+	margin-bottom: 20px;
+	margin-top: 10px;
+	}
+a {
+	font-weight:bold;
+	color: #666666;
+	text-decoration: none;
+	border: 0px;
+	}
+ul, ol{
+    margin: 10px 0;
+    padding-left: 20px;
+}
+.mainContent {
+    margin: 15px;
+    
+}
+</style>
   </HEAD>
   <BODY>
     <A HREF="http://open.controltier.org/"><IMG SRC="project-logo.gif"></A>
+    <div class="mainContent">
     <h1>Welcome</h1>
 <div id="main">
     <p>
-      This is the ControlTier server installation on host: ${server.jetty.hostname}.
+      This is the ControlTier server installation on host: <code>${server.jetty.hostname}</code>.
       For more information about this software, please visit our
       <a href="http://open.controltier.org">Open.ControlTier</a> site.
       Commercial support for these applications is available via
       <a href="http://www.controltier.com">ControlTier Software Inc.</a>
     </p>
     <p>
-  This ControlTier ${installer.version} installation includes several applications:</p>
+  This ControlTier ${installer.version} installation includes several web applications:</p>
       <ul>
 	<li><a href="jobcenter/">JobCenter (${pkgs.jobcenter.version})</a></li>
 	<li><a href="itnav/">Workbench (${pkgs.itnav.version})</a></li>
 	<li><a href="reportcenter/">ReportCenter (${pkgs.reportcenter.version})</a></li>
-	<li><a href="/${server.jetty.webdav.path}/">Jackrabbit WebDAV Repository (${pkgs.jackrabbit.version})</a></li>
+	<li><a href="/${server.jetty.webdav.path}/">Apache Jackrabbit WebDAV Repository (${pkgs.jackrabbit.version})</a></li>
       </ul>
       <p>You can login to these applications with the default user ID (${jetty.user.name}/${jetty.user.password}).
-      You can define your own login IDs in the Jetty configuration: ${server.jetty.base}/etc/realm.properties
+      You can define your own login IDs in the Jetty configuration:
+      <code>${server.jetty.base}/etc/realm.properties</code>
       </p>
       <p>Software Install Info:<p>
       <ul>
@@ -43,5 +76,6 @@
       <li><a href="http://open.controltier.org/Tutorials/index.html">ControlTier Tutorials</a></li>
       <li><a href="http://ctl.controltier.org/using/running-overview.html">Running CTL commands</a></li>
       </ul>
+      </div>
   </BODY>
 </HTML>
