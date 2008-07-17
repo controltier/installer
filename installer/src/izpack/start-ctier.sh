@@ -10,6 +10,6 @@ fi
 
 . $USER_HOME/.ctierrc
 echo Starting server...
-./jetty.sh start
+$JETTY_HOME/bin/jetty.sh start
 
 exit 0
