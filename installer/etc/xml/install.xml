@@ -916,6 +916,12 @@ framework.email.failonerror = true
                              pattern="^framework\.node\.name *=(.*)$" 
                     replace="framework.node.name = ${client.node.name}" 
                /> 
+	       
+	       <!-- node authentication strategy -->
+	       <replaceregex flags="si" 
+                             pattern="^framework\.nodeauthentication\.classname *=(.*)$" 
+			     replace="framework.nodeauthentication.classname = ${client.nodeauthentication.classname}" 
+               /> 
 
             </filterchain>
             <fileset file="${env.ctl_base}/etc/framework.properties.${DSTAMP}-${TSTAMP}.backup"/>

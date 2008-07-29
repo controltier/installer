@@ -138,6 +138,9 @@ client.node.name = ${server.jetty.hostname}
 # Description of this ControlTier client node.  
 client.node.description = ControlTier managed node.
 
+# Client node authentication class. Used to configure framework.nodeauthentication.classname
+client.nodeauthentication.classname = com.controltier.commander.authentication.WorkbenchNodeAuthResolutionStrategy
+
 ################
 # Client email settings
 ################
