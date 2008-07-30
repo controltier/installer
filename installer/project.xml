@@ -203,15 +203,6 @@ headlines sample par-->
        </dependency>
 
 
-      <!-- needed in compile and runtime of ant tasks -->
-      <dependency>
-         <id>apache-ant</id>
-         <version>1.7.0p3</version>
-         <properties>
-            <war.bundle.jar>false</war.bundle.jar>
-         </properties>
-      </dependency>
-
      <dependency>
          <id>commons-cli</id>
          <version>1.0</version>
@@ -301,7 +292,7 @@ headlines sample par-->
        <!-- needed at ant runtime for testing -->
        <dependency>
            <id>ant-launcher</id>
-           <version>1.7.0</version>
+           <version>1.7.1</version>
            <url>http://ant.apache.org/</url>
            <properties>
                <war.bundle.jar>false</war.bundle.jar>
@@ -310,7 +301,7 @@ headlines sample par-->
        <!-- needed at ant runtime for testing -->
        <dependency>
            <id>apache-ant</id>
-           <version>1.7.0</version>
+           <version>1.7.1p1</version>
            <url>http://ant.apache.org/</url>
            <properties>
                <war.bundle.jar>false</war.bundle.jar>
