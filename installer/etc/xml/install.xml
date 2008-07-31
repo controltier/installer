@@ -797,13 +797,15 @@ framework.server.password = user2pass
 framework.server.hostname = localhost
 framework.server.url = http://localhost:8080/itnav
 
-framework.webdav.uri = http://localhost:8080/webdav
+framework.webdav.uri = http://localhost:8080/jackrabbit/repository/workbench
 framework.webdav.username = user2
 framework.webdav.password = user2pass
 
-framework.pkgRepo.uri = http://localhost:8080/webdav/pkgs
+framework.pkgRepo.uri = http://localhost:8080/jackrabbit/repository/workbench/pkgs
 framework.pkgRepo.rootdir =
-framework.pkgRepo.upload-url = http://localhost:8080/webdav/pkgs
+framework.pkgRepo.upload-url = http://localhost:8080/jackrabbit/repository/workbench/pkgs
+
+framework.moduleRepo.url = http://localhost:8080/jackrabbit/repository/workbench/publish/modules
 
  -->
 
@@ -848,7 +850,10 @@ framework.pkgRepo.upload-url = http://localhost:8080/webdav/pkgs
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.upload-url *=(.*)$"
                     replace="framework.pkgRepo.upload-url = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
-		
+               <replaceregex flags="si"
+                    pattern="^framework\.moduleRepo\.url *=(.*)$"
+                    replace="framework.moduleRepo.url = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/publish/modules"/>
+				
 
                 <!-- email properties -->
                 <!--
@@ -985,6 +990,8 @@ depot.default.create = true
 
         <backup-file-with-datestamp file="${env.ctl_base}/etc/log4j.properties"/>
 
+
+
         <!-- overwrite file -->
         <copy tofile="${env.ctl_base}/etc/log4j.properties" overwrite="true">
             <filterchain>
@@ -992,6 +999,7 @@ depot.default.create = true
 log4j.logger.com.controltier.log.common=INFO,CommonLog
 log4j.appender.CommonLog.remoteHost=${server.jetty.hostname}
 log4j.appender.CommonLog.port=${server.reportcenter.port}
+log4j.appender.R.file=/tmp/workbench.log
 
  -->
                 <replaceregex flags="si"
@@ -1003,6 +1011,12 @@ log4j.appender.CommonLog.port=${server.reportcenter.port}
                 <replaceregex flags="si"
                               pattern="^log4j\.appender\.CommonLog\.port *=(.*)$"
                               replace="log4j.appender.CommonLog.port = ${server.reportcenter.port}"/>
+		<pathconvert property="converted.workbench.log">
+		  <path path="${server.jetty.base}/logs/workbench.log"/>
+		</pathconvert>
+               <replaceregex flags="si"
+                              pattern="^log4j\.appender\.R\.file *=(.*)$"
+                              replace="log4j.appender.R.file = ${converted.workbench.log}"/>
 
             </filterchain>
             <fileset file="${env.ctl_base}/etc/log4j.properties.${DSTAMP}-${TSTAMP}.backup"/>
