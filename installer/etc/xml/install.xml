@@ -991,6 +991,9 @@ depot.default.create = true
         <backup-file-with-datestamp file="${env.ctl_base}/etc/log4j.properties"/>
 
 
+	<pathconvert property="converted.workbench.log">
+	  <path path="${server.jetty.base}/logs/workbench.log"/>
+	</pathconvert>
 
         <!-- overwrite file -->
         <copy tofile="${env.ctl_base}/etc/log4j.properties" overwrite="true">
@@ -1011,9 +1014,7 @@ log4j.appender.R.file=/tmp/workbench.log
                 <replaceregex flags="si"
                               pattern="^log4j\.appender\.CommonLog\.port *=(.*)$"
                               replace="log4j.appender.CommonLog.port = ${server.reportcenter.port}"/>
-		<pathconvert property="converted.workbench.log">
-		  <path path="${server.jetty.base}/logs/workbench.log"/>
-		</pathconvert>
+
                <replaceregex flags="si"
                               pattern="^log4j\.appender\.R\.file *=(.*)$"
                               replace="log4j.appender.R.file = ${converted.workbench.log}"/>
