@@ -778,6 +778,36 @@ or equivalent:
                 <property name="regex-escaped.framework.pkgRepo.rootdir" value="${converted.framework.pkgRepo.rootdir}"/>
             </else>
         </if>
+        <property name="ant.home.full" value="${env.ctl_home}/pkgs/apache-ant-${package.ant.version}"/>
+        <pathconvert property="converted.ant.home.full">
+            <path path="${ant.home.full}"/>
+        </pathconvert>
+        <if>
+            <os family="windows"/>
+            <then>
+                <pathconvert property="regex-escaped.ant.home.full" dirsep="\\\\\\\\">
+                    <path path="${ant.home.full}"/>
+                </pathconvert>
+            </then>
+            <else>
+                <property name="regex-escaped.ant.home.full" value="${converted.ant.home.full}"/>
+            </else>
+        </if>
+
+        <pathconvert property="converted.framework.ssh.keypath">
+            <path path="${framework.ssh.keypath}"/>
+        </pathconvert>
+        <if>
+            <os family="windows"/>
+            <then>
+                <pathconvert property="regex-escaped.framework.ssh.keypath" dirsep="\\\\\\\\">
+                    <path path="${framework.ssh.keypath}"/>
+                </pathconvert>
+            </then>
+            <else>
+                <property name="regex-escaped.framework.ssh.keypath" value="${converted.framework.ssh.keypath}"/>
+            </else>
+        </if>
 
         <!-- duplicate original -->
         <backup-file-with-datestamp file="${env.ctl_base}/etc/framework.properties"/>
@@ -787,7 +817,7 @@ or equivalent:
             <filterchain>
                 <replaceregex flags="si"
                    pattern="^ant\.home *=(.*)$"
-                   replace="ant.home = ${env.ctl_home}/pkgs/apache-ant-${package.ant.version}"
+                   replace="ant.home = ${regex-escaped.ant.home.full}"
                 />
                 <!--
 framework.workbench.integration.enabled = true
@@ -909,7 +939,7 @@ framework.email.failonerror = true
                 <!-- ssh path -->
                 <replaceregex flags="si"
                               pattern="^framework\.ssh\.keypath *=(.*)$"
-                              replace="framework.ssh.keypath = ${framework.ssh.keypath}"/>
+                              replace="framework.ssh.keypath = ${regex-escaped.framework.ssh.keypath}"/>
                 
                 <!-- ssh user -->
                 <replaceregex flags="si"
