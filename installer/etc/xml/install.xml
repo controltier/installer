@@ -287,7 +287,7 @@ fi
       <echo>Copying in tools.jar dependency  ...</echo>
       <copy todir="${server.jetty.home}/lib">
 	<filelist 
-	    dir="${USER_ENV.JAVA_HOME}"
+	    dir="${USER_ENV.JAVA_HOME}/lib"
 	    files="tools.jar"
 	    />
       </copy>
