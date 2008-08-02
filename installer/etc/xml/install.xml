@@ -281,6 +281,14 @@ fi
 	    files="${pkgs.jasper-runtime.archive},${pkgs.jasper-compiler.archive}"
 	    />
       </copy>
+      <!-- copy in tools.jar the old jasper libs still needs them -->
+      <echo>Copying in tools.jar dependency  ...</echo>
+      <copy todir="${server.jetty.home}/lib">
+	<filelist 
+	    dir="${USER_ENV.JAVA_HOME}"
+	    files="tools.jar"
+	    />
+      </copy>
     </target>
 
     <!--
