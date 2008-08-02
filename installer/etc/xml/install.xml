@@ -580,20 +580,6 @@ fi
                 </if>
             </then>
         </if>
-
-	<!--
-	Replace the base-seed.jar
-	-->
-	<echo level="info">Copying base-seed.jar to webdav/seeds ...</echo>
-	<mkdir dir="${server.jetty.base}/webapps/${server.jetty.webdav.path}/seeds"/>
-	<copy
-	      todir="${server.jetty.base}/webapps/${server.jetty.webdav.path}/seeds" 
-	      verbose="true" flatten="true">
-	  <zipentry
-	      zipfile="${server.jetty.base}/webapps/itnav/WEB-INF/lib/ctier-common-${pkgs.itnav.version}.jar"
-	      name="resources/seeds/base-seed.jar"
-	      />
-	</copy>
     </target>
 
     <target name="install-sample-par">
