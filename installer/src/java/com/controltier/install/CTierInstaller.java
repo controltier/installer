@@ -196,7 +196,7 @@ public class CTierInstaller {
             help();
             exit(argErrorCode);
         }
-        if (cli.hasOption("h")) {
+        if (cli.hasOption("h")||cli.hasOption("?")) {
             help();
             exit(argErrorCode);
         }
@@ -256,7 +256,8 @@ public class CTierInstaller {
                 "options:",
                 options,
                 "Examples:\n"
-                + "\tinstall -client|-server -Dkey=val\n");
+                        + "\tinstall --client -d /install/dir -Dkey=val\n"
+                        + "\tinstall -d /ctier -Dserver.jetty.hostname=development\n");
     }
 
     public void log(String output) {
