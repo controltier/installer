@@ -201,6 +201,7 @@ fi
                     <property name="install.ant.home" value="${env.ctl_home}/pkgs/apache-ant-${package.ant.version}"/>
                     <property name="jetty.home" value="${server.jetty.home}"/>
                     <property name="jetty.server.httpPort" value="${server.jetty.port}"/>
+		    <property name="jetty.server.hostname" value="${server.jetty.hostname}"/>
                     <property name="jobcenter.base.path" value="${server.jobcenter.data_path}"/>
                     <property name="reportcenter.baseUrl" value="${reportcenter.baseUrl}"/>
                     <property name="reportcenter.host" value="${server.reportcenter.host}"/>
@@ -234,6 +235,7 @@ fi
                 <ant dir="${pkgs.root}/reportcenter-${pkgs.reportcenter.version}">
                     <property name="jetty.home" value="${server.jetty.home}"/>
                     <property name="jetty.server.httpPort" value="${server.reportcenter.jetty.port}"/>
+		    <property name="jetty.server.hostname" value="${server.jetty.hostname}"/>
                     <property name="reportcenter.base.path" value="${server.reportcenter.base_path}"/>
                     <property name="reportcenter.host" value="${server.reportcenter.host}"/>
                     <property name="reportcenter.port" value="${server.reportcenter.port}"/>
