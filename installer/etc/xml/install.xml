@@ -833,6 +833,8 @@ framework.pkgRepo.upload-url = http://localhost:8080/jackrabbit/repository/workb
 
 framework.moduleRepo.url = http://localhost:8080/jackrabbit/repository/workbench/publish/modules
 
+framework.jobcenter.url = http://localhost:8080/jobcenter
+
  -->
 
                 <replaceregex flags="si"
@@ -878,8 +880,10 @@ framework.moduleRepo.url = http://localhost:8080/jackrabbit/repository/workbench
                     replace="framework.pkgRepo.upload-url = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
                <replaceregex flags="si"
                     pattern="^framework\.moduleRepo\.url *=(.*)$"
-                    replace="framework.moduleRepo.url = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/publish/modules"/>
-				
+                    replace="framework.moduleRepo.url = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/publish/modules"/>				
+               <replaceregex flags="si"
+                    pattern="^framework\.jobcenter\.url *=(.*)$"
+                    replace="framework.jobcenter.url = http://${server.jetty.hostname}:${server.jetty.port}/jobcenter"/>
 
                 <!-- email properties -->
                 <!--
