@@ -971,11 +971,11 @@ framework.email.failonerror = true
             <filterchain>
                 <replaceregex flags="si"
                    pattern="^depot\.default\.name *=(.*)$"
-                   replace="${depot.default.name}"
+                   replace="depot.default.name = ${depot.default.name}"
                 />
            <replaceregex flags="si"
                    pattern="^depot\.default\.create *=(.*)$"
-                   replace="${depot.default.create}"
+                   replace="depot.default.create = ${depot.default.create}"
                 />
                 <!--
 depot.default.name = default
