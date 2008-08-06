@@ -333,19 +333,49 @@ fi
 		</filterchain>
 		<fileset file="${basedir}/etc/templates/jackrabbit/config.xml.template"/>
 	      </copy>
+
+	      <if>
+		<os family="windows"/>
+		<then>
+		  <pathconvert property="regex-escaped.converted.jackrabbit.repository.config" dirsep="\\">
+		    <path path="${converted.jackrabbit.repository.config}"/>
+		  </pathconvert>
+		</then>
+		<else>
+		  <property name="regex-escaped.converted.jackrabbit.repository.config"
+			    value="${converted.jackrabbit.repository.config}"/>
+		</else>
+	      </if>
+	      <if>
+		<os family="windows"/>
+		<then>
+		  <pathconvert property="regex-escaped.converted.jackrabbit.repository.home" dirsep="\\">
+		    <path path="${converted.jackrabbit.repository.home}"/>
+		  </pathconvert>
+		</then>
+		<else>
+		  <property name="regex-escaped.converted.jackrabbit.repository.home"
+			    value="${converted.jackrabbit.repository.home}"/>
+		</else>
+	      </if>
+
 	      <!-- Generate bootstrap.properties -->
 	      <copy tofile="${converted.jackrabbit.bootstrap.properties}" overwrite="true">
 		<filterset>
-		  <filter token="jackrabbit.repository.config" value="${converted.jackrabbit.repository.config}"/>
-		  <filter token="jackrabbit.repository.home" value="${converted.jackrabbit.repository.home}"/>
+		  <filter token="jackrabbit.repository.config" 
+			  value="${regex-escaped.converted.jackrabbit.repository.config}"/>
+		  <filter token="jackrabbit.repository.home" 
+			  value="${regex-escaped.converted.jackrabbit.repository.home}"/>
 		</filterset>
 		<fileset file="${basedir}/etc/templates/jackrabbit/bootstrap.properties.template"/>
 	      </copy>
 	      <!-- Generate repository.xml -->
 	      <copy tofile="${converted.jackrabbit.repository.config}" overwrite="true">
 		<filterset>
-		  <filter token="jackrabbit.repository.config" value="${converted.jackrabbit.repository.config}"/>
-		  <filter token="jackrabbit.repository.home" value="${converted.jackrabbit.repository.home}"/>
+		  <filter token="jackrabbit.repository.config" 
+			  value="${converted.jackrabbit.repository.config}"/>
+		  <filter token="jackrabbit.repository.home" 
+			  value="${converted.jackrabbit.repository.home}"/>
 		  <filter token="jackrabbit.bootstrap.properties" value="${converted.jackrabbit.bootstrap.properties}"/>
 		</filterset>
 		<fileset file="${basedir}/etc/templates/jackrabbit/repository.xml.template"/>
@@ -1246,12 +1276,11 @@ log4j.appender.R.file=/tmp/workbench.log
 	** then no prefix is used.
 	**
 	-->
-	<property name="relativebaseUrl" value=""/><!--empty string-->
 	<if>
 	  <equals arg1="http://${server.jobcenter.host}:${server.jobcenter.jetty.port}" 
 		  arg2="http://${server.jetty.hostname}:${server.jetty.port}"/>
 	  <then>
-	    <property name="jobcenter.baseUrl" value="${relativebaseUrl}/jobcenter"/>
+	    <property name="jobcenter.baseUrl" value="/jobcenter"/>
 	  </then>
 	  <else>
 	    <property name="jobcenter.baseUrl" value="http://${server.jobcenter.host}:${server.jobcenter.jetty.port}/jobcenter"/>
@@ -1261,7 +1290,7 @@ log4j.appender.R.file=/tmp/workbench.log
 	  <equals arg1="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}" 
 		  arg2="http://${server.jetty.hostname}:${server.jetty.port}"/>
 	  <then>
-	    <property name="reportcenter.baseUrl" value="${relativebaseUrl}/reportcenter"/>
+	    <property name="reportcenter.baseUrl" value="/reportcenter"/>
 	  </then>
 	  <else>
 	    <property name="reportcenter.baseUrl" value="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}/reportcenter"/>
@@ -1271,7 +1300,7 @@ log4j.appender.R.file=/tmp/workbench.log
 	  <equals arg1="http://${server.workbench.host}:${server.workbench.jetty.port}" 
 		  arg2="http://${server.jetty.hostname}:${server.jetty.port}"/>
 	  <then>
-	    <property name="workbench.baseUrl" value="${relativebaseUrl}/itnav"/>
+	    <property name="workbench.baseUrl" value="/itnav"/>
 	  </then>
 	  <else>
 	    <property name="workbench.baseUrl" value="http://${server.workbench.host}:${server.workbench.jetty.port}/itnav"/>
