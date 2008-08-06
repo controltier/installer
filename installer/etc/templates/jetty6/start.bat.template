@@ -1,0 +1,23 @@
+:: ---------------------------------------------------------------------------
+:: Start script for the JETTY Server
+::
+:: $Id$
+:: ---------------------------------------------------------------------------
+
+@echo off
+if "%OS%" == "Windows_NT" setlocal
+
+
+call "%USER_HOME%\CTIER.BAT"
+
+IF NOT DEFINED JAVA_HOME (
+   ECHO JAVA_HOME not set
+   GOTO:EOF
+)
+
+echo Starting server...
+cd "%JETTY_HOME%"
+call "%JAVA_HOME%\bin\java.exe" ^
+    %JAVA_OPTIONS% ^
+    -jar "%JETTY_HOME%\start.jar" ^
+    "%JETTY_HOME%\etc\jetty.xml"

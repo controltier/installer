@@ -456,6 +456,11 @@ fi
             </filterset>
             <fileset file="${basedir}/etc/templates/jetty6/jetty.xml.template"/>
         </copy>
+        
+        <!-- copy windows start script -->
+        <copy tofile="${server.jetty.base}/bin/start.bat" overwrite="true">
+            <fileset file="${basedir}/etc/templates/jetty6/start.bat.template"/>
+        </copy>
 
 
         <!-- create the RDF data dir -->
