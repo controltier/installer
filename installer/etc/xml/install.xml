@@ -59,6 +59,11 @@ $Id$
 
     <target name="execute" depends="-check-prereqs,-load-props,check-client-env,check-server-env,-install-client,-install-server,install-jobcenter,install-reportcenter,generate-rcfile,echo-rcfile-info" >
         <echo>
+Startup:
+
+On Unix start Jetty by running: "$JETTY_HOME/bin/jetty.sh start"
+or on Windows run: "%JETTY_HOME%\bin\start.bat"
+
 Once you have started Jetty, visit this URL to access ControlTier web applications:
 
     http://${server.jetty.hostname}:${server.jetty.port}/
