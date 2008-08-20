@@ -30,8 +30,7 @@ $Id$
         <property file="${ctier.installfile}"/>
         <echo>Using CTIER_ROOT: ${env.ctier_root}</echo>
         <pathconvert property="env.ctier_root.converted">
-            <path path="${env.ctier_root}"/>
-        </pathconvert>
+            <path path="${env.ctier_root}"/>        </pathconvert>
         <property environment="USER_ENV"/>
     </target>
 
@@ -107,7 +106,7 @@ set JETTY_LOGS=${server.jetty.home.converted}\logs
 set JETTY_RUN=%JETTY_LOGS%
 set CONFIG_PROPS=-Djobcenter.config.location=${env.ctier_root}\jobcenter\jobcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}\reportcenter\reportcenter-config.properties
 set JAVA_HOME=${USER_ENV.JAVA_HOME}
-set JAVA_OPTIONS=-XX:MaxPermSize=128m -Xmx2048m -Xms256m -Djava.io.tmpdir=${server.jetty.home.converted}\logs %CONFIG_PROPS%
+set JAVA_OPTIONS=-XX:MaxPermSize=128m -Xmx2048m -Xms256m %CONFIG_PROPS%
 </echo>
                                 <property name="rcfile.path" value="%CTL_HOME%\bin;%JETTY_HOME%\bin;%Path%"/>
                             </then>
@@ -148,7 +147,7 @@ export JETTY_LOGS=${server.jetty.home.converted}/logs
 export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${USER_ENV.JAVA_HOME}
 CONFIG_PROPS="-Djobcenter.config.location=${env.ctier_root}/jobcenter/jobcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}/reportcenter/reportcenter-config.properties"
-export JAVA_OPTIONS="-XX:MaxPermSize=128m -Xmx2048m -Xms256m -Djava.io.tmpdir=$JETTY_LOGS $CONFIG_PROPS"
+export JAVA_OPTIONS="-XX:MaxPermSize=128m -Xmx2048m -Xms256m $CONFIG_PROPS"
 </echo>
                         <property name="rcfile.path" value="$CTL_HOME/bin:$JETTY_HOME/bin:$PATH"/>
                     </then>
@@ -296,6 +295,22 @@ fi
 	    files="tools.jar"
 	    />
       </copy>
+      <!-- create a work dir -->
+      <mkdir dir="${server.jetty.base}/work"/>
+      <!-- change the hardcoded config value(s) in jetty.sh -->
+      <!-- duplicate original -->
+      <copy tofile="${server.jetty.home}/bin/jetty.sh.orig" overwrite="true">
+	<fileset file="${server.jetty.home}/bin/jetty.sh"/>
+      </copy>
+      <copy tofile="${server.jetty.home}/bin/jetty.sh" overwrite="true">
+	<filterchain >
+	  <!-- TMP=/tmp -->
+	  <replaceregex flags="si"
+			pattern="^TMP=(.*)$"
+			replace="TMP=${server.jetty.base}/work" />
+	</filterchain>
+	<fileset file="${server.jetty.base}/${itnav.configpath}/jetty.sh.orig"/>
+      </copy>
     </target>
 
     <!--
@@ -310,6 +325,10 @@ fi
         </pathconvert>
         <pathconvert property="converted.jackrabbit.bootstrap.properties">
             <path path="${server.jetty.base}/webapps/jackrabbit/WEB-INF/templates/bootstrap.properties"/>
+        </pathconvert>
+
+	<pathconvert property="converted.jackrabbit.workdir">
+            <path path="${server.jetty.base}/work"/>
         </pathconvert>
 
         <if>
@@ -328,6 +347,7 @@ fi
 		  <filter token="jackrabbit.repository.config" value="/WEB-INF/templates/bootstrap.properties"/>
 		  <filter token="jackrabbit.repository.home" value="${converted.jackrabbit.repository.home}"/>
 		  <filter token="jackrabbit.bootstrap.properties" value="${converted.jackrabbit.bootstrap.properties}"/>
+		  <filter token="jackrabbit.workdir" value="${converted.jackrabbit.workdir}"/>
 		</filterset>
 		<fileset file="${basedir}/etc/templates/jackrabbit/web.xml.template"/>
 	      </copy>	 
@@ -467,6 +487,8 @@ fi
             <fileset file="${basedir}/etc/templates/jetty6/start.bat.template"/>
         </copy>
 
+	<!-- create the work dir -->
+	<mkdir dir="${server.jetty.base}/work"/>
 
         <!-- create the RDF data dir -->
         <mkdir dir="${server.rdfdata.path}"/>
