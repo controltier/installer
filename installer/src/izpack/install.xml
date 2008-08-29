@@ -17,7 +17,9 @@
         <author name="ControlTier, Inc." email="info@controltier.com"/>
       </authors>
       <url>http://open.controltier.org/</url>
-      <javaversion>1.3</javaversion>
+      <javaversion>1.5</javaversion>
+      <requiresjdk>yes</requiresjdk>
+      <appsubpath>ctier</appsubpath>
     </info>
     <variables>
       <variable name="CTVERSION" value="@controltier.version@"/>
@@ -60,7 +62,7 @@
         <os family="unix"/>
       </laf>
 
-        <modifier key="useButtonIcons" value="no"/>
+        <modifier key="useButtonIcons" value="yes"/>
         <modifier key="useLabelIcons" value="no"/>
         <modifier key="labelGap" value="2"/>
         <modifier key="layoutAnchor" value="NORTHWEST"/>
@@ -68,7 +70,6 @@
         <modifier key="headingLineCount" value="1"/>
         <modifier key="headingFontSize" value="1.5"/>
         <modifier key="headingBackgroundColor" value="0x00ffffff"/>
-
         <modifier key="headingPanelCounter" value="text"/>
         <modifier key="headingPanelCounterPos" value="inHeading"/>
         <modifier key="useFlags" value="no"/>
@@ -99,7 +100,7 @@
       <res id="TargetPanel.dir.unix" src="CtierTargetPath_Unix.txt"/>
       <res id="TargetPanel.dir.macosx" src="CtierTargetPath_Macosx.txt"/>
       <res id="TargetPanel.dir.windows" src="CtierTargetPath_Windows.txt"/>
-      <res id="XInfoPanel.info" parse="yes" src="XInfoPanel.txt"/>
+      <res id="XInfoPanel.info" parse="yes" src="XInfoPanel.html"/>
       <res id="controltier-gray.png" src="imgs/controltier-gray.png" />
       <res id="installer.langsel.img" src="imgs/controltier-logo.gif" />
       <res id="Installer.image" src="imgs/pack-install.gif" />

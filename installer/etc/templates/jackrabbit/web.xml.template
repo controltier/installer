@@ -21,6 +21,18 @@
     <display-name>Jackrabbit JCR Server</display-name>
 
     <!-- ====================================================================== -->
+    <!-- W O R K   D I R                                                        -->
+    <!-- ====================================================================== -->
+    <context-param>
+      <param-name>tempdir</param-name>
+      <param-value>@jackrabbit.workdir@</param-value>
+    </context-param>
+    <context-param>
+      <param-name>workdir</param-name>
+      <param-value>@jackrabbit.workdir@</param-value>
+    </context-param>
+
+    <!-- ====================================================================== -->
     <!-- L O G G I N G   S E R V L E T                                          -->
     <!-- ====================================================================== -->
     <servlet>

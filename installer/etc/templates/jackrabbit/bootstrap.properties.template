@@ -27,7 +27,7 @@ repository.name=jackrabbit.repository
 
 # RMI Settings
 rmi.enabled=true
-rmi.port=0
+rmi.port=@jackrabbit.rmi.port@
 rmi.host=localhost
 # If the URI is not specified, it's composed as follows:
 #rmi.uri=//${rmi.host}:${rmi.port}/${repository.name}

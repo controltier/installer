@@ -26,6 +26,9 @@ server.jetty.base = ${server.jetty.home}
 #  the listen port used by Jetty (Jetty default is 8080)
 server.jetty.port = 8080
 
+#  the https listen port used by Jetty (Jetty default is 8443)
+server.jetty.httpsPort = 8443
+
 # the hostname used by jetty
 server.jetty.hostname = localhost
 
@@ -109,11 +112,15 @@ server.reportcenter.base_path = ${env.ctier_root}/reportcenter
 server.reportcenter.host=${server.jetty.hostname}
 
 # the reportcenter server HTTP port. (Default is ${server.jetty.port})
-server.reportcenter.jetty.port = 8080
+server.reportcenter.jetty.port = ${server.jetty.port}
 
 # the reportcenter log4j listen port. (Default is 1055)
 server.reportcenter.port = 1055
 
+##############
+# Jackrabbit server installation
+##############
+server.jackrabbit.rmi.port = 1099
 
 ################
 # ControlTier Client

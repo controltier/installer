@@ -392,6 +392,8 @@ fi
 			  value="${regex-escaped.converted.jackrabbit.repository.config}"/>
 		  <filter token="jackrabbit.repository.home" 
 			  value="${regex-escaped.converted.jackrabbit.repository.home}"/>
+		  <filter token="jackrabbit.rmi.port" 
+			  value="${server.jackrabbit.rmi.port}"/>
 		</filterset>
 		<fileset file="${basedir}/etc/templates/jackrabbit/bootstrap.properties.template"/>
 	      </copy>
@@ -479,6 +481,7 @@ fi
         <copy tofile="${server.jetty.base}/etc/jetty.xml" overwrite="true" filtering="true" verbose="true">
             <filterset >
                 <filter token="jetty.server.port" value="${server.jetty.port}"/>
+                <filter token="jetty.server.httpsPort" value="${server.jetty.httpsPort}"/>
             </filterset>
             <fileset file="${basedir}/etc/templates/jetty6/jetty.xml.template"/>
         </copy>
