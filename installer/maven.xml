@@ -176,7 +176,7 @@
           </j:if>
           <j:if test="${dep.id == 'jetty'}">
               <mkdir dir="${target.dir}/pkgs"/>
-              <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+              <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
