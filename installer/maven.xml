@@ -122,7 +122,7 @@
           <j:set var="expanded.name" value="${dep.id}-${dep.version}"/>
 
           <j:if test="${dep.id == 'ctl'}">
-              <get src="${maven.repo.ctier}/${dep.id}/tgzs/${dep.id}-${dep.version}.tgz"
+              <get src="${maven.repo.ctlocal}/${dep.id}/tgzs/${dep.id}-${dep.version}.tgz"
                    dest="${target.dir}/${dep.id}-${dep.version}.tgz"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
@@ -136,7 +136,7 @@
               </exec>
           </j:if>
           <j:if test="${dep.id == 'itnav'}">
-              <get src="${maven.repo.ctier}/${dep.id}/wars/${dep.id}-${dep.version}.war"
+              <get src="${maven.repo.ctlocal}/${dep.id}/wars/${dep.id}-${dep.version}.war"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.war"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
@@ -159,7 +159,7 @@
               <j:set var="pkg.commander.version" value="${dep.version}"/>
           </j:if>
           <j:if test="${dep.id == 'jobcenter'}">
-              <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+              <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
@@ -167,7 +167,7 @@
               <j:set var="pkg.jobcenter.version" value="${dep.version}"/>
           </j:if>
           <j:if test="${dep.id == 'reportcenter'}">
-              <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+              <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
