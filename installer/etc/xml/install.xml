@@ -31,6 +31,8 @@ $Id$
         <echo>Using CTIER_ROOT: ${env.ctier_root}</echo>
         <pathconvert property="env.ctier_root.converted">
             <path path="${env.ctier_root}"/>        </pathconvert>
+        <pathconvert property="env.ctier_root.forwardslash" dirsep="/">
+            <path path="${env.ctier_root}"/>        </pathconvert>
         <property environment="USER_ENV"/>
     </target>
 
@@ -612,6 +614,10 @@ fi
                 <replaceregex flags="si"
                               pattern="^app\.reportcenter\.port *=(.*)$"
                               replace="app.reportcenter.port = ${server.reportcenter.port}"
+                    />
+                <replaceregex flags="si"
+                              pattern="^app\.uploads\.localpath *=(.*)$"
+                              replace="app.uploads.localpath = ${env.ctier_root.forwardslash}/workbench/incoming"
                     />
             </filterchain>
             <fileset file="${server.jetty.base}/${itnav.configpath}/runtime.properties.orig"/>
