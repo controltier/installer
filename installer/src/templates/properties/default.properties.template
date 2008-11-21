@@ -148,6 +148,8 @@ client.node.description = ControlTier managed node.
 # Client node authentication class. Used to configure framework.nodeauthentication.classname
 client.nodeauthentication.classname = com.controltier.commander.authentication.WorkbenchNodeAuthResolutionStrategy
 
+framework.node.type = Node
+
 ################
 # Client email settings
 ################

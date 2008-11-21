@@ -591,6 +591,11 @@ fi
                              pattern="^framework\.node\.name *=(.*)$" 
                     replace="framework.node.name = ${client.node.name}" 
                /> 
+	       <!-- node object type --> 
+               <replaceregex flags="si" 
+                             pattern="^framework\.node\.type *=(.*)$" 
+                    replace="framework.node.type = ${framework.node.type}" 
+               /> 
                 <replaceregex flags="si"
                               pattern="^app\.log4j\.appender\.CommonLog\.port *=(.*)$"
                               replace="app.log4j.appender.CommonLog.port = ${server.reportcenter.port}"
@@ -1056,7 +1061,12 @@ framework.email.failonerror = true
                              pattern="^framework\.node\.name *=(.*)$" 
                     replace="framework.node.name = ${client.node.name}" 
                /> 
-	       
+	       <!-- node object type --> 
+               <replaceregex flags="si" 
+                             pattern="^framework\.node\.type *=(.*)$" 
+                    replace="framework.node.type = ${framework.node.type}" 
+               /> 
+	       	       
 	       <!-- node authentication strategy -->
 	       <replaceregex flags="si" 
                              pattern="^framework\.nodeauthentication\.classname *=(.*)$" 
