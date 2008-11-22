@@ -349,6 +349,25 @@
     </servlet-mapping>
 
     <!-- ====================================================================== -->
+    <!-- Security constraint and login-config                                   -->
+    <!-- ====================================================================== -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>all</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>*</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- for basic auth, not form based auth -->
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>jackrabbit</realm-name>
+    </login-config>
+
+    <!-- ====================================================================== -->
     <!-- W E L C O M E   F I L E S                                              -->
     <!-- ====================================================================== -->
     <welcome-file-list>
