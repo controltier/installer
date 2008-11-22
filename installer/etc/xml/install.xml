@@ -177,7 +177,7 @@ fi
     </target>
 
 
-    <target name="-install-server" depends="check-server-env,-backup-server-config,expand-itnav,expand-jackrabbit,configure-server,install-sample-par,configure-landingpage" >
+    <target name="-install-server" depends="check-server-env,-backup-server-config,clean-server,expand-itnav,expand-jackrabbit,configure-server,install-sample-par,configure-landingpage" >
         <echo>ControlTier Server installed.</echo>
     </target>
     <target name="install-server" depends="-check-prereqs,-load-props,-install-server" >
@@ -706,8 +706,49 @@ fi
             </then>
         </if>
     </target>
+    <target name="clean-client" description="Remove old jar files">
+        <if>
+            <available file="${env.ctl_home}/lib/extensions/commander/jars" type="dir"/>
+            <then>
+                <delete verbose="true">
+                    <fileset dir="${env.ctl_home}/lib/extensions/commander/jars"
+                             includes="ctier-*.jar"/>
+                </delete>
+            </then>
+        </if>
+    </target>
 
-    <target name="-install-client" depends="check-client-env,expand-client,configure-client" description="Internal client install target" >
+    <target name="clean-server" description="Remove old jar files">
+        <if>
+            <available file="${server.jetty.base}/webapps/itnav/WEB-INF/lib" type="dir"/>
+            <then>
+                <delete verbose="true">
+                    <fileset dir="${server.jetty.base}/webapps/itnav/WEB-INF/lib"
+                             includes="*.jar"/>
+                </delete>
+            </then>
+        </if>
+        <if>
+            <available file="${server.jetty.base}/webapps/jobcenter/WEB-INF/lib" type="dir"/>
+            <then>
+                <delete verbose="true">
+                    <fileset dir="${server.jetty.base}/webapps/jobcenter/WEB-INF/lib"
+                             includes="*.jar"/>
+                </delete>
+            </then>
+        </if>
+        <if>
+            <available file="${server.jetty.base}/webapps/reportcenter/WEB-INF/lib" type="dir"/>
+            <then>
+                <delete verbose="true">
+                    <fileset dir="${server.jetty.base}/webapps/reportcenter/WEB-INF/lib"
+                             includes="*.jar"/>
+                </delete>
+            </then>
+        </if>
+    </target>
+    
+    <target name="-install-client" depends="check-client-env,clean-client,expand-client,configure-client" description="Internal client install target" >
         <echo>ControlTier Client installed.</echo>
     </target>
 
