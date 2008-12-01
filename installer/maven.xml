@@ -151,7 +151,7 @@
               <j:set var="pkg.headlines.archive.name" value="${expanded.name}.par"/>
           </j:if>
           <j:if test="${dep.id == 'commander-extension'}">
-              <get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+              <get src="${maven.repo.ctlocal}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
@@ -176,7 +176,7 @@
           </j:if>
           <j:if test="${dep.id == 'jetty'}">
               <mkdir dir="${target.dir}/pkgs"/>
-              <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+              <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
@@ -185,7 +185,7 @@
           </j:if>
 
           <j:if test="${dep.id == 'jackrabbit-webapp'}">
-              <get src="${maven.repo.ctlocal}/${dep.id}/wars/${dep.id}-${dep.version}.war"
+              <get src="${maven.repo.ctier}/${dep.id}/wars/${dep.id}-${dep.version}.war"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.war"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
@@ -194,7 +194,7 @@
           </j:if>
 
           <j:if test="${dep.id == 'jcr'}">
-              <get src="${maven.repo.ctlocal}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+              <get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
@@ -203,7 +203,7 @@
           </j:if>
 
          <j:if test="${dep.id == 'jasper-compiler'}">
-              <get src="${maven.repo.ctlocal}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+              <get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
@@ -211,7 +211,7 @@
               <j:set var="pkg.jaspercompiler.version" value="${dep.version}"/>
           </j:if>
         <j:if test="${dep.id == 'jasper-runtime'}">
-              <get src="${maven.repo.ctlocal}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+              <get src="${maven.repo.ctier}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
