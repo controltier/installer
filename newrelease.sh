@@ -16,12 +16,15 @@ RCPATH=$8
 
 # update ctl version 
 
+perl  -i'.orig' -p -e "s#^version\.number\s*=.*\$#version.number=$CTLVER#" $CTLPATH/version.properties
 perl  -i'.orig' -p -e "s#<currentVersion>.*?</currentVersion>#<currentVersion>$CTLVER</currentVersion>#s" $CTLPATH/project.xml
 perl  -i'.orig' -p -e "s#<currentVersion>.*?</currentVersion>#<currentVersion>$CTLVER</currentVersion>#s" $CTLPATH/bundle/project.xml
 perl  -0777 -i'.orig' -p -e "s#(<id>ctl-dispatch</id>\s*)<version>.*?</version>#\$1<version>$CTLVER</version>#s" $CTLPATH/bundle/project.xml
 perl  -0777 -i'.orig' -p -e "s#(<id>commander-extension</id>\s*)<version>.*?</version>#\$1<version>$CTVER</version>#sg" $CTLPATH/bundle/project.xml
 
 
+# update version.properties
+perl  -i'.orig' -p -e "s#^version\.number\s*=.*\$#version.number=$CTVER#" $CTPATH/version.properties
 # update ctier versions and dependencies
 perl  -i'.orig' -p -e "s#<currentVersion>.*?</currentVersion>#<currentVersion>$CTVER</currentVersion>#s" $CTPATH/common/project.xml
 
@@ -51,6 +54,7 @@ perl  -0777 -i'.orig' -p -e "s#(<id>reportcenter</id>\s*)<version>.*?</version>#
 
 # update jobcenter version
 
+perl  -i'.orig' -p -e "s#^version\.number\s*=.*\$#version.number=$JCVER#" $JCPATH/version.properties
 perl  -i'.orig' -p -e "s#^app\.version=.*\$#app.version=$JCVER#" $JCPATH/application.properties
 perl  -i'.orig' -p -e "s#^jobcenter\.version\.num=.*\$#jobcenter.version.num=$JCVER#" $JCPATH/grails-app/i18n/messages.properties
 perl  -i'.orig' -p -e "s#<property\s+name=\"jobcenter.version\"\s+value=\".*?\"#<property name=\"jobcenter.version\" value=\"$JCVER\"#" $JCPATH/etc/install.xml
@@ -59,6 +63,7 @@ perl  -i'.orig' -p -e "s#<property\s+name=\"ctl.version\"\s+value=\".*?\"#<prope
 
 # update reportcenter version
 
+perl  -i'.orig' -p -e "s#^version\.number\s*=.*\$#version.number=$RCVER#" $RCPATH/version.properties
 perl  -i'.orig' -p -e "s#^app\.version=.*\$#app.version=$RCVER#" $RCPATH/application.properties
 perl  -i'.orig' -p -e "s#^reportcenter\.version\.num=.*\$#reportcenter.version.num=$RCVER#" $RCPATH/grails-app/i18n/messages.properties
 perl  -i'.orig' -p -e "s#<property\s+name=\"reportcenter.version\"\s+value=\".*?\"#<property name=\"reportcenter.version\" value=\"$RCVER\"#" $RCPATH/etc/install.xml
@@ -69,10 +74,7 @@ perl  -i'.orig' -p -e "s#<property\s+name=\"ctl.version\"\s+value=\".*?\"#<prope
 
 if [ "$9" == "-commit" ] ; then
     svn commit -m "update version to $CTLVER, update dependencies" $CTLPATH/project.xml $CTLPATH/bundle/project.xml
-    svn commit -m "update version to $CTVER, update dependencies" $CTPATH/common/project.xml
-    svn commit -m "update version to $CTVER, update dependencies" $CTPATH/commander/project.xml
-    svn commit -m "update version to $CTVER, update dependencies" $CTPATH/workbench/project.xml
-    svn commit -m "update version to $CTVER, update dependencies" $CTPATH/installer/project.xml
-    svn commit -m "update version to $JCVER" $JCPATH/application.properties $JCPATH/grails-app/i18n/messages.properties $JCPATH/etc/install.xml
-    svn commit -m "update version to $RCVER" $RCPATH/application.properties $RCPATH/grails-app/i18n/messages.properties $RCPATH/etc/install.xml
+    svn commit -m "update version to $CTVER, update dependencies" $CTPATH/version.properties $CTPATH/common/project.xml $CTPATH/commander/project.xml $CTPATH/workbench/project.xml $CTPATH/installer/project.xml
+    svn commit -m "update version to $JCVER" $JCPATH/application.properties $JCPATH/grails-app/i18n/messages.properties $JCPATH/etc/install.xml $JCPATH/version.properties
+    svn commit -m "update version to $RCVER" $RCPATH/application.properties $RCPATH/grails-app/i18n/messages.properties $RCPATH/etc/install.xml $RCPATH/version.properties
 fi
