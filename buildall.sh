@@ -74,8 +74,19 @@ $MAVEN_HOME/bin/maven ctl:stgz ctl:tgz ctl:zip
 
 mkdir -p $LOCALREPO/ctl/jars
 mkdir -p $LOCALREPO/ctl-dispatch/tgzs
-cp target/ctl-dispatch-$CTLVERS.jar $LOCALREPO/ctl/jars/ctl-$CTLVERS.jar || (echo "CTL build failed: cannot copy target/ctl-dispatch-$CTLVERS.jar" && exit 1)
-cp target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz $LOCALREPO/ctl-dispatch/tgzs/ctl-dispatch-$CTLVERS.tgz || (echo "CTL build failed: cannot copy target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz" && exit 1)
+cp target/ctl-dispatch-$CTLVERS.jar $LOCALREPO/ctl/jars/ctl-$CTLVERS.jar 
+if [ 0 != $? ]
+then
+   echo "CTL build failed: cannot copy target/ctl-dispatch-$CTLVERS.jar"
+   exit 2
+fi
+
+cp target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz $LOCALREPO/ctl-dispatch/tgzs/ctl-dispatch-$CTLVERS.tgz 
+if [ 0 != $? ]
+then
+   echo "CTL build failed: cannot copy target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz"
+   exit 2
+fi
 
 #######################
 #
@@ -89,9 +100,24 @@ $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jars
 mkdir -p $LOCALREPO/ctier-common/jars
 mkdir -p $LOCALREPO/ctier-common-vocabulary/jars
 mkdir -p $LOCALREPO/ctier-base-seed/jars
-cp target/distributions/ctier-common/jars/ctier-common-$CTIERVERS.jar $LOCALREPO/ctier-common/jars/ctier-common-$CTIERVERS.jar || (echo "CTIER common build failed: cannot copy target/distributions/ctier-common/jars/ctier-common-$CTIERVERS.jar" && exit 1)
-cp target/distributions/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.jar $LOCALREPO/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.jar || (echo "CTIER common build failed: cannot copy target/distributions/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.jar" && exit 1)
-cp target/distributions/ctier-base-seed/jars/ctier-base-seed-$CTIERVERS.jar $LOCALREPO/ctier-base-seed/jars/ctier-base-seed-$CTIERVERS.jar || (echo "CTIER common build failed: cannot copy target/distributions/ctier-base-seed/jars/ctier-base-seed-$CTIERVERS.jar" && exit 1)
+cp target/distributions/ctier-common/jars/ctier-common-$CTIERVERS.jar $LOCALREPO/ctier-common/jars/ctier-common-$CTIERVERS.jar 
+if [ 0 != $? ]
+then
+   echo "CTIER common build failed: cannot copy target/distributions/ctier-common/jars/ctier-common-$CTIERVERS.jar"
+   exit 2
+fi  
+cp target/distributions/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.jar $LOCALREPO/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.jar 
+if [ 0 != $? ]
+then
+   echo "CTIER common build failed: cannot copy target/distributions/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.jar"
+   exit 2
+fi  
+cp target/distributions/ctier-base-seed/jars/ctier-base-seed-$CTIERVERS.jar $LOCALREPO/ctier-base-seed/jars/ctier-base-seed-$CTIERVERS.jar 
+if [ 0 != $? ]
+then
+   echo "CTIER common build failed: cannot copy target/distributions/ctier-base-seed/jars/ctier-base-seed-$CTIERVERS.jar"
+   exit 2
+fi  
 
 #########################
 #
@@ -106,7 +132,13 @@ $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar war
 
 
 mkdir -p $LOCALREPO/itnav/wars
-cp target/itnav.war $LOCALREPO/itnav/wars/itnav-$CTIERVERS.war	|| (echo "Workbench build failed: cannot copy target/itnav.war" && exit 1)
+cp target/itnav.war $LOCALREPO/itnav/wars/itnav-$CTIERVERS.war	
+if [ 0 != $? ]
+then
+   echo "Workbench build failed: cannot copy target/itnav.war"
+   exit 2
+fi  
+
 
 ##################
 #
@@ -119,8 +151,20 @@ $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true extension:package
 #    artifacts: commander-extension-X.jar, commander-X.jar
 mkdir -p $LOCALREPO/commander-extension/jars
 mkdir -p $LOCALREPO/commander/jars
-cp dist/jars/commander-extension-$CTIERVERS.jar $LOCALREPO/commander-extension/jars/commander-extension-$CTIERVERS.jar || (echo "CTIER commander-extension build failed: cannot copy dist/jars/commander-extension-$CTIERVERS.jar" && exit 1)
-cp target/commander-$CTIERVERS.jar $LOCALREPO/commander/jars/commander-$CTIERVERS.jar || (echo "CTIER commander-extension build failed: cannot copy target/commander-$CTIERVERS.jar" && exit 1)
+cp dist/jars/commander-extension-$CTIERVERS.jar $LOCALREPO/commander-extension/jars/commander-extension-$CTIERVERS.jar 
+if [ 0 != $? ]
+then
+   echo "CTIER commander-extension build failed: cannot copy dist/jars/commander-extension-$CTIERVERS.jar"
+   exit 2
+fi  
+
+cp target/commander-$CTIERVERS.jar $LOCALREPO/commander/jars/commander-$CTIERVERS.jar 
+if [ 0 != $? ]
+then
+   echo "CTIER commander-extension build failed: cannot copy target/commander-$CTIERVERS.jar"
+   exit 2
+fi  
+
 
 ##################
 #
@@ -129,7 +173,13 @@ cp target/commander-$CTIERVERS.jar $LOCALREPO/commander/jars/commander-$CTIERVER
 
 mkdir -p $LOCALREPO/coreutils-extension/jars
 cd $LOCALREPO/coreutils-extension/jars
-wget -N http://ctl-dispatch.sourceforge.net/repository/coreutils-extension/jars/coreutils-extension-0.9.jar || (echo "Couldn't get coreutils-extension" && exit 1 )
+wget -N http://ctl-dispatch.sourceforge.net/repository/coreutils-extension/jars/coreutils-extension-0.9.jar 
+if [ 0 != $? ]
+then
+   echo "Couldn't get coreutils-extension"
+   exit 2
+fi  
+
 
 ##################
 #
@@ -146,8 +196,20 @@ $MAVEN_HOME/bin/maven clean ctl:bundle
 # artifacts: ctl-X.tgz, ctl-X.zip
 mkdir -p $LOCALREPO/ctl/zips
 mkdir -p $LOCALREPO/ctl/tgzs
-cp target/dist/zips/ctl-$CTLVERS.zip $LOCALREPO/ctl/zips/ctl-$CTLVERS.zip || (echo "CTL bundle build failed: cannot copy target/dist/zips/ctl-$CTLVERS.zip" && exit 1)
-cp target/dist/tgzs/ctl-$CTLVERS.tgz $LOCALREPO/ctl/tgzs/ctl-$CTLVERS.tgz || (echo "CTL bundle build failed: cannot copy target/dist/tgzs/ctl-$CTLVERS.tgz" && exit 1)
+cp target/dist/zips/ctl-$CTLVERS.zip $LOCALREPO/ctl/zips/ctl-$CTLVERS.zip 
+if [ 0 != $? ]
+then
+   echo "CTL bundle build failed: cannot copy target/dist/zips/ctl-$CTLVERS.zip"
+   exit 2
+fi  
+
+cp target/dist/tgzs/ctl-$CTLVERS.tgz $LOCALREPO/ctl/tgzs/ctl-$CTLVERS.tgz 
+if [ 0 != $? ]
+then
+   echo "CTL bundle build failed: cannot copy target/dist/tgzs/ctl-$CTLVERS.tgz"
+   exit 2
+fi  
+
 
 #####################
 #
@@ -161,11 +223,23 @@ cp $LOCALREPO/ctier-common/jars/ctier-common-$CTIERVERS.jar lib/
 cp $LOCALREPO/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.jar lib/
 cp $LOCALREPO/commander/jars/commander-$CTIERVERS.jar lib/
 export PATH=$PATH:$GRAILS_HOME/bin
-$ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist || (echo "Jobcenter build failed" && exit 1)
+$ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist 
+if [ 0 != $? ]
+then
+   echo "Jobcenter build failed"
+   exit 2
+fi  
+
 
 # artifacts: jobcenter-X.zip
 mkdir -p $LOCALREPO/jobcenter/zips
-cp target/jobcenter-$JCVERS.zip $LOCALREPO/jobcenter/zips/jobcenter-$JCVERS.zip || (echo "Jobcenter build failed: cannot copy target/jobcenter-$JCVERS.zip" && exit 1)
+cp target/jobcenter-$JCVERS.zip $LOCALREPO/jobcenter/zips/jobcenter-$JCVERS.zip 
+if [ 0 != $? ]
+then
+   echo "Jobcenter build failed: cannot copy target/jobcenter-$JCVERS.zip"
+   exit 2
+fi  
+
 
 
 ######################
@@ -177,11 +251,23 @@ cd $CTIERSVN/reportcenter
 # copy the dependencies into the lib directory
 cp $LOCALREPO/ctier-common/jars/ctier-common-$CTIERVERS.jar lib/
 export PATH=$PATH:$GRAILS_HOME/bin
-$ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist || (echo "Reportcenter build failed" && exit 1)
+$ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist 
+if [ 0 != $? ]
+then
+   echo "Reportcenter build failed"
+   exit 2
+fi  
+
 
 #artifacts: reportcenter-X.zip
 mkdir -p $LOCALREPO/reportcenter/zips
-cp target/reportcenter-$RCVERS.zip $LOCALREPO/reportcenter/zips/reportcenter-$RCVERS.zip || (echo "Reportcenter build failed: cannot copy target/reportcenter-$RCVERS.zip" && exit 1)
+cp target/reportcenter-$RCVERS.zip $LOCALREPO/reportcenter/zips/reportcenter-$RCVERS.zip 
+if [ 0 != $? ]
+then
+   echo "Reportcenter build failed: cannot copy target/reportcenter-$RCVERS.zip"
+   exit 2
+fi  
+
 
 
 ######################
@@ -192,9 +278,27 @@ cp target/reportcenter-$RCVERS.zip $LOCALREPO/reportcenter/zips/reportcenter-$RC
 cd $CTIERSVN/installer
 	
 echo maven.repo.ctlocal = $LOCALREPOURL > build.properties
-$MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean installer:create || (echo "Installer build failed" && exit 1)
+$MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean installer:create 
+if [ 0 != $? ]
+then
+   echo "Installer build failed"
+   exit 2
+fi  
+
 
 #artifacts: ControlTier-Installer-$CTIERVERS.jar, ControlTier-$CTIERVERS.zip
 
-ls target/dist/ControlTier-Installer/jars/ControlTier-Installer-$CTIERVERS.jar || (echo "Installer build failed: couldn't find target/dist/ControlTier-Installer/jars/ControlTier-Installer-$CTIERVERS.jar" && exit 1)
-ls target/dist/ControlTier/zips/ControlTier-$CTIERVERS.zip || (echo "Installer build failed: couldn't find target/dist/ControlTier/zips/ControlTier-$CTIERVERS.zip" && exit 1)
+ls target/dist/ControlTier-Installer/jars/ControlTier-Installer-$CTIERVERS.jar 
+if [ 0 != $? ]
+then
+   echo "Installer build failed: couldn't find target/dist/ControlTier-Installer/jars/ControlTier-Installer-$CTIERVERS.jar"
+   exit 2
+fi  
+
+ls target/dist/ControlTier/zips/ControlTier-$CTIERVERS.zip 
+if [ 0 != $? ]
+then
+   echo "Installer build failed: couldn't find target/dist/ControlTier/zips/ControlTier-$CTIERVERS.zip"
+   exit 2
+fi  
+
