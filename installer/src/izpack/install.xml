@@ -100,7 +100,7 @@
       <res id="TargetPanel.dir.unix" src="CtierTargetPath_Unix.txt"/>
       <res id="TargetPanel.dir.macosx" src="CtierTargetPath_Macosx.txt"/>
       <res id="TargetPanel.dir.windows" src="CtierTargetPath_Windows.txt"/>
-      <res id="XInfoPanel.info" parse="yes" src="XInfoPanel.html"/>
+      <res id="XInfoPanel.info" parse="yes" src="XInfoPanel.txt"/>
       <res id="controltier-gray.png" src="imgs/controltier-gray.png" />
       <res id="installer.langsel.img" src="imgs/controltier-logo.gif" />
       <res id="Installer.image" src="imgs/pack-install.gif" />

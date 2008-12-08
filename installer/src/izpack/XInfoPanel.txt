@@ -1,16 +1,10 @@
 Contratulations, ControlTier is installed
 
-You may now visit Workbench at:
+Once started you may now visit the ControlTier applications at:
 
-    http://$INSTALL_JETTY_HOSTNAME:$INSTALL_JETTY_PORT/itnav
+    http://$INSTALL_JETTY_HOSTNAME:$INSTALL_JETTY_PORT
 
-Jobcenter is available at:
-
-    http://$INSTALL_JETTY_HOSTNAME:$INSTALL_JETTY_PORT/jobcenter
-
-Reportcenter is available at:
-
-    http://$INSTALL_JETTY_HOSTNAME:$INSTALL_JETTY_PORT/reportcenter
+where you will find information about the available web apps.
 
 The software was installed in:
 
