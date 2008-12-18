@@ -13,9 +13,9 @@ CALL CTIER.BAT
 CD "${INSTALL_PATH}\pkgs\jetty-${JETTYVERSION}\bin"
 
 ECHO Installing jetty as a windows service ...
-Jetty-Service.exe --install jetty-service.conf
+Jetty-Service.exe --install jetty-ctier-service.conf
 
 ECHO Starting jetty...
-Jetty-Service.exe --start jetty-service.conf
+start Jetty-Service.exe --start jetty-ctier-service.conf
 
 EXIT 0

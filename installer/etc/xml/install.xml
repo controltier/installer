@@ -502,6 +502,13 @@ fi
         <copy tofile="${server.jetty.base}/bin/start.bat" overwrite="true">
             <fileset file="${basedir}/etc/templates/jetty6/start.bat.template"/>
         </copy>
+        <!-- create windows service wrapper file -->
+        <copy tofile="${server.jetty.base}/bin/jetty-ctier-service.conf" overwrite="true" filtering="true" verbose="true">
+            <filterchain >
+                <expandproperties/>
+            </filterchain>
+            <fileset file="${basedir}/etc/templates/jetty6/jetty-ctier-service.conf.template"/>
+        </copy>
 
 	<!-- create the work dir -->
 	<mkdir dir="${server.jetty.base}/work"/>
