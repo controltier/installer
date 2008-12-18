@@ -161,12 +161,12 @@
                 places the one in the bootstrap-config wins.
             </description>
         </init-param>
-        <!-- 
+        <!--
         <init-param>
           <param-name>repository.context.attribute.name</param-name>
           <param-value>javax.jcr.Repository</param-value>
           <description>
-            If this is set, the RepositoryAccessServlet expects a Repository in the ServletContext 
+            If this is set, the RepositoryAccessServlet expects a Repository in the ServletContext
             attribute having this name. This allows servlets of this module to be used with repositories
             intialized by the jackrabbit-jcr-servlet module utilities.
           </description>
@@ -348,6 +348,23 @@
         <url-pattern>/rmi</url-pattern>
     </servlet-mapping>
 
+
+    <!-- ====================================================================== -->
+    <!-- W E L C O M E   F I L E S                                              -->
+    <!-- ====================================================================== -->
+    <welcome-file-list>
+      <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <error-page>
+        <exception-type>org.apache.jackrabbit.j2ee.JcrApiNotFoundException</exception-type>
+        <location>/error/classpath.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.jcr.RepositoryException</exception-type>
+        <location>/error/repository.jsp</location>
+    </error-page>
+
     <!-- ====================================================================== -->
     <!-- Security constraint and login-config                                   -->
     <!-- ====================================================================== -->
@@ -366,21 +383,4 @@
         <auth-method>BASIC</auth-method>
         <realm-name>jackrabbit</realm-name>
     </login-config>
-
-    <!-- ====================================================================== -->
-    <!-- W E L C O M E   F I L E S                                              -->
-    <!-- ====================================================================== -->
-    <welcome-file-list>
-      <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
-
-    <error-page>
-        <exception-type>org.apache.jackrabbit.j2ee.JcrApiNotFoundException</exception-type>
-        <location>/error/classpath.jsp</location>
-    </error-page>
-    <error-page>
-        <exception-type>javax.jcr.RepositoryException</exception-type>
-        <location>/error/repository.jsp</location>
-    </error-page>
-
 </web-app>
