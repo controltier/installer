@@ -7,8 +7,8 @@
 @echo off
 if "%OS%" == "Windows_NT" setlocal
 
-echo INFO : Reading "%HOME%\CTIER.BAT" ...
-call "%HOME%\CTIER.BAT"
+echo INFO : Reading "%HOMEPATH%\CTIER.BAT" ...
+call "%HOMEPATH%\CTIER.BAT"
 
 IF NOT DEFINED JAVA_HOME (
    ECHO JAVA_HOME not set
