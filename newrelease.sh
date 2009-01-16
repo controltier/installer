@@ -14,6 +14,14 @@ JCPATH=$6
 RCVER=$7
 RCPATH=$8
 
+if [ "$9" == "-check" ] ; then
+    svn stat $CTLPATH/project.xml $CTLPATH/bundle/project.xml
+    svn stat $CTPATH/version.properties $CTPATH/common/project.xml $CTPATH/commander/project.xml $CTPATH/workbench/project.xml $CTPATH/installer/project.xml
+    svn stat $JCPATH/application.properties $JCPATH/grails-app/i18n/messages.properties $JCPATH/etc/install.xml $JCPATH/version.properties
+    svn stat $RCPATH/application.properties $RCPATH/grails-app/i18n/messages.properties $RCPATH/etc/install.xml $RCPATH/version.properties
+    exit 0
+fi
+
 # update ctl version 
 
 perl  -i'.orig' -p -e "s#^version\.number\s*=.*\$#version.number=$CTLVER#" $CTLPATH/version.properties
@@ -36,6 +44,7 @@ perl  -0777 -i'.orig' -p -e "s#(<id>ctl</id>\s*)<version>.*?</version>#\$1<versi
 perl  -i'.orig' -p -e "s#<currentVersion>.*?</currentVersion>#<currentVersion>$CTVER</currentVersion>#s" $CTPATH/commander/project.xml
 perl  -0777 -i'.orig' -p -e "s#(<id>ctl</id>\s*)<version>.*?</version>#\$1<version>$CTLVER</version>#s" $CTPATH/commander/project.xml
 perl  -0777 -i'.orig' -p -e "s#(<id>ctier-.+?</id>\s*)<version>.*?</version>#\$1<version>$CTVER</version>#sg" $CTPATH/commander/project.xml
+perl  -0777 -i'.orig' -p -e "s#(<id>controltier-seed</id>\s*)<version>.*?</version>#\$1<version>$CTVER</version>#sg" $CTPATH/commander/project.xml
 
 
 #workbench
@@ -44,6 +53,7 @@ perl  -i'.orig' -p -e "s#<currentVersion>.*?</currentVersion>#<currentVersion>$C
 perl  -0777 -i'.orig' -p -e "s#(<id>ctl</id>\s*)<version>.*?</version>#\$1<version>$CTLVER</version>#s" $CTPATH/workbench/project.xml
 perl  -0777 -i'.orig' -p -e "s#(<id>ctier-.+?</id>\s*)<version>.*?</version>#\$1<version>$CTVER</version>#sg" $CTPATH/workbench/project.xml
 perl  -0777 -i'.orig' -p -e "s#(<id>commander</id>\s*)<version>.*?</version>#\$1<version>$CTVER</version>#sg" $CTPATH/workbench/project.xml
+perl  -0777 -i'.orig' -p -e "s#(<id>controltier-seed</id>\s*)<version>.*?</version>#\$1<version>$CTVER</version>#sg" $CTPATH/workbench/project.xml
 #installer
 perl  -i'.orig' -p -e "s#<currentVersion>.*?</currentVersion>#<currentVersion>$CTVER</currentVersion>#s" $CTPATH/installer/project.xml
 perl  -0777 -i'.orig' -p -e "s#(<id>ctl</id>\s*)<version>.*?</version>#\$1<version>$CTLVER</version>#s" $CTPATH/installer/project.xml
