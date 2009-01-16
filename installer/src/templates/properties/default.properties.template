@@ -63,6 +63,25 @@ jetty.user.name = default
 # the password of the default ControlTier user
 jetty.user.password = default
 
+# the name of the "admin" ControlTier user, will also be used for Jobcenter
+jetty.user.admin.name = admin
+
+# the password of the "admin" ControlTier user
+jetty.user.admin.password = admin
+
+# the name of the "build" ControlTier user, will also be used for Jobcenter
+jetty.user.build.name = build
+
+# the password of the "build" ControlTier user
+jetty.user.build.password = build
+
+# the name of the "deploy" ControlTier user, will also be used for Jobcenter
+jetty.user.deploy.name = deploy
+
+# the password of the "build" ControlTier user
+jetty.user.deploy.password = deploy
+
+
 ################
 # Workbench
 ################
