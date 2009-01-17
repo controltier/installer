@@ -12,7 +12,7 @@
 # format, either plain text or OBF:.
 #
 jetty: MD5:164c88b302622e17050af52c89945d44,user
-#admin: CRYPT:ad1ks..kc.1Ug,server-administrator,content-administrator,admin
+admin: CRYPT:ad1ks..kc.1Ug,server-administrator,content-administrator,admin
 other: OBF:1xmk1w261u9r1w1c1xmq
 plain: plain
 user: password
@@ -20,9 +20,8 @@ user: password
 # This entry is for digest auth.  The credential is a MD5 hash of username:realmname:password
 digest: MD5:6e120743ad67abfbc385bc2bb754e297
 #
-# This sets the default user account for the ControlTier server apps
+# This sets the default user accounts for the ControlTier apps
 #
-@jetty.user.name@:@jetty.user.password@,user,admin,architect
-@jetty.user.admin.name@:@jetty.user.admin.password@,user,admin,architect
-@jetty.user.deploy.name@:@jetty.user.deploy.password@,user,admin
-@jetty.user.build.name@:@jetty.user.build.password@,user,admin
+@jetty.user.name@:@jetty.user.password@,user,admin,architect,deploy,build
+@jetty.user.deploy.name@:@jetty.user.deploy.password@,user,admin,deploy
+@jetty.user.build.name@:@jetty.user.build.password@,user,admin,build
