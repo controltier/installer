@@ -36,7 +36,7 @@ ul, ol{
 </style>
   </HEAD>
   <BODY>
-    <A HREF="http://open.controltier.org/"><IMG SRC="project-logo.gif"></A>
+    <A HREF="http://open.controltier.org/"><IMG SRC="project-logo.gif" border="0"></A>
     <div class="mainContent">
     <h1>Welcome</h1>
 <div id="main">
