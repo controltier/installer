@@ -37,7 +37,7 @@
     <field type="divider" align="top"/>
     <field type="text" variable="INSTALL_PROJECT_NAME">
       <description align="left" id="description6"/>
-      <spec txt="Name:" id="project.name" size="6" set="default"/>
+      <spec txt="Name:" id="project.name" size="6" set="demo"/>
     </field>
     <field type="text" variable="INSTALL_PROJECT_DESC">
       <description align="left"  id="description7"/>
