@@ -71,10 +71,10 @@
         <iohandler>
             <class name="org.apache.jackrabbit.server.io.VersionHistoryHandler" />
         </iohandler>
+<!--
         <iohandler>
             <class name="org.apache.jackrabbit.server.io.ZipHandler" />
         </iohandler>
-<!--
         <iohandler>
             <class name="org.apache.jackrabbit.server.io.XmlHandler" />
         </iohandler>
