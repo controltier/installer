@@ -690,6 +690,12 @@ fi
                             <filterset>
                                 <filter token="jetty.user.name" value="${jetty.user.name}"/>
                                 <filter token="jetty.user.password" value="${jetty.user.password}"/>
+				<!-- deploy user -->
+				<filter token="jetty.user.deploy.name" value="${jetty.user.deploy.name}"/>
+                                <filter token="jetty.user.deploy.password" value="${jetty.user.deploy.password}"/>
+				<!-- build user -->
+				<filter token="jetty.user.build.name" value="${jetty.user.build.name}"/>
+                                <filter token="jetty.user.build.password" value="${jetty.user.build.password}"/>
                             </filterset>
                             <fileset file="${basedir}/etc/templates/jetty6/realm.properties.template"/>
                         </copy>
