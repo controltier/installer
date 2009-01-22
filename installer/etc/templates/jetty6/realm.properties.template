@@ -23,5 +23,5 @@ digest: MD5:6e120743ad67abfbc385bc2bb754e297
 # This sets the default user accounts for the ControlTier apps
 #
 @jetty.user.name@:@jetty.user.password@,user,admin,architect,deploy,build
-@jetty.user.deploy.name@:@jetty.user.deploy.password@,user,admin,deploy
-@jetty.user.build.name@:@jetty.user.build.password@,user,admin,build
+@jetty.user.deploy.name@:@jetty.user.deploy.password@,user,deploy
+@jetty.user.build.name@:@jetty.user.build.password@,user,build
