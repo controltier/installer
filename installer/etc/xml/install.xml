@@ -435,8 +435,23 @@ fi
                 <isset property="dontexpand"/>
             </not>
             <then>
-	      <echo>Preparing workbench installation ...</echo>
-	      <unjar dest="${server.jetty.base}/webapps/itnav" src="${pkgs.root}/${pkgs.itnav.archive}"/>	      
+              <echo>Preparing workbench installation ...</echo>
+              <unjar dest="${server.jetty.base}/webapps/itnav" src="${pkgs.root}/${pkgs.itnav.archive}"/>
+                <!-- change session cookie name in web.xml -->
+                <!-- duplicate original -->
+                <copy tofile="${server.jetty.base}/webapps/itnav/WEB-INF/web.xml.orig" overwrite="true">
+                    <fileset file="${server.jetty.base}/webapps/itnav/WEB-INF/web.xml"/>
+                </copy>
+
+                <!-- overwrite file -->
+                <copy tofile="${server.jetty.base}/webapps/itnav/WEB-INF/web.xml" overwrite="true" filtering="true" verbose="true">
+                    <filterchain >
+                    <replaceregex flags="si"
+                                  pattern="^.*&lt;param-value&gt;JSESSIONID.*&lt;/param-value&gt;.*$"
+                                  replace="        &lt;param-value&gt;JSESSIONID_CT_${pkgs.itnav.version}&lt;/param-value&gt;"/>
+                    </filterchain>
+                    <fileset file="${server.jetty.base}/webapps/itnav/WEB-INF/web.xml.orig"/>
+                </copy>
             </then>
         </if>
     </target>
