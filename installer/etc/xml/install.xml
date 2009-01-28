@@ -554,7 +554,19 @@ fi
             </filterchain>
             <fileset file="${server.jetty.base}/${itnav.configpath}/bootstrap.properties.orig"/>
         </copy>
-
+        <if>
+            <equals arg1="true" arg2="${depot.default.create}"/>
+            <then>
+                <property name="app.depot.default.name" value="${depot.default.name}"/>
+                <property name="app.depot.default.description" value="${depot.default.description}"/>
+                <property name="app.depot.default.organization" value="${depot.default.organization}"/>
+            </then>
+            <else>
+                <property name="app.depot.default.name" value=""/>
+                <property name="app.depot.default.description" value=""/>
+                <property name="app.depot.default.organization" value=""/>
+            </else>
+        </if>
 
         <!-- modify the runtime.properties to include the correct settings -->
 
@@ -567,13 +579,13 @@ fi
             <filterchain>
                <replaceregex flags="si"
                     pattern="^app\.depot\.default\.name *=(.*)$"
-                    replace="app.depot.default.name = ${depot.default.name}"/>
+                    replace="app.depot.default.name = ${app.depot.default.name}"/>
                <replaceregex flags="si"
                     pattern="^app\.depot\.default\.description *=(.*)$"
-                    replace="app.depot.default.description = ${depot.default.description}"/>
+                    replace="app.depot.default.description = ${app.depot.default.description}"/>
                <replaceregex flags="si"
                     pattern="^app\.depot\.default\.organization *=(.*)$"
-                    replace="app.depot.default.organization = ${depot.default.organization}"/>
+                    replace="app.depot.default.organization = ${app.depot.default.organization}"/>
                 <replaceregex flags="si"
                     pattern="^app\.external\.uri *=(.*)$"
                     replace="app.external.uri = http://${server.jetty.hostname}:${server.jetty.port}"/>
