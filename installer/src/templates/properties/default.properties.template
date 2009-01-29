@@ -210,5 +210,5 @@ framework.ssh.keypath = ${user.home}/.ssh/id_dsa
 depot.default.name = demo
 depot.default.description = The Demonstration project
 depot.default.organization =
-depot.default.create = true
+depot.default.create = false
 
