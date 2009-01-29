@@ -35,6 +35,10 @@
 
     <field type="staticText" align="left"  txt="Default Project"  id="staticText.text3"/>
     <field type="divider" align="top"/>
+    <field type="check" variable="DO_INSTALL_DEFAULT_PROJECT">
+      <description align="left" id="description9"/>
+      <spec txt="Create default project automatically" id="create.project" true="true" false="false" set="false"/>
+    </field>
     <field type="text" variable="INSTALL_PROJECT_NAME">
       <description align="left" id="description6"/>
       <spec txt="Name:" id="project.name" size="6" set="demo"/>
