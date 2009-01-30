@@ -154,12 +154,12 @@ env.ctl_home = ${env.ctier_root}/pkgs/ctl-@ctl.version@
 # Administrative hostname used by the ControlTier client. This is the 
 # hostname that will appear in Workbench. ${server.jetty.hostname} sets this 
 # value to the hostname specified in the Jetty section above. 
-client.hostname = ${server.jetty.hostname} 
+client.hostname = ${server.jetty.hostname}
 
 # Object name used by the ControlTier client. This is the 
 # name that will appear in Workbench. ${server.jetty.hostname} sets this 
 # value to the hostname specified in the Jetty section above. 
-client.node.name = ${client.hostname} 
+client.node.name = ${client.hostname}
 
 # Description of this ControlTier client node.  
 client.node.description = ControlTier managed node.
