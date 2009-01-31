@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ] || [ -z "$8" ] ; then
-    echo "usage: newrelease <ctl-version> <ctl-path> <ctier-version> <ct-path> <jc-version> <jc-path> <rc-version> <rc-path>"
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ]  ; then
+    echo "usage: newrelease <ctl-version> <ctl-path> <ctier-version> <ct-path> <jc-version> <jc-path> <rc-version> [-status | -commit]"
     exit 1
 fi
 
@@ -12,11 +12,11 @@ CTPATH=$4
 JCVER=$5
 JCPATH=$6
 RCVER=$7
-RCPATH=$8
+RCPATH=$CTPATH/reportcenter
 
-if [ "$9" == "-check" ] ; then
+if [ "$8" == "-status" ] ; then
     svn stat $CTLPATH/project.xml $CTLPATH/bundle/project.xml
-    svn stat $CTPATH/version.properties $CTPATH/common/project.xml $CTPATH/commander/project.xml $CTPATH/workbench/project.xml $CTPATH/installer/project.xml
+    svn stat $CTPATH/version.properties $CTPATH/common/project.xml $CTPATH/commander/project.xml $CTPATH/workbench/project.xml $CTPATH/installer/project.xml $CTPATH/ctbuild/objects/project.xml
     svn stat $JCPATH/application.properties $JCPATH/grails-app/i18n/messages.properties $JCPATH/etc/install.xml $JCPATH/version.properties
     svn stat $RCPATH/application.properties $RCPATH/grails-app/i18n/messages.properties $RCPATH/etc/install.xml $RCPATH/version.properties
     exit 0
@@ -80,11 +80,15 @@ perl  -i'.orig' -p -e "s#<property\s+name=\"reportcenter.version\"\s+value=\".*?
 perl  -i'.orig' -p -e "s#<property\s+name=\"commander.version\"\s+value=\".*?\"#<property name=\"commander.version\" value=\"$CTVER\"#" $RCPATH/etc/install.xml
 perl  -i'.orig' -p -e "s#<property\s+name=\"ctl.version\"\s+value=\".*?\"#<property name=\"ctl.version\" value=\"$CTLVER\"#" $RCPATH/etc/install.xml
 
+echo "updating project.xml"
+
+ant -Dctl.path=$CTLPATH -Dctier.path=$CTPATH -Djc.path=$JCPATH -f $CTPATH/ctbuild/build.xml
 
 
-if [ "$9" == "-commit" ] ; then
+if [ "$8" == "-commit" ] ; then
     svn commit -m "update version to $CTLVER, update dependencies" $CTLPATH/project.xml $CTLPATH/bundle/project.xml
     svn commit -m "update version to $CTVER, update dependencies" $CTPATH/version.properties $CTPATH/common/project.xml $CTPATH/commander/project.xml $CTPATH/workbench/project.xml $CTPATH/installer/project.xml
     svn commit -m "update version to $JCVER" $JCPATH/application.properties $JCPATH/grails-app/i18n/messages.properties $JCPATH/etc/install.xml $JCPATH/version.properties
     svn commit -m "update version to $RCVER" $RCPATH/application.properties $RCPATH/grails-app/i18n/messages.properties $RCPATH/etc/install.xml $RCPATH/version.properties
+    svn commit -m "update project.xml definitions to latest" $CTPATH/ctbuild/objects/project.xml 
 fi
