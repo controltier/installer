@@ -196,12 +196,21 @@ headlines sample par-->
        <dependency>
            <id>commander-extension</id>
            <version>3.4.1</version>
-           <url>http://www.controltier.com/</url>
+           <url>http://open.controltier.org/</url>
            <properties>
                <war.bundle.jar>true</war.bundle.jar>
            </properties>
        </dependency>
 
+       <!-- coreutils extension-->
+       <dependency>
+           <id>coreutils-extension</id>
+           <version>0.9</version>
+           <url>http://open.controltier.org/</url>
+           <properties>
+               <war.bundle.jar>true</war.bundle.jar>
+           </properties>
+       </dependency>
 
      <dependency>
          <id>commons-cli</id>

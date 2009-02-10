@@ -158,6 +158,14 @@
               <j:set var="pkg.commander.archive.name" value="${expanded.name}.jar"/>
               <j:set var="pkg.commander.version" value="${dep.version}"/>
           </j:if>
+	  <j:if test="${dep.id == 'coretuils-extension'}">
+              <get src="${maven.repo.ctlocal}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.coretuils.archive.name" value="${expanded.name}.jar"/>
+              <j:set var="pkg.coretuils.version" value="${dep.version}"/>
+          </j:if>
           <j:if test="${dep.id == 'jobcenter'}">
               <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
@@ -249,6 +257,8 @@
 	<filter token="pkg.ctl.version" value="${ctl.version}"/>
 	<filter token="pkg.commander.archive.name" value="${pkg.commander.archive.name}"/>
 	<filter token="pkg.commander.version" value="${pkg.commander.version}"/>
+	<filter token="pkg.coreutils.archive.name" value="${pkg.coreutils.archive.name}"/>
+	<filter token="pkg.coreutils.version" value="${pkg.coreutils.version}"/>
 	<filter token="pkg.headlines.archive.name" value="${pkg.headlines.archive.name}"/>
 	<filter token="pkg.itnav.archive.name" value="${pkg.itnav.archive.name}"/>
 	<filter token="pkg.itnav.version" value="${pkg.itnav.version}"/>

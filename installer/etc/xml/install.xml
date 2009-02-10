@@ -902,6 +902,13 @@ or equivalent:
                     <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
                     <arg line="-f ${basedir}/${pkgs.root}/${pkgs.commander.archive} -D depot.default.name=${depot.default.name} -D depot.default.create=${depot.default.create} -D workbench.server=${server.jetty.hostname} -D workbench.port=${server.jetty.port} --overwrite"/>
                 </exec>
+		<exec executable="${converted.env.ctl_home}/bin/ctl-extension" dir="${converted.env.ctl_base}" newenvironment="true" failonerror="true">
+                    <env key="CTL_HOME" value="${converted.env.ctl_home}"/>
+                    <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
+                    <env key="ANT_HOME" value="${anthome.dir}/${anthome.base}"/>
+                    <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
+                    <arg line="-f ${basedir}/${pkgs.root}/${pkgs.coreutils.archive} -D depot.default.name=${depot.default.name} -D depot.default.create=${depot.default.create} -D workbench.server=${server.jetty.hostname} -D workbench.port=${server.jetty.port} --overwrite"/>
+                </exec>
             </then>
             <elseif>
                 <os family="windows"/>
@@ -920,6 +927,13 @@ or equivalent:
 <!--                        <env key="ANT_HOME" value="${ant.home}"/>-->
                         <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
                         <arg line='-f "${basedir}\${pkgs.root}\${pkgs.commander.archive}" -D depot.default.name=${depot.default.name} -D depot.default.create=${depot.default.create} -D workbench.server=${server.jetty.hostname} -D workbench.port=${server.jetty.port}'/>
+                    </exec>
+		    <exec executable="${converted.env.ctl_home}\bin\ctl-extension.bat" dir="${converted.env.ctl_base}" newenvironment="true" failonerror="true">
+                        <env key="CTL_HOME" value="${converted.env.ctl_home}"/>
+                        <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
+<!--                        <env key="ANT_HOME" value="${ant.home}"/>-->
+                        <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
+                        <arg line='-f "${basedir}\${pkgs.root}\${pkgs.coreutils.archive}" -D depot.default.name=${depot.default.name} -D depot.default.create=${depot.default.create} -D workbench.server=${server.jetty.hostname} -D workbench.port=${server.jetty.port}'/>
                     </exec>
                 </then>
             </elseif>
