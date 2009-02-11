@@ -158,13 +158,13 @@
               <j:set var="pkg.commander.archive.name" value="${expanded.name}.jar"/>
               <j:set var="pkg.commander.version" value="${dep.version}"/>
           </j:if>
-	  <j:if test="${dep.id == 'coretuils-extension'}">
+	        <j:if test="${dep.id == 'coreutils-extension'}">
               <get src="${maven.repo.ctlocal}/${dep.id}/jars/${dep.id}-${dep.version}.jar"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.jar"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
-              <j:set var="pkg.coretuils.archive.name" value="${expanded.name}.jar"/>
-              <j:set var="pkg.coretuils.version" value="${dep.version}"/>
+              <j:set var="pkg.coreutils.archive.name" value="${expanded.name}.jar"/>
+              <j:set var="pkg.coreutils.version" value="${dep.version}"/>
           </j:if>
           <j:if test="${dep.id == 'jobcenter'}">
               <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
