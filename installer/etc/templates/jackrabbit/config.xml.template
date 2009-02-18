@@ -112,10 +112,11 @@
         <propertyhandler>
             <class name="org.apache.jackrabbit.server.io.VersionHistoryHandler" />
         </propertyhandler>
+<!--
         <propertyhandler>
             <class name="org.apache.jackrabbit.server.io.ZipHandler" />
         </propertyhandler>
-<!--
+
         <propertyhandler>
             <class name="org.apache.jackrabbit.server.io.XmlHandler" />
         </propertyhandler>
