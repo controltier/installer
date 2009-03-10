@@ -6,11 +6,32 @@
 export JAVA_HOME=/usr/java/jdk1.5.0_15
 export BUILD_ROOT=$HOME
 
-CTLVERS=1.2
-CTIERVERS=3.2.4
-RCVERS=0.6
-JCVERS=1.1
+if [ ! -f $JAVA_HOME/bin/java ] ; then
+    echo "ERROR: java is not configured correctly.  Set JAVA_HOME."
+    exit 1
+fi
 
+if [ ! -f $HOME/.ssh/id_dsa.pub ] ; then
+    echo "ERROR: $HOME/.ssh/id_dsa file must exist.  Please run: ssh-keygen -t dsa"
+    exit 1
+fi
+
+CTLVERS=1.4.2
+CTIERVERS=3.4.2
+RCVERS=0.8.2
+JCVERS=1.4.2
+
+
+CTLSVNROOT="https://ctl-dispatch.svn.sourceforge.net/svnroot/ctl-dispatch"
+CTIERSVNROOT="https://controltier.svn.sourceforge.net/svnroot/controltier"
+JCSVNROOT="https://webad.svn.sourceforge.net/svnroot/webad"
+SEEDSVNROOT="https://moduleforge.svn.sourceforge.net/svnroot/moduleforge/controltier"
+
+CTLBRANCH=ctl-dispatch-1-4-support
+CTIERBRANCH=controltier-3-4-support
+JCBRANCH=jobcenter-1-4-support
+
+prepare_build(){
 
 # dl dir is for downloaded files
 mkdir $BUILD_ROOT/dl
@@ -23,22 +44,32 @@ mkdir $BUILD_ROOT/localrepo
 export LOCALREPO=$BUILD_ROOT/localrepo
 export LOCALREPOURL=file:$LOCALREPO
 
-# get ant zip dependency to local repo
+
 mkdir -p $LOCALREPO/apache-ant/zips
-cd $LOCALREPO/apache-ant/zips
-wget -N http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.7.1p1.zip
+if [ ! -f $LOCALREPO/apache-ant/zips/apache-ant-1.7.1p1.zip ] ; then
+    # get ant zip dependency to local repo if it doesn't exist
+    cd $LOCALREPO/apache-ant/zips
+    wget -N http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.7.1p1.zip
+fi
 
-# get grails bin distribution
-cd $BUILD_ROOT/dl
-wget -N http://dist.codehaus.org/grails/grails-bin-1.0.3.tar.gz
-
-
-# extract grails and apache-ant to local dir for use during build
-cd $BUILD_ROOT/local
-tar xvzf $BUILD_ROOT/dl/grails-bin-1.0.3.tar.gz
-unzip -o $LOCALREPO/apache-ant/zips/apache-ant-1.7.1p1.zip
+# extract apache-ant to local dir for use during build
+if [ ! -f $BUILD_ROOT/local/apache-ant-1.7.1p1/bin/ant ] ; then
+    cd $BUILD_ROOT/local
+    unzip -o $LOCALREPO/apache-ant/zips/apache-ant-1.7.1p1.zip
+fi
 
 export ANT_HOME=$BUILD_ROOT/local/apache-ant-1.7.1p1
+
+
+# extract grails to local dir for use during build
+if [ ! -f $BUILD_ROOT/local/grails-1.0.3/bin/grails ] ; then 
+    # get grails bin distribution
+    cd $BUILD_ROOT/dl
+    wget -N http://dist.codehaus.org/grails/grails-bin-1.0.3.tar.gz
+    cd $BUILD_ROOT/local
+    tar xvzf $BUILD_ROOT/dl/grails-bin-1.0.3.tar.gz
+fi
+
 export GRAILS_HOME=$BUILD_ROOT/local/grails-1.0.3
 
 
@@ -47,18 +78,45 @@ export GRAILS_HOME=$BUILD_ROOT/local/grails-1.0.3
 cd $BUILD_ROOT
 
 #checkout ctier source
-svn co https://controltier.svn.sourceforge.net/svnroot/controltier/branches/controltier-3-2-dev ctiersvn
+svn co $CTIERSVNROOT/branches/$CTIERBRANCH ctiersvn
+if [ 0 != $? ]
+then
+   echo "CTIER src checkout failed"
+   exit 2
+fi
 export CTIERSVN=$BUILD_ROOT/ctiersvn
 
 #checkout ctl source
-svn co https://ctl-dispatch.svn.sourceforge.net/svnroot/ctl-dispatch/trunk ctlsvn
+svn co $CTLSVNROOT/branches/$CTLBRANCH ctlsvn
+if [ 0 != $? ]
+then
+   echo "CTL src checkout failed"
+   exit 2
+fi
 export CTLSVN=$BUILD_ROOT/ctlsvn
 
 #checkout jobcenter source
-svn co https://webad.svn.sourceforge.net/svnroot/webad/branches/jobcenter-1-0-dev/webad jobcentersvn
+svn co $JCSVNROOT/branches/$JCBRANCH/webad jobcentersvn
+if [ 0 != $? ]
+then
+   echo "Jobcenter src checkout failed"
+   exit 2
+fi
 export JCSVN=$BUILD_ROOT/jobcentersvn
 
+#checkout modules source
+svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
+if [ 0 != $? ]
+then
+   echo "Controltier Seed src checkout failed"
+   exit 2
+fi
+export SEEDSVN=$BUILD_ROOT/ctierseedsvn
 
+}
+
+
+build_ctl(){
 #########################
 #
 # CTL build
@@ -66,14 +124,16 @@ export JCSVN=$BUILD_ROOT/jobcentersvn
 # NOTE: if $HOME/.ssh/id_dsa does not exist, run ssh-keygen:
 # ssh-keygen -t dsa
 
+
 cd $CTLSVN
 echo maven.repo.ctierlocal = $LOCALREPOURL > build.properties
 MAVEN_HOME=$CTLSVN/maven
-$MAVEN_HOME/bin/maven clean ctl:antConfigure
-$MAVEN_HOME/bin/maven ctl:stgz ctl:tgz ctl:zip
+cd $CTLSVN && $MAVEN_HOME/bin/maven clean ctl:antConfigure
+cd $CTLSVN && $MAVEN_HOME/bin/maven ctl:stgz ctl:tgz ctl:zip
 
 mkdir -p $LOCALREPO/ctl/jars
-mkdir -p $LOCALREPO/ctl-dispatch/tgzs
+mkdir -p $LOCALREPO/ctl/tgzs
+mkdir -p $LOCALREPO/ctl/zips
 cp target/ctl-dispatch-$CTLVERS.jar $LOCALREPO/ctl/jars/ctl-$CTLVERS.jar 
 if [ 0 != $? ]
 then
@@ -81,25 +141,34 @@ then
    exit 2
 fi
 
-cp target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz $LOCALREPO/ctl-dispatch/tgzs/ctl-dispatch-$CTLVERS.tgz 
+cp target/dist/zips/ctl-dispatch-$CTLVERS.zip $LOCALREPO/ctl/zips/ctl-$CTLVERS.zip 
+if [ 0 != $? ]
+then
+   echo "CTL build failed: cannot copy target/dist/zips/ctl-dispatch-$CTLVERS.zip"
+   exit 2
+fi
+
+cp target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz $LOCALREPO/ctl/tgzs/ctl-$CTLVERS.tgz 
 if [ 0 != $? ]
 then
    echo "CTL build failed: cannot copy target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz"
    exit 2
 fi
+}
 
+build_common(){
 #######################
 #
 # CTIER common build
 #
 MAVEN_HOME=$CTIERSVN/maven	
+echo maven.repo.ctlocal = $LOCALREPOURL >  $CTIERSVN/common/build.properties
 cd $CTIERSVN/common
-$MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jars
+cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jars
 		
 
 mkdir -p $LOCALREPO/ctier-common/jars
 mkdir -p $LOCALREPO/ctier-common-vocabulary/jars
-mkdir -p $LOCALREPO/ctier-base-seed/jars
 cp target/distributions/ctier-common/jars/ctier-common-$CTIERVERS.jar $LOCALREPO/ctier-common/jars/ctier-common-$CTIERVERS.jar 
 if [ 0 != $? ]
 then
@@ -112,23 +181,48 @@ then
    echo "CTIER common build failed: cannot copy target/distributions/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.jar"
    exit 2
 fi  
-cp target/distributions/ctier-base-seed/jars/ctier-base-seed-$CTIERVERS.jar $LOCALREPO/ctier-base-seed/jars/ctier-base-seed-$CTIERVERS.jar 
+}
+
+build_controltier_seed(){
+######################
+#
+# CTIER Seed build
+#
+# Note: this step uses the common sourcebase and maven dependency to build the controltier-seed
+#
+MAVEN_HOME=$CTIERSVN/maven	
+echo maven.repo.ctlocal = $LOCALREPOURL >  $CTIERSVN/common/build.properties
+
+mkdir -p $SEEDSVN/target
+cd $CTIERSVN/common
+cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Dseed.name=controltier -Dseed.build.name=controltier-seed-$CTIERVERS -Dseed.modulesrc.dir=$SEEDSVN/core/modules,$SEEDSVN/elements/modules -Dseed.target.dir=$SEEDSVN/target seed:build
 if [ 0 != $? ]
 then
-   echo "CTIER common build failed: cannot copy target/distributions/ctier-base-seed/jars/ctier-base-seed-$CTIERVERS.jar"
+   echo "Ctier Seed build failed: unable to create the controltier-seed-$CTIERVERS.jar"
    exit 2
 fi  
 
+mkdir -p $LOCALREPO/controltier-seed/jars
+cp $SEEDSVN/target/controltier-seed-$CTIERVERS.jar $LOCALREPO/controltier-seed/jars/controltier-seed-$CTIERVERS.jar 
+if [ 0 != $? ]
+then
+   echo "Ctier Seed build failed: cannot copy target/controltier-seed-$CTIERVERS.jar"
+   exit 2
+fi  
+}
+
+build_workbench(){
 #########################
 #
 # CTIER workbench build
 #
 
+MAVEN_HOME=$CTIERSVN/maven	
 cd $CTIERSVN/workbench
 
-echo maven.repo.ctlocal = $LOCALREPOURL > build.properties
-$MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar-resources
-$MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar war
+echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/workbench/build.properties
+cd $CTIERSVN/workbench && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar-resources
+cd $CTIERSVN/workbench && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar war
 
 
 mkdir -p $LOCALREPO/itnav/wars
@@ -138,15 +232,19 @@ then
    echo "Workbench build failed: cannot copy target/itnav.war"
    exit 2
 fi  
+}
 
-
+build_commander_extension(){
 ##################
 #
 # CTIER commander-extension build
 #
+MAVEN_HOME=$CTIERSVN/maven	
 cd $CTIERSVN/commander
-$MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar-resources 
-$MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true extension:package
+
+echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/commander/build.properties
+cd $CTIERSVN/commander && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar-resources 
+cd $CTIERSVN/commander && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true extension:package
    
 #    artifacts: commander-extension-X.jar, commander-X.jar
 mkdir -p $LOCALREPO/commander-extension/jars
@@ -164,8 +262,9 @@ then
    echo "CTIER commander-extension build failed: cannot copy target/commander-$CTIERVERS.jar"
    exit 2
 fi  
+}
 
-
+build_coreutils_extension(){
 ##################
 #
 # Download coreutils-extension jar
@@ -179,38 +278,42 @@ then
    echo "Couldn't get coreutils-extension"
    exit 2
 fi  
+}
 
-
+build_ctl_bundle(){
 ##################
 #
 # CTL bundle build
 #
 
-cd $CTLSVN/bundle
-export MAVEN_HOME=../maven
-echo maven.repo.ctier = $LOCALREPOURL > build.properties
-$MAVEN_HOME/bin/maven clean ctl:bundle
+#cd $CTLSVN/bundle
+#export MAVEN_HOME=../maven
+#echo maven.repo.ctier = $LOCALREPOURL > build.properties
+#$MAVEN_HOME/bin/maven clean ctl:bundle
 
 #!! failed to download ctl-dispatch.jar ... !!!
 
 # artifacts: ctl-X.tgz, ctl-X.zip
-mkdir -p $LOCALREPO/ctl/zips
-mkdir -p $LOCALREPO/ctl/tgzs
-cp target/dist/zips/ctl-$CTLVERS.zip $LOCALREPO/ctl/zips/ctl-$CTLVERS.zip 
-if [ 0 != $? ]
-then
-   echo "CTL bundle build failed: cannot copy target/dist/zips/ctl-$CTLVERS.zip"
-   exit 2
-fi  
+#mkdir -p $LOCALREPO/ctl/zips
+#mkdir -p $LOCALREPO/ctl/tgzs
+#cp target/dist/zips/ctl-$CTLVERS.zip $LOCALREPO/ctl/zips/ctl-$CTLVERS.zip 
+#if [ 0 != $? ]
+#then
+   #echo "CTL bundle build failed: cannot copy target/dist/zips/ctl-$CTLVERS.zip"
+   #exit 2
+#fi  
 
-cp target/dist/tgzs/ctl-$CTLVERS.tgz $LOCALREPO/ctl/tgzs/ctl-$CTLVERS.tgz 
-if [ 0 != $? ]
-then
-   echo "CTL bundle build failed: cannot copy target/dist/tgzs/ctl-$CTLVERS.tgz"
-   exit 2
-fi  
+#cp target/dist/tgzs/ctl-$CTLVERS.tgz $LOCALREPO/ctl/tgzs/ctl-$CTLVERS.tgz 
+#if [ 0 != $? ]
+#then
+   #echo "CTL bundle build failed: cannot copy target/dist/tgzs/ctl-$CTLVERS.tgz"
+   #exit 2
+#fi  
+echo ctl_bundle disabled
 
+}
 
+build_jobcenter(){
 #####################
 #
 # Jobcenter build
@@ -240,8 +343,9 @@ then
    exit 2
 fi  
 
+}
 
-
+build_reportcenter(){
 ######################
 #
 # Reportcenter build
@@ -267,18 +371,18 @@ then
    echo "Reportcenter build failed: cannot copy target/reportcenter-$RCVERS.zip"
    exit 2
 fi  
+}
 
-
-
+build_installer(){
 ######################
 #
 # Installer build
 #
-
+MAVEN_HOME=$CTIERSVN/maven	
 cd $CTIERSVN/installer
 	
-echo maven.repo.ctlocal = $LOCALREPOURL > build.properties
-$MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean installer:create 
+echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/installer/build.properties
+cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean installer:create 
 if [ 0 != $? ]
 then
    echo "Installer build failed"
@@ -302,3 +406,61 @@ then
    exit 2
 fi  
 
+}
+
+
+if [ -z "$*" ] ; then
+
+    prepare_build
+    build_ctl
+    build_common
+    build_controltier_seed
+    build_workbench
+    build_commander_extension
+    build_coreutils_extension
+    build_ctl_bundle
+    build_jobcenter
+    build_reportcenter
+    build_installer
+else
+    prepare_build
+    for i in $* ; do
+        case "$i" in
+            ctl)
+                build_ctl
+                ;;
+            common)
+                build_common
+                ;;
+            controltier_seed)
+                build_controltier_seed
+                ;;
+            workbench)
+                build_workbench
+                ;;
+            commander_extension)
+                build_commander_extension
+                ;;
+            coreutils_extension)
+                build_coreutils_extension
+                ;;
+            ctl_bundle)
+                build_ctl_bundle
+                ;;
+            jobcenter)
+                build_jobcenter
+                ;;
+            reportcenter)
+                build_reportcenter
+                ;;
+            installer)
+                build_installer
+                ;;
+            *)
+                echo unknown action: ${i}
+                exit 1
+            ;;
+        esac
+    done
+    exit 0
+fi
