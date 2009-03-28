@@ -90,5 +90,5 @@ if [ "$8" == "-commit" ] ; then
     svn commit -m "update version to $CTVER, update dependencies" $CTPATH/version.properties $CTPATH/common/project.xml $CTPATH/commander/project.xml $CTPATH/workbench/project.xml $CTPATH/installer/project.xml
     svn commit -m "update version to $JCVER" $JCPATH/application.properties $JCPATH/grails-app/i18n/messages.properties $JCPATH/etc/install.xml $JCPATH/version.properties
     svn commit -m "update version to $RCVER" $RCPATH/application.properties $RCPATH/grails-app/i18n/messages.properties $RCPATH/etc/install.xml $RCPATH/version.properties
-    svn commit -m "update project.xml definitions to latest" $CTPATH/ctbuild/objects/project.xml 
+    svn commit -m "update project.xml definitions to latest" $CTPATH/ctbuild/objects/project.xml $CTPATH/ctbuild/build.properties $CTPATH/ctbuild/jobs/jobs.xml
 fi
