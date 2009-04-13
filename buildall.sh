@@ -373,6 +373,33 @@ then
 fi  
 }
 
+build_examples(){
+######################
+#
+# examples package build
+#
+cd $CTIERSVN/examples
+mkdir -p $CTIERSVN/examples/target
+svn export . $CTIERSVN/examples/target/examples
+cd target
+zip -r ctier-examples-$CTIERVERS.zip examples
+if [ 0 != $? ]
+then
+   echo "Examples package build failed"
+   exit 2
+fi  
+
+#artifacts: ctier-examples-X.zip
+mkdir -p $LOCALREPO/ctier-examples/zips
+cp $CTIERSVN/examples/target/ctier-examples-$CTIERVERS.zip $LOCALREPO/ctier-examples/zips/ctier-examples-$CTIERVERS.zip 
+if [ 0 != $? ]
+then
+   echo "Examples build failed: cannot copy target/ctier-examples-$CTIERVERS.zip"
+   exit 2
+fi  
+
+}
+
 build_installer(){
 ######################
 #
@@ -421,6 +448,7 @@ if [ -z "$*" ] ; then
     build_ctl_bundle
     build_jobcenter
     build_reportcenter
+    build_examples
     build_installer
 else
     prepare_build
@@ -452,6 +480,9 @@ else
                 ;;
             reportcenter)
                 build_reportcenter
+                ;;
+            examples)
+                build_examples
                 ;;
             installer)
                 build_installer
