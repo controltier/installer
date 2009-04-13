@@ -182,6 +182,14 @@
               <j:set var="pkg.reportcenter.archive.name" value="${expanded.name}.zip"/>
               <j:set var="pkg.reportcenter.version" value="${dep.version}"/>
           </j:if>
+          <j:if test="${dep.id == 'ctier-examples'}">
+              <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
+                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                      />
+              <j:set var="pkg.examples.archive.name" value="${expanded.name}.zip"/>
+              <j:set var="pkg.examples.version" value="${dep.version}"/>
+          </j:if>
           <j:if test="${dep.id == 'jetty'}">
               <mkdir dir="${target.dir}/pkgs"/>
               <get src="${maven.repo.ctier}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
@@ -266,6 +274,7 @@
 	<filter token="pkg.jobcenter.version" value="${pkg.jobcenter.version}"/>
 	<filter token="pkg.reportcenter.archive.name" value="${pkg.reportcenter.archive.name}"/>
 	<filter token="pkg.reportcenter.version" value="${pkg.reportcenter.version}"/>
+	<filter token="pkg.examples.archive.name" value="${pkg.examples.archive.name}"/>
 	<filter token="pkg.jetty.version" value="${pkg.jetty.version}"/>
 	<filter token="pkg.jetty.archive.name" value="${pkg.jetty.archive.name}"/>
 	<filter token="pkg.jackrabbit.archive.name" value="${pkg.jackrabbit.archive.name}"/>

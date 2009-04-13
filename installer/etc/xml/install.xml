@@ -177,7 +177,7 @@ fi
     </target>
 
 
-    <target name="-install-server" depends="check-server-env,-backup-server-config,clean-server,expand-itnav,expand-jackrabbit,configure-server,install-sample-par,configure-landingpage" >
+    <target name="-install-server" depends="check-server-env,-backup-server-config,clean-server,expand-itnav,expand-jackrabbit,configure-server,install-examples,configure-landingpage" >
         <echo>ControlTier Server installed.</echo>
     </target>
     <target name="install-server" depends="-check-prereqs,-load-props,-install-server" >
@@ -732,7 +732,7 @@ fi
         </if>
     </target>
 
-    <target name="install-sample-par">
+    <target name="install-examples">
         <!-- copy the headlines par into webdav archive directory -->
         <if>
             <and>
@@ -743,6 +743,18 @@ fi
                 <copy tofile="${server.jetty.base}/webapps/${server.jetty.webdav.path}/archive/headlines/${pkgs.headlines.archive}" >
                     <fileset file="${basedir}/${pkgs.root}/${pkgs.headlines.archive}"/>
                 </copy>
+            </then>
+        </if>
+        <!-- copy the examples dir into CTIER root dir-->
+        <if>
+            <and>
+                <isset property="pkgs.examples.archive"/>
+                <available file="${basedir}/${pkgs.root}/${pkgs.examples.archive}"/>
+            </and>
+            <then>
+                <unzip src="${basedir}/${pkgs.root}/${pkgs.examples.archive}" dest="${env.ctier_root}/examples" overwrite="true" >
+                    <globmapper from="examples/*" to="*"/>
+                </unzip>
             </then>
         </if>
     </target>
