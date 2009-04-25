@@ -17,7 +17,7 @@
    <id>depo</id>
      -->
    <id>ControlTier</id>
-   <currentVersion>3.4.3</currentVersion>
+   <currentVersion>3.4.4</currentVersion>
 
 
    <!--
@@ -161,7 +161,7 @@
 
       <dependency>
          <id>ctl</id>
-         <version>1.4.3</version>
+         <version>1.4.4</version>
          <url>http://www.antdepo.org/</url>
           <type>tgz</type>
          <properties>
@@ -172,7 +172,7 @@
       <!-- the Workbench Server (ITNav) jar -->
       <dependency>
          <id>itnav</id>
-         <version>3.4.3</version>
+         <version>3.4.4</version>
          <url>http://www.controltier.com/</url>
           <type>war</type>
          <properties>
@@ -195,7 +195,7 @@ headlines sample par-->
        <!-- commander extension-->
        <dependency>
            <id>commander-extension</id>
-           <version>3.4.3</version>
+           <version>3.4.4</version>
            <url>http://open.controltier.org/</url>
            <properties>
                <war.bundle.jar>true</war.bundle.jar>
@@ -232,7 +232,7 @@ headlines sample par-->
 
        <dependency>
            <id>jobcenter</id>
-           <version>1.4.3</version>
+           <version>1.4.4</version>
            <url>http://www.controltier.com</url>
            <type>zip</type>
            <properties>
@@ -242,7 +242,7 @@ headlines sample par-->
 
        <dependency>
            <id>reportcenter</id>
-           <version>0.8.3</version>
+           <version>0.8.4</version>
            <url>http://www.controltier.com</url>
            <type>zip</type>
            <properties>
