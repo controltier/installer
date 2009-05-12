@@ -806,7 +806,19 @@ fi
     </target>
 
     <target name="echo-rcfile-info" description="Prints information about location and content of .ctierrc file.">
-        <echo>
+        <if>
+            <os family="windows"/>
+            <then>
+<echo>
+A ctier.bat file was generated at:
+   ${user.home}\${installer.rcbatfilename}
+
+It defines necessary environment variables and should be executed
+prior to starting up the jetty server.
+</echo>
+            </then>
+            <else>
+<echo>
 A .ctierrc file was generated at:
     ${user.home}/${installer.rcfilename}
 containing the appropriate environment variables for the installed
@@ -819,6 +831,8 @@ or equivalent:
     echo ~/.ctierrc not found 1&gt;&amp;2
     fi
 </echo>
+            </else>
+        </if>
     </target>
 
     <target name="expand-client">
