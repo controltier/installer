@@ -215,7 +215,7 @@ headlines sample par-->
        <!-- ctier-examples package -->
        <dependency>
            <id>ctier-examples</id>
-           <version>3.4.3</version>
+           <version>3.4.4</version>
            <url>http://open.controltier.org/</url>
            <properties>
                <war.bundle.jar>true</war.bundle.jar>
