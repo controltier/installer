@@ -273,7 +273,7 @@ headlines sample par-->
        <!-- JackRabbit Webdav web application -->
        <dependency>
            <id>jackrabbit-webapp</id>
-           <version>1.5.2</version>
+           <version>1.5.5</version>
            <type>war</type>
            <properties>
                <war.bundle.jar>false</war.bundle.jar>
