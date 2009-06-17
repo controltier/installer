@@ -202,16 +202,6 @@ headlines sample par-->
            </properties>
        </dependency>
 
-       <!-- coreutils extension-->
-       <dependency>
-           <id>coreutils-extension</id>
-           <version>0.9</version>
-           <url>http://open.controltier.org/</url>
-           <properties>
-               <war.bundle.jar>true</war.bundle.jar>
-           </properties>
-       </dependency>
-
        <!-- ctier-examples package -->
        <dependency>
            <id>ctier-examples</id>
