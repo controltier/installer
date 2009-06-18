@@ -163,22 +163,26 @@
     <New id="jackrabbit"  class="org.mortbay.jetty.webapp.WebAppContext">      
       <Arg><Ref id="Contexts"/></Arg>
       <Arg><SystemProperty name="jetty.home" default="."/>/webapps/jackrabbit</Arg>
-      <Arg>/jackrabbit</Arg>      
+      <Arg>/jackrabbit</Arg>
+      <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
     </New>
     <New id="reportcenter"  class="org.mortbay.jetty.webapp.WebAppContext">      
       <Arg><Ref id="Contexts"/></Arg>
       <Arg><SystemProperty name="jetty.home" default="."/>/webapps/reportcenter</Arg>
-      <Arg>/reportcenter</Arg>      
+      <Arg>/reportcenter</Arg>
+      <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
     </New>
     <New id="jobcenter"  class="org.mortbay.jetty.webapp.WebAppContext">      
       <Arg><Ref id="Contexts"/></Arg>
       <Arg><SystemProperty name="jetty.home" default="."/>/webapps/jobcenter</Arg>
-      <Arg>/jobcenter</Arg>      
+      <Arg>/jobcenter</Arg>
+      <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
     </New>
     <New id="itnav"  class="org.mortbay.jetty.webapp.WebAppContext">      
       <Arg><Ref id="Contexts"/></Arg>
       <Arg><SystemProperty name="jetty.home" default="."/>/webapps/itnav</Arg>
-      <Arg>/itnav</Arg>      
+      <Arg>/itnav</Arg>
+      <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
     </New>
 
     <!-- =========================================================== -->
