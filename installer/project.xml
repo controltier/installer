@@ -24,8 +24,8 @@
      ** Organizational attributes name/url
      -->
    <organization>
-      <name>ControlTier, Inc.</name>
-      <url>http://www.controltier.com/</url>
+      <name>ControlTier</name>
+      <url>http://open.controltier.org/</url>
    </organization>
 
    <!--
@@ -51,9 +51,7 @@
      ** A detailed description of this project for "front page" of report
      -->
    <description>
-      This is the Deployment Object System, please see 
-      <![CDATA[<a href="http://www.networkgps.com">NetworkGPS Aspect-oriented Metadata Management</a>]]>
-      for details
+      This is the ControlTier installer.
    </description>
 
    <!--
@@ -112,14 +110,9 @@
    <!--
    <mailingLists>
       <mailingList>
-         <name>NetworkGPS User List</name>
-         <sucscribe>networkgps-colony-user-subscribe@networkgps.com</sucscribe>
-         <unsucscribe>networkgps-colony-user-unsubscribe@networkgps.com</unsucscribe>
-      </mailingList>
-      <mailingList>
-         <name>OpenDepo depo Developer List</name>
-         <sucscribe>networkgps-colony-dev-subscribe@networkgps.com</sucscribe>
-         <unsucscribe>networkgps-colongy-dev-user-unsubscribe@networkgps.com</unsucscribe>
+         <name>ControlTier User List</name>
+         <sucscribe>controltier@groups.google.com</sucscribe>
+         <unsucscribe>controltier@groups.google.com</unsucscribe>
       </mailingList>
    </mailingLists>
      -->
@@ -162,7 +155,7 @@
       <dependency>
          <id>ctl</id>
          <version>1.4.6</version>
-         <url>http://www.antdepo.org/</url>
+         <url>http://open.controltier.org/</url>
           <type>tgz</type>
          <properties>
             <war.bundle.jar>false</war.bundle.jar>
@@ -173,7 +166,7 @@
       <dependency>
          <id>itnav</id>
          <version>3.4.6</version>
-         <url>http://www.controltier.com/</url>
+         <url>http://open.controltier.org/</url>
           <type>war</type>
          <properties>
             <war.bundle.jar>true</war.bundle.jar>
@@ -184,7 +177,7 @@
        <dependency>
            <id>headlines</id>
            <version>20060929161527</version>
-           <url>http://www.controltier.com/</url>
+           <url>http://open.controltier.org/</url>
            <type>par</type>
            <properties>
                <war.bundle.jar>true</war.bundle.jar>
@@ -223,7 +216,7 @@ headlines sample par-->
        <dependency>
            <id>jobcenter</id>
            <version>1.4.6</version>
-           <url>http://www.controltier.com</url>
+           <url>http://open.controltier.org</url>
            <type>zip</type>
            <properties>
                <war.bundle.jar>true</war.bundle.jar>
@@ -233,7 +226,7 @@ headlines sample par-->
        <dependency>
            <id>reportcenter</id>
            <version>0.8.6</version>
-           <url>http://www.controltier.com</url>
+           <url>http://open.controltier.org</url>
            <type>zip</type>
            <properties>
                <war.bundle.jar>true</war.bundle.jar>
