@@ -17,7 +17,8 @@ $Id$
 
     <property file="etc/installer.properties" classpath="." />
 
-    <target name="-load-props">
+    <target name="-load-props" description="Configures default properties and loads the configuration from default.properties">
+        <property environment="USER_ENV"/>
         <if>
             <os family="windows"/>
             <then>
@@ -27,13 +28,105 @@ $Id$
                 <property name="ctier.root.default" value="${user.home}/ctier"/>
             </else>
         </if>
+
+        <!-- import system hostname -->
+        <exec executable="hostname" failifexecutionfails="false" outputproperty="system.hostname" failonerror="false"/>
+        <if>
+            <not>
+                <isset property="system.hostname"/>
+            </not>
+            <then>
+                <if>
+                    <os family="windows"/>
+                    <then>
+                        <property name="system.hostname" value="${USER_ENV.COMPUTERNAME}"/>
+                    </then>
+                    <else>
+                        <property name="system.hostname" value="${USER_ENV.HOSTNAME}"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+        <if>
+            <or>
+                <not>
+                    <isset property="system.hostname"/>
+                </not>
+                <equals arg1="${system.hostname}" arg2="$${USER_ENV.COMPUTERNAME}"/>
+                <equals arg1="${system.hostname}" arg2="$${USER_ENV.HOSTNAME}"/>
+            </or>
+            <then>
+                <fail>ERROR: System hostname could not be determined. Please specify with -Dsystem.hostname=&lt;value&gt; on the commandline.</fail>
+            </then>
+        </if>
+        <!--
+        <if>
+            <equals arg1="${system.hostname}" arg2="localhost"/>
+            <then>
+                <echo level="warn">System hostname is "localhost".  Use of this hostname is discouraged.</echo>
+            </then>
+        </if>
+        -->
+        <echo>System hostname: ${system.hostname}</echo>
+
+
+        <if>
+            <isset property="is.server.install"/>
+            <then>
+                <!-- default for server.hostname is system hostname for a server installation -->
+                <property name="server.hostname.default" value="${system.hostname}"/>
+            </then>
+        </if>
+
+        <!-- default for client.hostname in client installation is the system hostname -->
+        <if>
+            <isset property="is.client.install"/>
+            <then>
+                <property name="client.hostname.default" value="${system.hostname}"/>
+            </then>
+        </if>
+
+        <!-- load the defaults.properties file -->
         <property file="${ctier.installfile}"/>
+
+        <!-- test whether it is a client install and the server.hostname is unset -->
+        <if>
+            <and>
+                <isset property="is.client.install"/>
+                <or>
+                    <not>
+                        <isset property="server.hostname"/>
+                    </not>
+                    <equals arg1="${server.hostname}" arg2="$${server.hostname.default}"/>
+                </or>
+            </and>
+            <then>
+                <fail>server.hostname is not set. For client installation, set server.hostname in defaults.properties, or on commandline via -Dserver.hostname=&lt;value&gt;</fail>
+            </then>
+        </if>
+        <!-- test whether it is a client install and the server.hostname is unset -->
+        <if>
+            <and>
+                <isset property="is.server.install"/>
+                <not>
+                    <equals arg1="${server.hostname}" arg2="${client.hostname}"/>
+                </not>
+            </and>
+            <then>
+                <!-- set client.hostname to the same as server.hostname -->
+                <var name="client.hostname" value="${server.hostname}"/>
+            </then>
+        </if>
+
         <echo>Using CTIER_ROOT: ${env.ctier_root}</echo>
+        <echo>Using server HOSTNAME: ${server.hostname}</echo>
+        <echo>Using client HOSTNAME: ${client.hostname}</echo>
         <pathconvert property="env.ctier_root.converted">
-            <path path="${env.ctier_root}"/>        </pathconvert>
+            <path path="${env.ctier_root}"/>
+        </pathconvert>
         <pathconvert property="env.ctier_root.forwardslash" dirsep="/">
-            <path path="${env.ctier_root}"/>        </pathconvert>
-        <property environment="USER_ENV"/>
+            <path path="${env.ctier_root}"/>
+        </pathconvert>
     </target>
 
     <target name="-check-prereqs">
@@ -55,7 +148,7 @@ $Id$
 
 <!--    <property name="dontexpand" value="true"/>-->
 
-    <target name="execute" depends="-check-prereqs,-load-props,check-client-env,check-server-env,-install-client,-install-server,install-jobcenter,install-reportcenter,generate-rcfile,echo-rcfile-info" >
+    <target name="execute" depends="-check-prereqs,-pre-server-install,-load-props,check-client-env,check-server-env,-install-client,-install-server,install-jobcenter,install-reportcenter,generate-rcfile,echo-rcfile-info" >
         <echo>
 Startup:
 
@@ -173,11 +266,14 @@ fi
 
     </target>
 
+    <target name="-pre-server-install">
+        <property name="is.server.install" value="true"/>
+    </target>
 
     <target name="-install-server" depends="check-server-env,-backup-server-config,clean-server,expand-itnav,expand-jackrabbit,configure-server,install-examples,configure-landingpage" >
         <echo>ControlTier Server installed.</echo>
     </target>
-    <target name="install-server" depends="-check-prereqs,-load-props,-install-server" >
+    <target name="install-server" depends="-pre-server-install,-check-prereqs,-load-props,-install-server" >
     </target>
 
     <target name="-backup-server-config" description="backup config files that would get overwritten">
@@ -807,11 +903,14 @@ fi
         </if>
     </target>
 
+    <target name="-pre-client-install">
+        <property name="is.client.install" value="true"/>
+    </target>
     <target name="-install-client" depends="check-client-env,clean-client,expand-client,configure-client" description="Internal client install target" >
         <echo>ControlTier Client installed.</echo>
     </target>
 
-    <target name="install-client" depends="-check-prereqs,-load-props,-install-client,generate-rcfile,echo-rcfile-info" description="Installs the ControlTier client only">
+    <target name="install-client" depends="-pre-client-install,-check-prereqs,-load-props,-install-client,generate-rcfile,echo-rcfile-info" description="Installs the ControlTier client only">
         <echo>Install Complete</echo>
     </target>
 
