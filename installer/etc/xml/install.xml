@@ -78,13 +78,8 @@ $Id$
             </then>
         </if>
 
-        <!-- default for client.hostname in client installation is the system hostname -->
-        <if>
-            <isset property="is.client.install"/>
-            <then>
-                <property name="client.hostname.default" value="${system.hostname}"/>
-            </then>
-        </if>
+        <!-- default for client.hostname is the system hostname -->
+        <property name="client.hostname.default" value="${system.hostname}"/>
 
         <!-- load the defaults.properties file -->
         <property file="${ctier.installfile}"/>
@@ -102,19 +97,6 @@ $Id$
             </and>
             <then>
                 <fail>server.hostname is not set. For client installation, set server.hostname in defaults.properties, or on commandline via -Dserver.hostname=&lt;value&gt;</fail>
-            </then>
-        </if>
-        <!-- test whether it is a client install and the server.hostname is unset -->
-        <if>
-            <and>
-                <isset property="is.server.install"/>
-                <not>
-                    <equals arg1="${server.hostname}" arg2="${client.hostname}"/>
-                </not>
-            </and>
-            <then>
-                <!-- set client.hostname to the same as server.hostname -->
-                <var name="client.hostname" value="${server.hostname}"/>
             </then>
         </if>
 
@@ -157,10 +139,10 @@ or on Windows run: "%JETTY_HOME%\bin\start.bat"
 
 Once you have started Jetty, visit this URL to access ControlTier web applications:
 
-    http://${server.jetty.hostname}:${server.jetty.port}/
+    http://${server.hostname}:${server.jetty.port}/
 
 NOTE: ControlTier Client requires that SSH is configured to allow
-key-based authentication from the ${server.jetty.hostname} host.  Ensure that the
+key-based authentication from the ${server.hostname} host.  Ensure that the
 public key has been added to the authorized_keys file.
  </echo>
 
@@ -300,7 +282,7 @@ fi
                     <property name="install.ant.home" value="${env.ctl_home}/pkgs/apache-ant-${package.ant.version}"/>
                     <property name="jetty.home" value="${server.jetty.home}"/>
                     <property name="jetty.server.httpPort" value="${server.jetty.port}"/>
-		    <property name="jetty.server.hostname" value="${server.jetty.hostname}"/>
+		    <property name="jetty.server.hostname" value="${server.hostname}"/>
                     <property name="jobcenter.base.path" value="${server.jobcenter.data_path}"/>
                     <property name="reportcenter.baseUrl" value="${reportcenter.baseUrl}"/>
                     <property name="reportcenter.host" value="${server.reportcenter.host}"/>
@@ -334,15 +316,15 @@ fi
                 <ant dir="${pkgs.root}/reportcenter-${pkgs.reportcenter.version}">
                     <property name="jetty.home" value="${server.jetty.home}"/>
                     <property name="jetty.server.httpPort" value="${server.reportcenter.jetty.port}"/>
-		    <property name="jetty.server.hostname" value="${server.jetty.hostname}"/>
+		    <property name="jetty.server.hostname" value="${server.hostname}"/>
                     <property name="reportcenter.base.path" value="${server.reportcenter.base_path}"/>
                     <property name="reportcenter.host" value="${server.reportcenter.host}"/>
                     <property name="reportcenter.port" value="${server.reportcenter.port}"/>
                     <property name="jobcenter.server.httpPort" value="${server.jetty.port}"/>
-                    <property name="jobcenter.server.host" value="${server.jetty.hostname}"/>
+                    <property name="jobcenter.server.host" value="${server.hostname}"/>
                     <property name="jobcenter.baseUrl" value="${jobcenter.baseUrl}"/>
                     <property name="workbench.server.httpPort" value="${server.jetty.port}"/>
-                    <property name="workbench.server.host" value="${server.jetty.hostname}"/>
+                    <property name="workbench.server.host" value="${server.hostname}"/>
                     <property name="workbench.baseUrl" value="${workbench.baseUrl}"/>
                     <property name="default.username" value="${jetty.user.name}"/>
                     <property name="default.password" value="${jetty.user.password}"/>
@@ -691,17 +673,17 @@ fi
                     replace="app.depot.default.organization = ${app.depot.default.organization}"/>
                 <replaceregex flags="si"
                     pattern="^app\.external\.uri *=(.*)$"
-                    replace="app.external.uri = http://${server.jetty.hostname}:${server.jetty.port}"/>
+                    replace="app.external.uri = http://${server.hostname}:${server.jetty.port}"/>
                 <replaceregex flags="si"
                     pattern="^dav\.baseUrl *=(.*)$"
-                    replace="dav.baseUrl = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}"/>
+                    replace="dav.baseUrl = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}"/>
                 <replaceregex flags="si"
                               pattern="^app\.jobcenter\.baseUrl *=(.*)$"
                               replace="app.jobcenter.baseUrl = ${jobcenter.baseUrl}"/>
 
                 <replaceregex flags="si"
                     pattern="^order\.package\.defaults\.packageRepoURL\.template *=(.*?)/pkgs(.*)$"
-                    replace="order.package.defaults.packageRepoURL.template=http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs\2"/>
+                    replace="order.package.defaults.packageRepoURL.template=http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs\2"/>
 
                 <replaceregex flags="si"
                     pattern="^dav\.user *=(.*)$"
@@ -717,11 +699,11 @@ fi
                 />
                 <replaceregex flags="si"
                     pattern="^framework\.node *=(.*)$"
-                    replace="framework.node = ${server.jetty.hostname}"
+                    replace="framework.node = ${client.node.name}"
                 />
 		<replaceregex flags="si"
                     pattern="^framework\.node\.hostname *=(.*)$"
-                    replace="framework.node.hostname = ${server.jetty.hostname}"
+                    replace="framework.node.hostname = ${client.hostname}"
                 />
                <!-- node object name -->
                <replaceregex flags="si" 
@@ -1032,7 +1014,7 @@ or equivalent:
                     <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
                     <env key="ANT_HOME" value="${anthome.dir}/${anthome.base}"/>
                     <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                    <arg line="-f ${basedir}/${pkgs.root}/${pkgs.commander.archive} -D depot.default.name=${depot.default.name} -D depot.default.create=${depot.default.create} -D workbench.server=${server.jetty.hostname} -D workbench.port=${server.jetty.port} --overwrite"/>
+                    <arg line="-f ${basedir}/${pkgs.root}/${pkgs.commander.archive} -D depot.default.name=${depot.default.name} -D depot.default.create=${depot.default.create} -D workbench.server=${server.hostname} -D workbench.port=${server.jetty.port} --overwrite"/>
                 </exec>
 		    </then>
             <elseif>
@@ -1051,7 +1033,7 @@ or equivalent:
                         <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
 <!--                        <env key="ANT_HOME" value="${ant.home}"/>-->
                         <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                        <arg line='-f "${basedir}\${pkgs.root}\${pkgs.commander.archive}" -D depot.default.name=${depot.default.name} -D depot.default.create=${depot.default.create} -D workbench.server=${server.jetty.hostname} -D workbench.port=${server.jetty.port}'/>
+                        <arg line='-f "${basedir}\${pkgs.root}\${pkgs.commander.archive}" -D depot.default.name=${depot.default.name} -D depot.default.create=${depot.default.create} -D workbench.server=${server.hostname} -D workbench.port=${server.jetty.port}'/>
                     </exec>
                 </then>
             </elseif>
@@ -1176,13 +1158,13 @@ framework.jobcenter.url = http://localhost:8080/jobcenter
                     replace="framework.server.password = ${jetty.user.password}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.server\.hostname *=(.*)$"
-                    replace="framework.server.hostname = ${server.jetty.hostname}"/>
+                    replace="framework.server.hostname = ${server.hostname}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.server\.url *=(.*)$"
-                    replace="framework.server.url = http://${server.jetty.hostname}:${server.jetty.port}/itnav"/>
+                    replace="framework.server.url = http://${server.hostname}:${server.jetty.port}/itnav"/>
                 <replaceregex flags="si"
                     pattern="^framework\.webdav\.uri *=(.*)$"
-                    replace="framework.webdav.uri = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}"/>
+                    replace="framework.webdav.uri = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.webdav\.username *=(.*)$"
                     replace="framework.webdav.username = ${jetty.user.name}"/>
@@ -1194,19 +1176,19 @@ framework.jobcenter.url = http://localhost:8080/jobcenter
                     replace="framework.webdav.rootdir = ${regex-escaped.framework.dav.rootDir}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.uri *=(.*)$"
-                    replace="framework.pkgRepo.uri = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
+                    replace="framework.pkgRepo.uri = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.rootdir *=(.*)$"
                     replace="framework.pkgRepo.rootdir = ${regex-escaped.framework.pkgRepo.rootdir}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.upload-url *=(.*)$"
-                    replace="framework.pkgRepo.upload-url = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
+                    replace="framework.pkgRepo.upload-url = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
                <replaceregex flags="si"
                     pattern="^framework\.moduleRepo\.url *=(.*)$"
-                    replace="framework.moduleRepo.url = http://${server.jetty.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/publish/modules"/>				
+                    replace="framework.moduleRepo.url = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/publish/modules"/>				
                <replaceregex flags="si"
                     pattern="^framework\.jobcenter\.url *=(.*)$"
-                    replace="framework.jobcenter.url = http://${server.jetty.hostname}:${server.jetty.port}/jobcenter"/>
+                    replace="framework.jobcenter.url = http://${server.hostname}:${server.jetty.port}/jobcenter"/>
 
                 <!-- email properties -->
                 <!--
@@ -1354,7 +1336,7 @@ depot.default.create = true
             <filterchain>
                 <!--
 log4j.logger.com.controltier.log.common=INFO,CommonLog
-log4j.appender.CommonLog.remoteHost=${server.jetty.hostname}
+log4j.appender.CommonLog.remoteHost=${server.hostname}
 log4j.appender.CommonLog.port=${server.reportcenter.port}
 log4j.appender.R.file=/tmp/workbench.log
 
@@ -1429,7 +1411,7 @@ log4j.appender.R.file=/tmp/workbench.log
         <fail-if-blank name="env.ctl_base"/>
         <fail-if-blank name="client.hostname"/>
         <fail-if-blank name="server.jetty.port"/>
-        <fail-if-blank name="server.jetty.hostname"/>
+        <fail-if-blank name="server.hostname"/>
         <fail-if-blank name="server.jetty.webdav.path"/>
         <fail-if-blank name="jetty.user.name"/>
         <fail-if-blank name="jetty.user.password"/>
@@ -1522,7 +1504,7 @@ log4j.appender.R.file=/tmp/workbench.log
         </pathconvert>
 
         <fail-if-blank name="server.jetty.port"/>
-        <fail-if-blank name="server.jetty.hostname"/>
+        <fail-if-blank name="server.hostname"/>
         <fail-if-blank name="server.jetty.webdav.path"/>
         <fail-if-blank name="jetty.user.name"/>
         <fail-if-blank name="jetty.user.password"/>
@@ -1595,7 +1577,7 @@ log4j.appender.R.file=/tmp/workbench.log
 	-->
 	<if>
 	  <equals arg1="http://${server.jobcenter.host}:${server.jobcenter.jetty.port}" 
-		  arg2="http://${server.jetty.hostname}:${server.jetty.port}"/>
+		  arg2="http://${server.hostname}:${server.jetty.port}"/>
 	  <then>
 	    <property name="jobcenter.baseUrl" value="/jobcenter"/>
 	  </then>
@@ -1605,7 +1587,7 @@ log4j.appender.R.file=/tmp/workbench.log
 	</if>
 	<if>
 	  <equals arg1="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}" 
-		  arg2="http://${server.jetty.hostname}:${server.jetty.port}"/>
+		  arg2="http://${server.hostname}:${server.jetty.port}"/>
 	  <then>
 	    <property name="reportcenter.baseUrl" value="/reportcenter"/>
 	  </then>
@@ -1615,7 +1597,7 @@ log4j.appender.R.file=/tmp/workbench.log
 	</if>
 	<if>
 	  <equals arg1="http://${server.workbench.host}:${server.workbench.jetty.port}" 
-		  arg2="http://${server.jetty.hostname}:${server.jetty.port}"/>
+		  arg2="http://${server.hostname}:${server.jetty.port}"/>
 	  <then>
 	    <property name="workbench.baseUrl" value="/itnav"/>
 	  </then>
