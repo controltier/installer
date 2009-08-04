@@ -15,7 +15,7 @@ RCVER=$7
 RCPATH=$CTPATH/reportcenter
 
 if [ "$8" == "-status" ] ; then
-    svn stat $CTLPATH/project.xml $CTLPATH/bundle/project.xml
+    svn stat $CTLPATH/project.xml $CTLPATH/bundle/project.xml $CTLPATH/version.properties
     svn stat $CTPATH/version.properties $CTPATH/common/project.xml $CTPATH/commander/project.xml $CTPATH/workbench/project.xml $CTPATH/installer/project.xml $CTPATH/ctbuild/objects/project.xml $CTPATH/buildall.sh $CTPATH/ctbuild/build.properties $CTPATH/ctbuild/jobs/jobs.xml
     svn stat $JCPATH/application.properties $JCPATH/grails-app/i18n/messages.properties $JCPATH/etc/install.xml $JCPATH/version.properties
     svn stat $RCPATH/application.properties $RCPATH/grails-app/i18n/messages.properties $RCPATH/etc/install.xml $RCPATH/version.properties
@@ -92,7 +92,7 @@ perl  -i'.orig' -p -e "s#^JCVERS=.*\$#JCVERS=$JCVER#" $CTPATH/buildall.sh
 
 
 if [ "$8" == "-commit" ] ; then
-    svn commit -m "update version to $CTLVER, update dependencies" $CTLPATH/project.xml $CTLPATH/bundle/project.xml
+    svn commit -m "update version to $CTLVER, update dependencies" $CTLPATH/project.xml $CTLPATH/bundle/project.xml $CTLPATH/version.properties
     svn commit -m "update version to $CTVER, update dependencies" $CTPATH/version.properties $CTPATH/common/project.xml $CTPATH/commander/project.xml $CTPATH/workbench/project.xml $CTPATH/installer/project.xml
     svn commit -m "update version to $JCVER" $JCPATH/application.properties $JCPATH/grails-app/i18n/messages.properties $JCPATH/etc/install.xml $JCPATH/version.properties
     svn commit -m "update version to $RCVER" $RCPATH/application.properties $RCPATH/grails-app/i18n/messages.properties $RCPATH/etc/install.xml $RCPATH/version.properties
