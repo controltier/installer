@@ -967,7 +967,7 @@ or equivalent:
         <!--
         set executable flag on bin scripts
                 -->
-        <chmod dir="${env.ctl_home}/bin" perm="ugo+rx" includes="*.sh"/>
+        <chmod dir="${env.ctl_home}/bin" perm="ugo+rx" excludes="*.bat"/>
 
 
         <if>
