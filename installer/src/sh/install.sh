@@ -12,6 +12,15 @@ errorMsg() {
    echo "$1" 1>&2
 }
 
+#
+# This hack checks if this shell script was called within (most probably) a cygwin context
+# during an ssh to a windows box and if so, to actually exec the .bat batch file instead.
+#
+if [ -n "$OS" -a "$OS" = "Windows_NT" ]
+then
+   exec ./install.bat "$@" -Dcygwin=true
+fi
+
 argsOrig=$*
 
 
