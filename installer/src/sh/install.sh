@@ -18,7 +18,7 @@ errorMsg() {
 #
 if [ -n "$OS" -a "$OS" = "Windows_NT" ]
 then
-   exec ./install.bat "$@" -Dcygwin=true
+   exec cmd.exe /C .\\install.bat "$@" -Dcygwin=true
 fi
 
 argsOrig=$*
