@@ -14,9 +14,9 @@
       <appname>ControlTier</appname>
       <appversion>@controltier.version@</appversion>
       <authors>
-        <author name="ControlTier, Inc." email="info@controltier.com"/>
+        <author name="The ControlTier Project" email="controltier@googlegroups.com"/>
       </authors>
-      <url>http://open.controltier.org/</url>
+      <url>http://controltier.org/</url>
       <javaversion>1.5</javaversion>
       <requiresjdk>yes</requiresjdk>
       <appsubpath>ctier</appsubpath>
