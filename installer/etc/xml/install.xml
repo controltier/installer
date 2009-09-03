@@ -136,12 +136,17 @@ $Id$
 
     <target name="-check-prereqs">
         <if>
+	  <and>
             <not>
                 <!--
                 ant.java.version    the JVM version Ant detected
                 -->
-                <equals arg1="1.5" arg2="${ant.java.version}"/>
+		  <equals arg1="1.5" arg2="${ant.java.version}"/>
             </not>
+	    <not>
+	      <equals arg1="${is.client.install}" arg2="true"/>
+	    </not>
+	  </and>
             <then>
                 <fail>Unable to install: Java version 1.5 is required. (ant.java.version = "${ant.java.version}")</fail>
             </then>
