@@ -136,19 +136,17 @@ $Id$
 
     <target name="-check-prereqs">
         <if>
-	  <and>
             <not>
+	            <or>
                 <!--
                 ant.java.version    the JVM version Ant detected
                 -->
-		  <equals arg1="1.5" arg2="${ant.java.version}"/>
+                  <equals arg1="1.5" arg2="${ant.java.version}"/>
+                  <equals arg1="1.6" arg2="${ant.java.version}"/>
+                </or>
             </not>
-	    <not>
-	      <equals arg1="${is.client.install}" arg2="true"/>
-	    </not>
-	  </and>
             <then>
-                <fail>Unable to install: Java version 1.5 is required. (ant.java.version = "${ant.java.version}")</fail>
+                <fail>Unable to install: Java version 1.5/1.6 is required. (ant.java.version = "${ant.java.version}")</fail>
             </then>
             <else>
                 <echo>Using compatible Java version: ${ant.java.version}</echo>
@@ -209,7 +207,7 @@ export JETTY_LOGS=${server.jetty.home.escbackslash}/logs
 export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${env.java_home.escbackslash}
 CONFIG_PROPS="-Djobcenter.config.location=${env.ctier_root.escbackslash}/jobcenter/jobcenter-config.properties -Dreportcenter.config.location=${env.ctier_root.escbackslash}/reportcenter/reportcenter-config.properties"
-export JAVA_OPTIONS="-XX:MaxPermSize=128m -Xmx1024m -Xms256m $CONFIG_PROPS"
+export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
 </echo>
                         <property name="rcfile.path" value="$CTL_HOME/bin:$JETTY_HOME/bin:$PATH"/>
                     </then>
@@ -306,7 +304,7 @@ export JETTY_LOGS=${server.jetty.home.converted}/logs
 export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${USER_ENV.JAVA_HOME}
 CONFIG_PROPS="-Djobcenter.config.location=${env.ctier_root}/jobcenter/jobcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}/reportcenter/reportcenter-config.properties"
-export JAVA_OPTIONS="-XX:MaxPermSize=128m -Xmx1024m -Xms256m $CONFIG_PROPS"
+export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
 </echo>
                         <property name="rcfile.path" value="$CTL_HOME/bin:$JETTY_HOME/bin:$PATH"/>
                     </then>
