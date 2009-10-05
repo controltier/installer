@@ -3,8 +3,8 @@
 ###################################
 
 # configure JAVA_HOME and BUILD_ROOT as required
-export JAVA_HOME=/usr/java/jdk1.5.0_15
-export BUILD_ROOT=$HOME
+#export JAVA_HOME=/usr/java/jdk1.5.0_15
+export BUILD_ROOT=$HOME/build
 
 if [ ! -f $JAVA_HOME/bin/java ] ; then
     echo "ERROR: java is not configured correctly.  Set JAVA_HOME."
@@ -70,7 +70,18 @@ if [ ! -f $BUILD_ROOT/local/grails-1.0.3/bin/grails ] ; then
     tar xvzf $BUILD_ROOT/dl/grails-bin-1.0.3.tar.gz
 fi
 
-export GRAILS_HOME=$BUILD_ROOT/local/grails-1.0.3
+export GRAILS_HOME_103=$BUILD_ROOT/local/grails-1.0.3
+
+# extract grails 1.1.1 to local dir for use during build of Jobcenter
+if [ ! -f $BUILD_ROOT/local/grails-1.1.1/bin/grails ] ; then 
+    # get grails bin distribution
+    cd $BUILD_ROOT/dl
+    wget -N http://dist.codehaus.org/grails/grails-bin-1.1.1.tar.gz
+    cd $BUILD_ROOT/local
+    tar xvzf $BUILD_ROOT/dl/grails-bin-1.1.1.tar.gz
+fi
+
+export GRAILS_HOME_111=$BUILD_ROOT/local/grails-1.1.1
 
 
 # begin checkout of sources
@@ -133,7 +144,9 @@ cd $CTLSVN && $MAVEN_HOME/bin/maven ctl:stgz ctl:tgz ctl:zip
 
 mkdir -p $LOCALREPO/ctl/jars
 mkdir -p $LOCALREPO/ctl/tgzs
+mkdir -p $LOCALREPO/ctl-dispatch/tgzs
 mkdir -p $LOCALREPO/ctl/zips
+mkdir -p $LOCALREPO/ctl-dispatch/zips
 cp target/ctl-dispatch-$CTLVERS.jar $LOCALREPO/ctl/jars/ctl-$CTLVERS.jar 
 if [ 0 != $? ]
 then
@@ -149,6 +162,20 @@ then
 fi
 
 cp target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz $LOCALREPO/ctl/tgzs/ctl-$CTLVERS.tgz 
+if [ 0 != $? ]
+then
+   echo "CTL build failed: cannot copy target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz"
+   exit 2
+fi
+
+cp target/dist/zips/ctl-dispatch-$CTLVERS.zip $LOCALREPO/ctl-dispatch/zips/ctl-dispatch-$CTLVERS.zip 
+if [ 0 != $? ]
+then
+   echo "CTL build failed: cannot copy target/dist/zips/ctl-dispatch-$CTLVERS.zip"
+   exit 2
+fi
+
+cp target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz $LOCALREPO/ctl-dispatch/tgzs/ctl-dispatch-$CTLVERS.tgz 
 if [ 0 != $? ]
 then
    echo "CTL build failed: cannot copy target/dist/tgzs/ctl-dispatch-$CTLVERS.tgz"
@@ -264,21 +291,6 @@ then
 fi  
 }
 
-build_coreutils_extension(){
-##################
-#
-# Download coreutils-extension jar
-#
-
-mkdir -p $LOCALREPO/coreutils-extension/jars
-cd $LOCALREPO/coreutils-extension/jars
-wget -N http://ctl-dispatch.sourceforge.net/repository/coreutils-extension/jars/coreutils-extension-0.9.jar 
-if [ 0 != $? ]
-then
-   echo "Couldn't get coreutils-extension"
-   exit 2
-fi  
-}
 
 build_ctl_bundle(){
 ##################
@@ -286,30 +298,30 @@ build_ctl_bundle(){
 # CTL bundle build
 #
 
-#cd $CTLSVN/bundle
-#export MAVEN_HOME=../maven
-#echo maven.repo.ctier = $LOCALREPOURL > build.properties
-#$MAVEN_HOME/bin/maven clean ctl:bundle
+cd $CTLSVN/bundle
+export MAVEN_HOME=../maven
+echo maven.repo.ctier = $LOCALREPOURL > build.properties
+$MAVEN_HOME/bin/maven clean ctl:bundle
 
 #!! failed to download ctl-dispatch.jar ... !!!
 
 # artifacts: ctl-X.tgz, ctl-X.zip
-#mkdir -p $LOCALREPO/ctl/zips
-#mkdir -p $LOCALREPO/ctl/tgzs
-#cp target/dist/zips/ctl-$CTLVERS.zip $LOCALREPO/ctl/zips/ctl-$CTLVERS.zip 
-#if [ 0 != $? ]
-#then
-   #echo "CTL bundle build failed: cannot copy target/dist/zips/ctl-$CTLVERS.zip"
-   #exit 2
-#fi  
+mkdir -p $LOCALREPO/ctl/zips
+mkdir -p $LOCALREPO/ctl/tgzs
+cp target/dist/zips/ctl-$CTLVERS.zip $LOCALREPO/ctl/zips/ctl-$CTLVERS.zip 
+if [ 0 != $? ]
+then
+   echo "CTL bundle build failed: cannot copy target/dist/zips/ctl-$CTLVERS.zip"
+   exit 2
+fi  
 
-#cp target/dist/tgzs/ctl-$CTLVERS.tgz $LOCALREPO/ctl/tgzs/ctl-$CTLVERS.tgz 
-#if [ 0 != $? ]
-#then
-   #echo "CTL bundle build failed: cannot copy target/dist/tgzs/ctl-$CTLVERS.tgz"
-   #exit 2
-#fi  
-echo ctl_bundle disabled
+cp target/dist/tgzs/ctl-$CTLVERS.tgz $LOCALREPO/ctl/tgzs/ctl-$CTLVERS.tgz 
+if [ 0 != $? ]
+then
+   echo "CTL bundle build failed: cannot copy target/dist/tgzs/ctl-$CTLVERS.tgz"
+   exit 2
+fi  
+#echo ctl_bundle disabled
 
 }
 
@@ -325,7 +337,10 @@ cp $LOCALREPO/ctl/jars/ctl-$CTLVERS.jar lib/
 cp $LOCALREPO/ctier-common/jars/ctier-common-$CTIERVERS.jar lib/
 cp $LOCALREPO/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.jar lib/
 cp $LOCALREPO/commander/jars/commander-$CTIERVERS.jar lib/
+MYPATH=$PATH
+export GRAILS_HOME=$GRAILS_HOME_111
 export PATH=$PATH:$GRAILS_HOME/bin
+grails install-plugin $JCSVN/plugins/grails-webrealms-0.1.zip
 $ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist 
 if [ 0 != $? ]
 then
@@ -342,6 +357,8 @@ then
    echo "Jobcenter build failed: cannot copy target/jobcenter-$JCVERS.zip"
    exit 2
 fi  
+export PATH=$MYPATH
+export GRAILS_HOME=
 
 }
 
@@ -354,6 +371,8 @@ build_reportcenter(){
 cd $CTIERSVN/reportcenter
 # copy the dependencies into the lib directory
 cp $LOCALREPO/ctier-common/jars/ctier-common-$CTIERVERS.jar lib/
+MYPATH=$PATH
+export GRAILS_HOME=$GRAILS_HOME_103
 export PATH=$PATH:$GRAILS_HOME/bin
 $ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist 
 if [ 0 != $? ]
@@ -371,6 +390,8 @@ then
    echo "Reportcenter build failed: cannot copy target/reportcenter-$RCVERS.zip"
    exit 2
 fi  
+export PATH=$MYPATH
+export GRAILS_HOME=
 }
 
 build_examples(){
@@ -442,9 +463,8 @@ if [ -z "$*" ] ; then
     build_ctl
     build_common
     build_controltier_seed
-    build_workbench
     build_commander_extension
-    build_coreutils_extension
+    build_workbench
     build_ctl_bundle
     build_jobcenter
     build_reportcenter
@@ -468,9 +488,6 @@ else
                 ;;
             commander_extension)
                 build_commander_extension
-                ;;
-            coreutils_extension)
-                build_coreutils_extension
                 ;;
             ctl_bundle)
                 build_ctl_bundle
