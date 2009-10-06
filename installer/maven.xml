@@ -23,6 +23,19 @@
    <property name="work.dir" value="${target.dir}/work"/>
 
 
+    <property name="rpm.cmd" value="rpmbuild"/>
+    <!-- location of the rpm workspace directory hierarchy -->
+    <property name="rpm.src.dir" value="${src.dir}/rpm"/>
+    <property name="rpm.target.dir" value="${target.dir}/rpm"/>
+    <!-- the spec template and generated file based on project name -->
+    <!-- client rpm builder -->
+    <!-- the input template for the .rpmmacros file -->
+    <property name="rpmmacros.template" value="${rpm.src.dir}/rpmmacros.template"/>
+    <!-- user based .rpmmacros file -->
+    <!--<property name="rpmmacros" value="${env.HOME}/.rpmmacros"/>-->
+    <property name="rpmmacros" value="${rpm.target.dir}/rpmmacros"/>
+    <property name="rpm.build.dir" value="${target.dir}/rpmbuild"/>
+
 
   <preGoal name="java:compile">
 
@@ -330,6 +343,62 @@
               <filter token="default.package-version" value="${pom.currentVersion}"/>
           </filterset>
       </copy>
+  </goal>
+
+
+    <!-- ensure the rpm workspace is created before rpm build starts -->
+    <preGoal name="client:rpmbuild">
+        <mkdir dir="${rpm.target.dir}/BUILD"/>
+        <mkdir dir="${rpm.target.dir}/RPMS/noarch"/>
+        <mkdir dir="${rpm.target.dir}/SOURCES"/>
+        <mkdir dir="${rpm.target.dir}/SPECS"/>
+        <mkdir dir="${rpm.target.dir}/SRPMS"/>
+        <j:forEach var="dep" items="${pom.dependencies}">
+          <j:set var="dep.id" value="${dep.getId()}"/>
+          <j:set var="dep.version" value="${dep.getVersion()}"/>
+          <j:set var="expanded.name" value="${dep.id}-${dep.version}"/>
+
+          <j:if test="${dep.id == 'ctl'}">
+              <get src="${maven.repo.ctlocal}/${dep.id}/tgzs/${dep.id}-${dep.version}.tgz"
+                   dest="${target.dir}/${dep.id}-${dep.version}.tgz"
+                   ignoreerrors="false" verbose="true" usetimestamp="true"
+                  />
+              <j:set var="pkg.ctl.expanded.name" value="${expanded.name}"/>
+              <j:set var="pkg.ctl.archive.name" value="${expanded.name}.tgz"/>
+              <property name="ctl.version" value="${dep.version}"/>
+              
+          </j:if>
+        </j:forEach>
+    </preGoal>
+
+    <!-- generate rpm from ctl tarball image -->
+    <goal name="client:rpmbuild" description="generate ctier-client rpm">
+        <filter token="rpm.top.dir" value="${rpm.target.dir}"/>
+        <filter token="version" value="${pom.currentVersion}"/>
+        <filter token="ant.version" value="${ant.version}"/>
+        <filter token="ctl.version" value="${ctl.version}"/>
+        <filter token="release" value="1"/>
+        <copy file="${rpmmacros.template}"
+              tofile="${rpmmacros}"
+              filtering="true"
+              overwrite="true"/>
+        <echo>rpm.build.dir: ${rpm.build.dir}</echo>
+
+        <copy file="${rpm.src.dir}/SPECS/ctier-client.spec.template"
+              tofile="${rpm.target.dir}/SPECS/ctier-client-${pom.currentVersion}.spec"
+              filtering="true"
+              overwrite="true"/>
+
+        <copy file="${rpmmacros.template}"
+              tofile="${user.home}/.rpmmacros"
+              filtering="true"
+              overwrite="true"/>
+
+        <copy file="${target.dir}/ctl-${ctl.version}.tgz" todir="${rpm.target.dir}/SOURCES/"/>
+
+        <exec executable="${rpm.cmd}" failonerror="true">
+            <arg line="--clean --buildroot ${rpm.build.dir} -bb ${rpm.target.dir}/SPECS/ctier-client-${pom.currentVersion}.spec"/>
+        </exec>
   </goal>
 
 </project>

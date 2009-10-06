@@ -1,0 +1,85 @@
+# default install root is /opt/ctier
+%define installRoot /opt/ctier
+%define ctlVersion @ctl.version@
+#
+# ctier-client
+Summary: Client for the ControlTier automation framework
+Name: ctier-client
+Prefix: %{installRoot}
+#BuildRoot: /var/tmp/%{name}-root
+BuildRoot: %{_tmppath}/%{name}-buildroot
+Version: @version@
+Release: @release@
+License: Apache
+Group: ControlTier
+#Source: ctier-client-@version@.tar.gz
+Source: ctl-%{ctlVersion}.tgz
+URL: http://wiki.controltier.org
+Distribution: ControlTier
+Vendor: ControlTier, Inc.
+Packager: ControlTier <info@controltier.com>
+AutoReqProv: no
+Requires: java >= 1.5
+BuildArch: noarch
+
+%description
+ControlTier Client 
+
+
+%prep
+%setup -c -n %{name}-%{version}/pkgs/ctl-%{ctlVersion}
+#cd %{_topdir}/BUILD
+#rm -rf %{name}-%{version}
+#mkdir -p %{_topdir}/BUILD/%{name}-%{version}/pkgs/ctl-%{ctlVersion}
+#cd %{_topdir}/BUILD/%{name}-%{version}/pkgs/ctl-%{ctlVersion}
+
+#gzip -dc %{_topdir}/SOURCES/%{name}-%{version}.tgz | tar -xvvf -
+#if [ $? -ne 0 ]; then
+#  exit $?
+#fi
+#cd %{_topdir}/BUILD/%{name}-%{version}
+
+#chmod -R a+rX,g-w,o-w .
+
+
+%build
+echo build is skipped
+
+%install
+if [ "$RPM_BUILD_ROOT" != "" ] ; then
+mkdir -p $RPM_BUILD_ROOT%{installRoot}
+fi
+echo copying %{name}-%{version} to $RPM_BUILD_ROOT%{installRoot}
+%ifos Darwin
+cp -R %{_topdir}/BUILD/%{name}-%{version}/* $RPM_BUILD_ROOT%{installRoot}/
+%else
+cp -r %{_topdir}/BUILD/%{name}-%{version}/* $RPM_BUILD_ROOT%{installRoot}/
+%endif
+
+rm $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/*.bat
+chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/{ant,antRun}
+chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/*.pl
+chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/{ctl,ctl-acl,ctl-exec,ctl-setup,ctl-extension,ctl-archive}
+
+%files
+%defattr(-, root, root)
+%undefine __check_files
+%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/
+%{installRoot}/pkgs/ctl-%{ctlVersion}/classes/
+#%doc %{installRoot}/pkgs/ctl-%{ctlVersion}/docs/
+%{installRoot}/pkgs/ctl-%{ctlVersion}/etc/
+%{installRoot}/pkgs/ctl-%{ctlVersion}/lib/
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/
+%{installRoot}/pkgs/ctl-%{ctlVersion}/tests/
+%{installRoot}/pkgs/ctl-%{ctlVersion}/var/
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+#rm -rf $RPM_BUILD_ROOT%{installRoot}/
+#rm -rf %{_topdir}/BUILD/%{name}-%{version}
+
+
+%changelog
+* Mon Oct 05 2009 Greg Schueler <greg@controltier.com> 3.4.9 
+- initial release of ctier-client rpm build
