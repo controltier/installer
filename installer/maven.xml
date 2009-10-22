@@ -401,6 +401,73 @@
         </exec>
   </goal>
 
+
+    <!-- ensure the rpm workspace is created before rpm build starts -->
+    <preGoal name="server:rpmbuild">
+        <mkdir dir="${rpm.target.dir}/BUILD"/>
+        <mkdir dir="${rpm.target.dir}/RPMS/noarch"/>
+        <mkdir dir="${rpm.target.dir}/SOURCES"/>
+        <mkdir dir="${rpm.target.dir}/SPECS"/>
+        <mkdir dir="${rpm.target.dir}/SRPMS"/>
+        <j:forEach var="dep" items="${pom.dependencies}">
+          <j:set var="dep.id" value="${dep.getId()}"/>
+          <j:set var="dep.version" value="${dep.getVersion()}"/>
+          <j:set var="expanded.name" value="${dep.id}-${dep.version}"/>
+
+          <j:if test="${dep.id == 'ctl'}">
+              <j:set var="pkg.ctl.expanded.name" value="${expanded.name}"/>
+              <j:set var="pkg.ctl.archive.name" value="${expanded.name}.tgz"/>
+              <property name="ctl.version" value="${dep.version}"/>
+
+          </j:if>
+          <j:if test="${dep.id == 'jetty'}">
+              <property name="jetty.version" value="${dep.version}"/>
+
+          </j:if>
+        </j:forEach>
+    </preGoal>
+
+    <goal name="server:rpmbuild-full" description="generate ctier-client rpm" prereqs="installer:create-tgz,server:rpmbuild">
+    </goal>
+    <!-- generate rpm from ctl tarball image -->
+    <goal name="server:rpmbuild" description="generate ctier-client rpm" >
+        <filter token="rpm.top.dir" value="${rpm.target.dir}"/>
+        <filter token="version" value="${pom.currentVersion}"/>
+        <filter token="ant.version" value="${ant.version}"/>
+        <filter token="ctl.version" value="${ctl.version}"/>
+        <filter token="jetty.version" value="${jetty.version}"/>
+        <filter token="release" value="1"/>
+        <copy file="${rpmmacros.template}"
+              tofile="${rpmmacros}"
+              filtering="true"
+              overwrite="true"/>
+        <echo>rpm.build.dir: ${rpm.build.dir}</echo>
+
+        <copy file="${rpm.src.dir}/SPECS/ctier-server.spec.template"
+              tofile="${rpm.target.dir}/SPECS/ctier-server-${pom.currentVersion}.spec"
+              filtering="true"
+              overwrite="true"/>
+
+        <copy file="${rpmmacros.template}"
+              tofile="${user.home}/.rpmmacros"
+              filtering="true"
+              overwrite="true"/>
+
+        <copy file="${target.dir}/dist/${pom.id}/tgzs/${pom.id}-${pom.currentVersion}.tgz" todir="${rpm.target.dir}/SOURCES/"/>
+
+        <exec executable="${rpm.cmd}" failonerror="true">
+            <arg line="--clean -bb ${rpm.target.dir}/SPECS/ctier-server-${pom.currentVersion}.spec"/>
+        </exec>
+  </goal>
+
+  <goal name="installer:create-tgz"  prereqs="installer:create">
+      <echo>Creating tgz file ${target.dir}/dist/${pom.id}/tgzs/${pom.id}-${pom.currentVersion}.tgz ...</echo>
+      <mkdir dir="${target.dir}/dist/${pom.id}/tgzs"/>
+      <exec executable="tar" dir="${work.dir}" failonerror="true" outputproperty="tgz.out">
+          <arg line="cvzf ${target.dir}/dist/${pom.id}/tgzs/${pom.id}-${pom.currentVersion}.tgz ${pom.id}-${pom.currentVersion}"/>
+      </exec>
+  </goal>
+
 </project>
 
 

@@ -1,0 +1,299 @@
+# default install root is /opt/ctier
+%define installRoot /opt/ctier
+%define ctlVersion @ctl.version@
+%define jettyVersion @jetty.version@
+%define ctuser ctier
+%define ctgroup ctier
+#
+# ctier-server
+Summary: Server for the ControlTier automation framework
+Name: ctier-server
+Prefix: %{installRoot}
+#BuildRoot: /var/tmp/%{name}-root
+#BuildRoot: %{_tmppath}/%{name}-buildroot
+Version: @version@
+Release: @release@
+License: Apache
+Group: ControlTier
+#Source: ctier-server-@version@.tar.gz
+Source: ControlTier-%{version}.tgz
+URL: http://wiki.controltier.org
+Distribution: ControlTier
+Vendor: ControlTier, Inc.
+Packager: ControlTier <info@controltier.com>
+AutoReqProv: no
+Requires: java >= 1.5
+BuildArch: noarch
+
+%description
+Design, deploy and manage complex IT and Operations systems.
+
+
+%prep
+%setup -n ControlTier-%{version}
+
+%build
+echo build is skipped
+
+%install
+#if [ "$RPM_BUILD_ROOT" != "" ] ; then
+#mkdir -p $RPM_BUILD_ROOT%{installRoot}
+#fi
+echo running install script
+cd %{_topdir}/BUILD/ControlTier-%{version}
+sh %{_topdir}/BUILD/ControlTier-%{version}/install.sh -d %{installRoot} -Dserver.hostname=localhost -Dclient.hostname=localhost -Drcfile.location=%{installRoot}/rcfile.sample
+
+#create missing dir, touch ghost files
+mkdir %{installRoot}/jackrabbit
+touch %{installRoot}/pkgs/jetty-%{jettyVersion}/logs/jetty.pid
+touch %{installRoot}/ctl/var/logs/command.log
+touch %{installRoot}/jobcenter/grailsdb.properties
+touch %{installRoot}/jobcenter/grailsdb.script
+touch %{installRoot}/reportcenter/grailsdb.properties
+touch %{installRoot}/reportcenter/grailsdb.script
+
+%pre
+
+#
+# create user/group if necessary
+#
+
+/usr/sbin/groupadd -r -f %{ctgroup}
+grep \^%{ctuser} /etc/passwd >/dev/null
+if [ $? -ne 0 ]; then
+  /usr/sbin/useradd  -g %{ctgroup} -r -c "ControlTier user" %{ctuser}
+fi
+
+%files
+%defattr(640, %{ctuser}, %{ctgroup},740)
+#%undefine __check_files
+
+%attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/depots
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp/downloads
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/logs
+%ghost %{installRoot}/ctl/var/logs/command.log
+
+%dir %{installRoot}/jobcenter
+%dir %{installRoot}/reportcenter
+%dir %{installRoot}/workbench
+%dir %{installRoot}/jackrabbit
+%dir %{installRoot}/workbench/rdfdata
+%dir %{installRoot}/pkgs
+
+#### grails db
+%ghost %{installRoot}/jobcenter/grailsdb.properties
+%ghost %{installRoot}/jobcenter/grailsdb.script
+%ghost %{installRoot}/reportcenter/grailsdb.properties
+%ghost %{installRoot}/reportcenter/grailsdb.script
+
+#### config files
+%config(noreplace) %{installRoot}/jobcenter/jobcenter-config.properties
+%config(noreplace) %{installRoot}/reportcenter/reportcenter-config.properties
+%config(noreplace) %{installRoot}/ctl/etc/acls.xml
+%config(noreplace) %{installRoot}/ctl/etc/deployments.properties
+%config(noreplace) %{installRoot}/ctl/etc/depot.properties
+%config(noreplace) %{installRoot}/ctl/etc/entity.properties
+%config(noreplace) %{installRoot}/ctl/etc/framework.properties
+%config(noreplace) %{installRoot}/ctl/etc/log4j.properties
+%config(noreplace) %{installRoot}/ctl/etc/modules.properties
+%config(noreplace) %{installRoot}/ctl/etc/node.properties
+%config(noreplace) %{installRoot}/ctl/etc/preferences.properties
+%config(noreplace) %{installRoot}/ctl/etc/profile
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/runtime.properties
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/crypto.properties
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/bootstrap.properties
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/auth.properties
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/log4j.properties
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/etc/realm.properties
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/etc/webdefault.xml
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/web.xml
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/config.xml
+%config(noreplace) %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/templates/bootstrap.properties
+
+
+#Jetty content
+
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}
+%{installRoot}/pkgs/jetty-%{jettyVersion}/work
+
+%{installRoot}/pkgs/jetty-%{jettyVersion}/LICENSES
+%{installRoot}/pkgs/jetty-%{jettyVersion}/README.txt
+%{installRoot}/pkgs/jetty-%{jettyVersion}/VERSION.txt
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/bin
+%attr(750,-,-) %{installRoot}/pkgs/jetty-%{jettyVersion}/bin/jetty.sh
+%{installRoot}/pkgs/jetty-%{jettyVersion}/contexts
+%{installRoot}/pkgs/jetty-%{jettyVersion}/contrib
+%{installRoot}/pkgs/jetty-%{jettyVersion}/controltier
+%{installRoot}/pkgs/jetty-%{jettyVersion}/distribution
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/etc
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jdbcRealm.properties
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-ajp.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-bio.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-jaas.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-jmx.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-logging.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-plus.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-setuid.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-ssl.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-sslengine.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-stats.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-win32-service.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty.webdefault.orig
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/keystore
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/login.conf
+%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/login.properties
+%{installRoot}/pkgs/jetty-%{jettyVersion}/examples
+%{installRoot}/pkgs/jetty-%{jettyVersion}/extras
+%{installRoot}/pkgs/jetty-%{jettyVersion}/javadoc
+%{installRoot}/pkgs/jetty-%{jettyVersion}/jxr
+%{installRoot}/pkgs/jetty-%{jettyVersion}/lib
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/logs
+%ghost %{installRoot}/pkgs/jetty-%{jettyVersion}/logs/jetty.pid
+%{installRoot}/pkgs/jetty-%{jettyVersion}/modules
+%{installRoot}/pkgs/jetty-%{jettyVersion}/patches
+%{installRoot}/pkgs/jetty-%{jettyVersion}/pom.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/resources
+%{installRoot}/pkgs/jetty-%{jettyVersion}/start.jar
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/README.TXT
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/cometd.war
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/DepOnt.rdf
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/DepOnt.rdfs
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/META-INF
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/Merged.rdf
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/castor.properties
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/cewolf.tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/com
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/org
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/report-query-error-messages.properties
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/request.tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/resources
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/schema.rdfs
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-bean.tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-config.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-config_1_0.dtd
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-config_1_1.dtd
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-html.tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-layout.tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-logic.tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-mbuilder.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-nested.tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-template.tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/struts-tiles.tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/templates
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/tiles-config.dtd
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/tiles-config_1_1.dtd
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/upgrade.rdf
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/validation_1_1.dtd
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/validator-rules_1_1.dtd
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/web-app_2_2.dtd
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/web-app_2_3.dtd
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/xmldbconf.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/messages_en_US.properties
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/messages.properties
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/modules.properties
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/lib
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/web.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/assets
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/config
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/docs
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/etc
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/guides
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/images
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/index.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/mbuilder
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/ops
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/pages
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/project
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/rdf
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/start.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/templates
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/viewer
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/viewdocs
+
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/templates
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/classes
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/lib
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/log4j.dtd
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/log4j.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/repository.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/about.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/bootstrap
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/css
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/error
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/footer.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/header.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/images
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/index.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/local.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/META-INF
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/populate.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/remote.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/search.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/swr.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/troubleshooting.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/webdav-jcr.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/webdav-simple.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/welcome.jsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jobcenter
+
+#%{installRoot}/pkgs/ctl-%{ctlVersion}
+%dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
+%attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl
+%attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl-*
+%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/commander-depotsetup.xml
+%{installRoot}/pkgs/ctl-%{ctlVersion}/classes
+%docdir %{installRoot}/pkgs/ctl-%{ctlVersion}/docs
+%{installRoot}/pkgs/ctl-%{ctlVersion}/docs
+%{installRoot}/pkgs/ctl-%{ctlVersion}/etc
+%{installRoot}/pkgs/ctl-%{ctlVersion}/lib
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs
+##
+#chmod +x %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/{ant,antRun}
+#chmod +x %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/*.pl
+#
+%{installRoot}/pkgs/ctl-%{ctlVersion}/tests
+%{installRoot}/pkgs/ctl-%{ctlVersion}/var
+
+%{installRoot}/bin
+%dir %{installRoot}/ctl
+%dir %{installRoot}/ctl/etc
+%{installRoot}/ctl/etc/acls.dtd
+%{installRoot}/ctl/etc/console-log4j.properties
+%dir %{installRoot}/ctl/etc/extensions
+%{installRoot}/ctl/etc/extensions/commander
+%{installRoot}/ctl/etc/jndi.properties.sample
+%{installRoot}/ctl/etc/setup.status
+%{installRoot}/ctl/modules
+%{installRoot}/ctl/src
+%{installRoot}/examples
+%{installRoot}/rcfile.sample
+
+# skip profile.bat
+#%{installRoot}/ctl/etc/profile.bat
+
+
+%clean
+rm -rf %{installRoot}/bin
+rm -rf %{installRoot}/ctl
+rm -rf %{installRoot}/examples
+rm -rf %{installRoot}/jackrabbit
+rm -rf %{installRoot}/jobcenter
+rm -rf %{installRoot}/pkgs
+rm -rf %{installRoot}/reportcenter
+rm -rf %{installRoot}/workbench
+rm %{installRoot}/rcfile.sample
+
+
+%changelog
+* Mon Oct 05 2009 Greg Schueler <greg@controltier.com> 3.4.9 
+- initial release of ctier-server rpm build
