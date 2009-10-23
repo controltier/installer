@@ -185,19 +185,19 @@ framework.node.type = Node
 framework.email.tolist = root
 
 # email address appearing in message "from" field
-framework.email.from = root
+framework.email.from = root@localdomain
 
 # email address replies should go to
 framework.email.replyto = do-not-reply
 
 # The ctl email relay host. must be a functioning smtp relay server
-framework.email.mailhost = mail
+framework.email.mailhost = localhost
 framework.email.mailport = 25
 
 # User/pass info if the smtp server requires it
 framework.email.user =
 framework.email.password =
-framework.email.ssl = true
+framework.email.ssl = false
 
 # Fail if there is an error
 framework.email.failonerror = true
