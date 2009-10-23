@@ -246,7 +246,7 @@ fi
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jobcenter
 
-#%{installRoot}/pkgs/ctl-%{ctlVersion}
+%dir %{installRoot}/pkgs/ctl-%{ctlVersion}
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
 %attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl
 %attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl-*
