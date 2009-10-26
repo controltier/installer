@@ -141,7 +141,7 @@ fi
 %{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-stats.xml
 %{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty-win32-service.xml
 %{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty.webdefault.orig
-%{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty.xml
+%config %{installRoot}/pkgs/jetty-%{jettyVersion}/etc/jetty.xml
 %{installRoot}/pkgs/jetty-%{jettyVersion}/etc/keystore
 %{installRoot}/pkgs/jetty-%{jettyVersion}/etc/login.conf
 %{installRoot}/pkgs/jetty-%{jettyVersion}/etc/login.properties
@@ -199,7 +199,7 @@ fi
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/messages.properties
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/classes/modules.properties
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/lib
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/web.xml
+%config %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/WEB-INF/web.xml
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/assets
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/config
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/itnav/docs
@@ -224,7 +224,7 @@ fi
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/lib
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/log4j.dtd
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/log4j.xml
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/repository.xml
+%config %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/repository.xml
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/about.jsp
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/bootstrap
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/css
@@ -243,7 +243,28 @@ fi
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/webdav-jcr.jsp
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/webdav-simple.jsp
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/welcome.jsp
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/birt-reports
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/css
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/images
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/index.gsp
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/js
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/META-INF
+%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/applicationContext.xml
+%config %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/BirtConfig.properties
+%config %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/jetty-web.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/classes
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/grails-app
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/grails.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/lib
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/platform
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/plugins
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/sitemesh.xml
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/spring
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/templates
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/tld
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/web.xml
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jobcenter
 
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}
@@ -264,15 +285,18 @@ fi
 %{installRoot}/pkgs/ctl-%{ctlVersion}/tests
 %{installRoot}/pkgs/ctl-%{ctlVersion}/var
 
-%{installRoot}/bin
+%{installRoot}/pkgs/configure
+
+%dir %{installRoot}/bin
+%attr(750,-,-) %{installRoot}/bin/*.sh
 %dir %{installRoot}/ctl
 %dir %{installRoot}/ctl/etc
 %{installRoot}/ctl/etc/acls.dtd
-%{installRoot}/ctl/etc/console-log4j.properties
+%config %{installRoot}/ctl/etc/console-log4j.properties
 %dir %{installRoot}/ctl/etc/extensions
 %{installRoot}/ctl/etc/extensions/commander
 %{installRoot}/ctl/etc/jndi.properties.sample
-%{installRoot}/ctl/etc/setup.status
+%config %{installRoot}/ctl/etc/setup.status
 %{installRoot}/ctl/modules
 %{installRoot}/ctl/src
 %{installRoot}/examples
