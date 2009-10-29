@@ -135,7 +135,7 @@ public class CTierConfigurator {
         }
 
         validateEnvironment();
-        final AntProject project = new AntProject(new File(buildfile), defaultPropertiesFile, debug);
+        final AntProject project = new AntProject(new File(ctierRoot,buildfile), defaultPropertiesFile, debug);
         // Fire the build
         project.execute();
     }
@@ -187,7 +187,7 @@ public class CTierConfigurator {
         if (!checkIfDir(ANT_HOME_PROP, antHome)) {
             throw new SetupException(antHome + " is not a valid Ant home");
         }
-        fileExists(buildfile, true);
+        fileExists(ctierRoot.getAbsolutePath() + buildfile, true);
 
         //TODO: do we need to verify info from the manifest properties?
     }

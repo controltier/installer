@@ -10,7 +10,7 @@ Summary: Server for the ControlTier automation framework
 Name: ctier-server
 Prefix: %{installRoot}
 #BuildRoot: /var/tmp/%{name}-root
-#BuildRoot: %{_tmppath}/%{name}-buildroot
+BuildRoot: %{_tmppath}/%{name}-buildroot
 Version: @version@
 Release: @release@
 License: Apache
@@ -36,21 +36,24 @@ Design, deploy and manage complex IT and Operations systems.
 echo build is skipped
 
 %install
-#if [ "$RPM_BUILD_ROOT" != "" ] ; then
-#mkdir -p $RPM_BUILD_ROOT%{installRoot}
-#fi
+if [ "$RPM_BUILD_ROOT" != "" ] ; then
+    mkdir -p $RPM_BUILD_ROOT%{installRoot}
+fi
+
 echo running install script
 cd %{_topdir}/BUILD/ControlTier-%{version}
-sh %{_topdir}/BUILD/ControlTier-%{version}/install.sh -d %{installRoot} -Dserver.hostname=localhost -Dclient.hostname=localhost -Drcfile.location=%{installRoot}/rcfile.sample
+cp %{_topdir}/BUILD/ControlTier-%{version}/default.properties %{_topdir}/BUILD/ControlTier-%{version}/default.properties.orig
+sh %{_topdir}/BUILD/ControlTier-%{version}/install.sh -d $RPM_BUILD_ROOT%{installRoot} -Dserver.hostname=localhost -Dclient.hostname=localhost -Drcfile.location=$RPM_BUILD_ROOT%{installRoot}/rcfile.sample
+cp %{_topdir}/BUILD/ControlTier-%{version}/default.properties.orig $RPM_BUILD_ROOT%{installRoot}/pkgs/configure/default.properties
 
 #create missing dir, touch ghost files
-mkdir %{installRoot}/jackrabbit
-touch %{installRoot}/pkgs/jetty-%{jettyVersion}/logs/jetty.pid
-touch %{installRoot}/ctl/var/logs/command.log
-touch %{installRoot}/jobcenter/grailsdb.properties
-touch %{installRoot}/jobcenter/grailsdb.script
-touch %{installRoot}/reportcenter/grailsdb.properties
-touch %{installRoot}/reportcenter/grailsdb.script
+mkdir $RPM_BUILD_ROOT%{installRoot}/jackrabbit
+touch $RPM_BUILD_ROOT%{installRoot}/pkgs/jetty-%{jettyVersion}/logs/jetty.pid
+touch $RPM_BUILD_ROOT%{installRoot}/ctl/var/logs/command.log
+touch $RPM_BUILD_ROOT%{installRoot}/jobcenter/grailsdb.properties
+touch $RPM_BUILD_ROOT%{installRoot}/jobcenter/grailsdb.script
+touch $RPM_BUILD_ROOT%{installRoot}/reportcenter/grailsdb.properties
+touch $RPM_BUILD_ROOT%{installRoot}/reportcenter/grailsdb.script
 
 %pre
 
@@ -68,6 +71,7 @@ fi
 %defattr(640, %{ctuser}, %{ctgroup},740)
 #%undefine __check_files
 
+%dir %attr(2760,%{ctuser},%{ctgroup}) %{installRoot}
 %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/depots
 %dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var
 %dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp
@@ -305,17 +309,94 @@ fi
 # skip profile.bat
 #%{installRoot}/ctl/etc/profile.bat
 
+%post
+# run the server-setup.sh command
+
+
+#see if alternatives has java_sdk
+if [ -z "$JAVA_HOME" ] ; then
+    if [ -d /etc/alternatives/java_sdk ] ; then
+        cd -P /etc/alternatives/java_sdk
+        export JAVA_HOME=`pwd`
+    fi
+fi
+
+if [ -z "$JAVA_HOME" ] ; then
+
+    if [ -z "$TMP" ]
+    then
+      TMP=/tmp
+    fi
+
+    TMPJ=$TMP/ctierrpm$$
+
+    if [ -z "$JAVA_HOME" ]
+    then
+        # If a java runtime is not defined, search the following
+        # directories for a JVM and sort by version. Use the highest
+        # version number.
+
+        # Java search path
+        JAVA_LOCATIONS="\
+            /usr/java \
+            /usr/bin \
+            /usr/local/bin \
+            /usr/local/java \
+            /usr/local/jdk \
+            /usr/local/jre \
+        /usr/lib/jvm \
+            /opt/java \
+            /opt/jdk \
+            /opt/jre \
+        "
+        JAVA_NAMES="java jdk jre"
+        for N in $JAVA_NAMES ; do
+            for L in $JAVA_LOCATIONS ; do
+                [ -d $L ] || continue
+                find $L -name "$N" ! -type d | grep -v threads | while read J ; do
+                    [ -x $J ] || continue
+                    VERSION=`eval $J -version 2>&1`
+                    [ $? = 0 ] || continue
+                    VERSION=`expr "$VERSION" : '.*"\(1.[0-9\.]*\)["_]'`
+                    [ "$VERSION" = "" ] && continue
+                    expr $VERSION \< 1.2 >/dev/null && continue
+                    echo $VERSION:$J
+                done
+            done
+        done | sort | tail -1 > ${TMPJ}
+        JAVA=`cat $TMPJ | cut -d: -f2`
+        JVERSION=`cat $TMPJ | cut -d: -f1`
+
+        JAVA_HOME=`dirname $JAVA`
+        while [ ! -z "$JAVA_HOME" -a "$JAVA_HOME" != "/" -a ! -f "$JAVA_HOME/lib/tools.jar" ] ; do
+            JAVA_HOME=`dirname $JAVA_HOME`
+        done
+        [ "$JAVA_HOME" = "" ] && JAVA_HOME=
+
+        echo "Found JAVA=$JAVA in JAVA_HOME=$JAVA_HOME"
+        export JAVA_HOME
+    fi
+fi
+
+cd ~%{ctuser}
+CTUSERDIR=`pwd`
+cd $RPM_INSTALL_PREFIX
+sudo -u ctier -H sh -c "JAVA_HOME=${JAVA_HOME} ${RPM_INSTALL_PREFIX}/bin/server-setup.sh -f ${RPM_INSTALL_PREFIX}/pkgs/configure/default.properties -d ${RPM_INSTALL_PREFIX} \
+    -Dserver.hostname=`hostname` -Drcfile.location=${RPM_INSTALL_PREFIX}/rcfile.sample"
+    
+#-Dframework.ssh.user=%{ctuser} -Dframework.ssh.keypath=$CTUSERDIR/.ssh/id_dsa \
+#sudo -u %{ctuser} sh ${RPM_INSTALL_PREFIX}/bin/server-setup.sh -f ${RPM_INSTALL_PREFIX}/pkgs/configure/default.properties -d ${RPM_INSTALL_PREFIX} -Dserver.hostname=`hostname` -Dframework.ssh.user=%{ctuser} -Dframework.ssh.keypath=/home/%{ctuser}/.ssh/id_dsa
 
 %clean
-rm -rf %{installRoot}/bin
-rm -rf %{installRoot}/ctl
-rm -rf %{installRoot}/examples
-rm -rf %{installRoot}/jackrabbit
-rm -rf %{installRoot}/jobcenter
-rm -rf %{installRoot}/pkgs
-rm -rf %{installRoot}/reportcenter
-rm -rf %{installRoot}/workbench
-rm %{installRoot}/rcfile.sample
+rm -rf $RPM_BUILD_ROOT%{installRoot}/bin
+rm -rf $RPM_BUILD_ROOT%{installRoot}/ctl
+rm -rf $RPM_BUILD_ROOT%{installRoot}/examples
+rm -rf $RPM_BUILD_ROOT%{installRoot}/jackrabbit
+rm -rf $RPM_BUILD_ROOT%{installRoot}/jobcenter
+rm -rf $RPM_BUILD_ROOT%{installRoot}/pkgs
+rm -rf $RPM_BUILD_ROOT%{installRoot}/reportcenter
+rm -rf $RPM_BUILD_ROOT%{installRoot}/workbench
+rm $RPM_BUILD_ROOT%{installRoot}/rcfile.sample
 
 
 %changelog

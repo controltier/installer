@@ -456,7 +456,7 @@
         <copy file="${target.dir}/dist/${pom.id}/tgzs/${pom.id}-${pom.currentVersion}.tgz" todir="${rpm.target.dir}/SOURCES/"/>
 
         <exec executable="${rpm.cmd}" failonerror="true">
-            <arg line="--clean -bb ${rpm.target.dir}/SPECS/ctier-server-${pom.currentVersion}.spec"/>
+            <arg line="--clean --buildroot ${rpm.build.dir} -bb ${rpm.target.dir}/SPECS/ctier-server-${pom.currentVersion}.spec"/>
         </exec>
   </goal>
 

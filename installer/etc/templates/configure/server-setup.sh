@@ -5,12 +5,32 @@
 # Configure the ControlTier Server
 #
 
-CTIER_ROOT=${env.ctier_root}
-ANT_HOME=${env.ctl_home}/pkgs/apache-ant-${package.ant.version}
-
 errorMsg() {
    echo "$1" 1>&2
 }
+
+#determine CTIER_ROOT from script location
+
+if [ -z "$CTIER_ROOT" ] ; then
+        CTIER_ROOT_1=`dirname "$0"`
+        CTIER_ROOT_1=`dirname "$CTIER_ROOT_1"`
+        if [ -f "${CTIER_ROOT_1}/pkgs/configure/configure.xml" ] ; then
+                CTIER_ROOT=${CTIER_ROOT_1}
+        fi
+fi
+
+if [ "${CTIER_ROOT}X" = "X" ]
+then
+    errorMsg "CTIER_ROOT not set or set incorrectly"
+    exit 1
+fi
+
+cd $CTIER_ROOT
+CTIER_ROOT=`pwd`
+
+
+ANT_HOME=$CTIER_ROOT/pkgs/ctl-${pkgs.ctl.version}/pkgs/apache-ant-${package.ant.version}
+
 
 #
 # This hack checks if this shell script was called within (most probably) a cygwin context
@@ -35,11 +55,6 @@ then
    exit 1
 fi
 
-if [ "${CTIER_ROOT}X" = "X" ]
-then
-    errorMsg "CTIER_ROOT not set or set incorrectly"
-    exit 1
-fi
 
 if [ "${ANT_HOME}X" = "X" ]
 then

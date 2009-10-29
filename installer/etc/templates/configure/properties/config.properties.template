@@ -19,7 +19,8 @@ pkgs.jasper-compiler.version=@pkgs.jasper-compiler.version@
 pkgs.jasper-runtime.version=@pkgs.jasper-runtime.version@
 
 
-configure.buildfile=@env.ctier_root@/pkgs/configure/configure.xml
+#relative to CTIER_ROOT
+configure.buildfile=/pkgs/configure/configure.xml
 installer.rcfilename=.ctierrc
 installer.rcbatfilename=ctier.bat
 installer.version=@installer.version@
