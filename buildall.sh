@@ -89,38 +89,46 @@ export GRAILS_HOME_111=$BUILD_ROOT/local/grails-1.1.1
 cd $BUILD_ROOT
 
 #checkout ctier source
+if [ ! -d ctiersvn ] ; then
 svn co $CTIERSVNROOT/branches/$CTIERBRANCH ctiersvn
 if [ 0 != $? ]
 then
    echo "CTIER src checkout failed"
    exit 2
 fi
+fi
 export CTIERSVN=$BUILD_ROOT/ctiersvn
 
 #checkout ctl source
+if [ ! -d ctlsvn ] ; then
 svn co $CTLSVNROOT/branches/$CTLBRANCH ctlsvn
 if [ 0 != $? ]
 then
    echo "CTL src checkout failed"
    exit 2
 fi
+fi
 export CTLSVN=$BUILD_ROOT/ctlsvn
 
 #checkout jobcenter source
+if [ ! -d jobcentersvn ] ; then
 svn co $JCSVNROOT/branches/$JCBRANCH/webad jobcentersvn
 if [ 0 != $? ]
 then
    echo "Jobcenter src checkout failed"
    exit 2
 fi
+fi
 export JCSVN=$BUILD_ROOT/jobcentersvn
 
 #checkout modules source
+if [ ! -d ctierseedsvn ] ; then
 svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
 if [ 0 != $? ]
 then
    echo "Controltier Seed src checkout failed"
    exit 2
+fi
 fi
 export SEEDSVN=$BUILD_ROOT/ctierseedsvn
 
@@ -456,6 +464,63 @@ fi
 
 }
 
+build_client_rpm(){
+######################
+#
+# Installer build
+#
+MAVEN_HOME=$CTIERSVN/maven	
+cd $CTIERSVN/installer
+	
+echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/installer/build.properties
+cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean client:rpmbuild
+if [ 0 != $? ]
+then
+   echo "Installer build failed"
+   exit 2
+fi  
+
+
+#artifacts: ctier-client-$CTIERVERS-1.noarch.rpm
+
+#ctier-client-3.4.9-1.noarch.rpm
+ls $CTIERSVN/installer/target/rpm/RPMS/noarch/ctier-client-${CTIERVERS}-1.noarch.rpm 
+if [ 0 != $? ]
+then
+   echo "Installer build failed: couldn't find target/rpmbuild/ctier-client-$CTIERVERS.rpm"
+   exit 2
+fi  
+
+}
+build_server_rpm(){
+######################
+#
+# Installer build
+#
+MAVEN_HOME=$CTIERSVN/maven	
+cd $CTIERSVN/installer
+	
+echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/installer/build.properties
+cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true server:rpmbuild
+if [ 0 != $? ]
+then
+   echo "Installer build failed"
+   exit 2
+fi  
+
+
+#artifacts: ctier-client-$CTIERVERS-1.noarch.rpm
+
+#ctier-client-3.4.9-1.noarch.rpm
+ls $CTIERSVN/installer/target/rpm/RPMS/noarch/ctier-server-${CTIERVERS}-1.noarch.rpm 
+if [ 0 != $? ]
+then
+   echo "Installer build failed: couldn't find target/rpmbuild/ctier-server-$CTIERVERS.rpm"
+   exit 2
+fi  
+
+}
+
 
 if [ -z "$*" ] ; then
 
@@ -503,6 +568,12 @@ else
                 ;;
             installer)
                 build_installer
+                ;;
+            client_rpm)
+                build_client_rpm
+                ;;
+            server_rpm)
+                build_server_rpm
                 ;;
             *)
                 echo unknown action: ${i}
