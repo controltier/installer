@@ -912,7 +912,7 @@ prior to starting up the jetty server.
                     <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
                     <env key="ANT_HOME" value="${anthome.dir}/${anthome.base}"/>
                     <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                    <arg line="-f -n ${client.node.name} -a ${client.hostname} -s ${server.hostname} --server.port=${server.jetty.port} --depot.default.name=${depot.default.name} --depot.default.create=${depot.default.create}"/>
+                    <arg line="-f -n ${client.node.name} -N ${client.hostname} -s ${server.hostname} --server.port=${server.jetty.port} --depot.default.name=${depot.default.name} --depot.default.create=${depot.default.create}"/>
                 </exec>
 		    </then>
             <elseif>
@@ -924,7 +924,7 @@ prior to starting up the jetty server.
                         <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
 <!--                        <env key="ANT_HOME" value="${ant.home}"/>-->
                         <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                        <arg line="-f -n ${client.hostname} -a ${client.hostname}  -s ${server.hostname} --server.port=${server.jetty.port} --depot.default.name=${depot.default.name} --depot.default.create=${depot.default.create}"/>
+                        <arg line="-f -n ${client.hostname} -N ${client.hostname}  -s ${server.hostname} --server.port=${server.jetty.port} --depot.default.name=${depot.default.name} --depot.default.create=${depot.default.create}"/>
                     </exec>
                 
                 </then>
