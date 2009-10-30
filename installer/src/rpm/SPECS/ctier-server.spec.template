@@ -43,7 +43,7 @@ fi
 echo running install script
 cd %{_topdir}/BUILD/ControlTier-%{version}
 cp %{_topdir}/BUILD/ControlTier-%{version}/default.properties %{_topdir}/BUILD/ControlTier-%{version}/default.properties.orig
-sh %{_topdir}/BUILD/ControlTier-%{version}/install.sh -d $RPM_BUILD_ROOT%{installRoot} -Dserver.hostname=localhost -Dclient.hostname=localhost -Drcfile.location=$RPM_BUILD_ROOT%{installRoot}/rcfile.sample
+sh %{_topdir}/BUILD/ControlTier-%{version}/install.sh -d $RPM_BUILD_ROOT%{installRoot} -Dserver.hostname=localhost -Dclient.hostname=localhost -Drcfile.location=$RPM_BUILD_ROOT%{installRoot}/ctierrc.sample
 cp %{_topdir}/BUILD/ControlTier-%{version}/default.properties.orig $RPM_BUILD_ROOT%{installRoot}/pkgs/configure/default.properties
 
 #create missing dir, touch ghost files
@@ -304,7 +304,7 @@ fi
 %{installRoot}/ctl/modules
 %{installRoot}/ctl/src
 %{installRoot}/examples
-%{installRoot}/rcfile.sample
+%{installRoot}/ctierrc.sample
 
 # skip profile.bat
 #%{installRoot}/ctl/etc/profile.bat
@@ -382,10 +382,7 @@ cd ~%{ctuser}
 CTUSERDIR=`pwd`
 cd $RPM_INSTALL_PREFIX
 sudo -u ctier -H sh -c "JAVA_HOME=${JAVA_HOME} ${RPM_INSTALL_PREFIX}/bin/server-setup.sh -f ${RPM_INSTALL_PREFIX}/pkgs/configure/default.properties -d ${RPM_INSTALL_PREFIX} \
-    -Dserver.hostname=`hostname` -Drcfile.location=${RPM_INSTALL_PREFIX}/rcfile.sample"
-    
-#-Dframework.ssh.user=%{ctuser} -Dframework.ssh.keypath=$CTUSERDIR/.ssh/id_dsa \
-#sudo -u %{ctuser} sh ${RPM_INSTALL_PREFIX}/bin/server-setup.sh -f ${RPM_INSTALL_PREFIX}/pkgs/configure/default.properties -d ${RPM_INSTALL_PREFIX} -Dserver.hostname=`hostname` -Dframework.ssh.user=%{ctuser} -Dframework.ssh.keypath=/home/%{ctuser}/.ssh/id_dsa
+    -Dserver.hostname=`hostname` -Drcfile.location=${RPM_INSTALL_PREFIX}/ctierrc.sample"
 
 %clean
 rm -rf $RPM_BUILD_ROOT%{installRoot}/bin
@@ -396,7 +393,7 @@ rm -rf $RPM_BUILD_ROOT%{installRoot}/jobcenter
 rm -rf $RPM_BUILD_ROOT%{installRoot}/pkgs
 rm -rf $RPM_BUILD_ROOT%{installRoot}/reportcenter
 rm -rf $RPM_BUILD_ROOT%{installRoot}/workbench
-rm $RPM_BUILD_ROOT%{installRoot}/rcfile.sample
+rm $RPM_BUILD_ROOT%{installRoot}/ctierrc.sample
 
 
 %changelog
