@@ -231,6 +231,7 @@ fi
 %config %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/WEB-INF/repository.xml
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/about.jsp
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/bootstrap
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/collect.jsp
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/css
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/error
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/footer.jsp

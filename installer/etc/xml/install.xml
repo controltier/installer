@@ -575,6 +575,10 @@ fi
 	      <!-- copy the JCR interface jar -->
 	      <copy todir="${server.jetty.base}/webapps/jackrabbit/WEB-INF/lib"
 		    file="${pkgs.root}/${pkgs.jcr.archive}"/>
+
+          <!-- copy special collect.jsp file -->
+	      <copy todir="${server.jetty.base}/webapps/jackrabbit" file="${basedir}/etc/templates/jackrabbit/collect.jsp"/>
+                
 	      <!-- Replace the web.xml -->
 	      <copy tofile="${server.jetty.base}/webapps/jackrabbit/WEB-INF/web.xml" overwrite="true">
 		<filterset>
