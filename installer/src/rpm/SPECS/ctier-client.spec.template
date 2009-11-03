@@ -1,6 +1,8 @@
 # default install root is /opt/ctier
 %define installRoot /opt/ctier
 %define ctlVersion @ctl.version@
+%define ctuser ctier
+%define ctgroup ctier
 #
 # ctier-client
 Summary: Client for the ControlTier automation framework
@@ -61,10 +63,28 @@ chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.
 chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/*.pl
 chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/{ctl,ctl-check,ctl-depot,ctl-acl,ctl-exec,ctl-setup,ctl-extension,ctl-archive}
 
+%pre
+
+#
+# create user/group if necessary
+#
+
+/usr/sbin/groupadd -r -f %{ctgroup}
+grep \^%{ctuser} /etc/passwd >/dev/null
+if [ $? -ne 0 ]; then
+  /usr/sbin/useradd  -g %{ctgroup} -r -c "ControlTier user" %{ctuser}
+fi
+
 %files
-%defattr(-, root, root)
+%defattr(640, %{ctuser}, %{ctgroup},740)
 %undefine __check_files
-%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/
+%dir %{installRoot}
+%dir %{installRoot}/pkgs
+%dir %{installRoot}/pkgs/ctl-%{ctlVersion}
+%dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
+%attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl
+%attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl-*
+%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/commander-depotsetup.xml
 %{installRoot}/pkgs/ctl-%{ctlVersion}/classes/
 #%doc %{installRoot}/pkgs/ctl-%{ctlVersion}/docs/
 %{installRoot}/pkgs/ctl-%{ctlVersion}/etc/
