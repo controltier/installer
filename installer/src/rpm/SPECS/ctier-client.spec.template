@@ -63,6 +63,29 @@ chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.
 chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/*.pl
 chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/{ctl,ctl-check,ctl-depot,ctl-acl,ctl-exec,ctl-setup,ctl-extension,ctl-archive}
 
+cat <<END > $RPM_BUILD_ROOT%{installRoot}/ctierrc.sample
+export CTIER_ROOT=$RPM_BUILD_ROOT%{installRoot}
+
+export CTL_HOME=$RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}
+
+#
+# Uncomment and set this to the CTL_BASE path you are using:
+
+# export CTL_BASE=/path/to/ctl/base
+
+export PATH=\$CTL_HOME/bin:\$PATH
+
+if [ -n "\$BASH" ] ; then
+    . \$CTL_HOME/etc/bash_completion.sh ;
+    if [ -t 0 -a -z "\$CTL_CLI_TERSE" ]
+    then
+      CTL_CLI_TERSE=true
+      export CTL_CLI_TERSE
+    fi
+fi
+
+END
+
 %pre
 
 #
@@ -79,6 +102,7 @@ fi
 %defattr(640, %{ctuser}, %{ctgroup},740)
 %undefine __check_files
 %dir %{installRoot}
+%{installRoot}/ctierrc.sample
 %dir %{installRoot}/pkgs
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
@@ -93,6 +117,32 @@ fi
 %{installRoot}/pkgs/ctl-%{ctlVersion}/tests/
 %{installRoot}/pkgs/ctl-%{ctlVersion}/var/
 
+%post
+
+#generate ctierrc.sample file
+cd $RPM_INSTALL_PREFIX
+cat <<END >  ${RPM_INSTALL_PREFIX}/ctierrc.sample
+export CTIER_ROOT=${RPM_INSTALL_PREFIX}
+
+export CTL_HOME=${RPM_INSTALL_PREFIX}/pkgs/ctl-%{ctlVersion}
+
+#
+# Uncomment and set this to the CTL_BASE path you are using:
+
+# export CTL_BASE=/path/to/ctl/base
+
+export PATH=\$CTL_HOME/bin:\$PATH
+
+if [ -n "\$BASH" ] ; then
+    . \$CTL_HOME/etc/bash_completion.sh ;
+    if [ -t 0 -a -z "\$CTL_CLI_TERSE" ]
+    then
+      CTL_CLI_TERSE=true
+      export CTL_CLI_TERSE
+    fi
+fi
+END
+chown %{ctuser}:%{ctgroup} $RPM_INSTALL_PREFIX/ctierrc.sample
 
 %clean
 rm -rf $RPM_BUILD_ROOT
