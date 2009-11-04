@@ -63,7 +63,7 @@ chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.
 chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/*.pl
 chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/{ctl,ctl-check,ctl-depot,ctl-acl,ctl-exec,ctl-setup,ctl-extension,ctl-archive}
 
-cat <<END > $RPM_BUILD_ROOT%{installRoot}/ctierrc.sample
+cat <<END > $RPM_BUILD_ROOT%{installRoot}/ctierrc
 export CTIER_ROOT=$RPM_BUILD_ROOT%{installRoot}
 
 export CTL_HOME=$RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}
@@ -95,14 +95,15 @@ END
 /usr/sbin/groupadd -r -f %{ctgroup}
 grep \^%{ctuser} /etc/passwd >/dev/null
 if [ $? -ne 0 ]; then
-  /usr/sbin/useradd  -g %{ctgroup} -r -c "ControlTier user" %{ctuser}
+  /usr/sbin/useradd  -g %{ctgroup} -r -c "ControlTier user" -d $RPM_INSTALL_PREFIX %{ctuser}
+  passwd -l %{ctuser}
 fi
 
 %files
 %defattr(640, %{ctuser}, %{ctgroup},740)
 %undefine __check_files
 %dir %{installRoot}
-%{installRoot}/ctierrc.sample
+%{installRoot}/ctierrc
 %dir %{installRoot}/pkgs
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
@@ -119,9 +120,9 @@ fi
 
 %post
 
-#generate ctierrc.sample file
+#generate ctierrc file
 cd $RPM_INSTALL_PREFIX
-cat <<END >  ${RPM_INSTALL_PREFIX}/ctierrc.sample
+cat <<END >  ${RPM_INSTALL_PREFIX}/ctierrc
 export CTIER_ROOT=${RPM_INSTALL_PREFIX}
 
 export CTL_HOME=${RPM_INSTALL_PREFIX}/pkgs/ctl-%{ctlVersion}
@@ -142,7 +143,30 @@ if [ -n "\$BASH" ] ; then
     fi
 fi
 END
-chown %{ctuser}:%{ctgroup} $RPM_INSTALL_PREFIX/ctierrc.sample
+
+cat <<END > ${RPM_INSTALL_PREFIX}/.bashrc
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+# User specific aliases and functions
+
+if [ -f ${RPM_INSTALL_PREFIX}/ctierrc ]; then
+        . ${RPM_INSTALL_PREFIX}/ctierrc
+else
+        echo ${RPM_INSTALL_PREFIX}/ctierrc not found 1>&2
+fi
+END
+
+cat <<END > ${RPM_INSTALL_PREFIX}/.bash_profile
+if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
+END
+
+chown %{ctuser}:%{ctgroup} ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
+chmod 640 ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
