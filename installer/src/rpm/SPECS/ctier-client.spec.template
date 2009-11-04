@@ -84,6 +84,8 @@ if [ -n "\$BASH" ] ; then
     fi
 fi
 
+umask 002
+
 END
 
 %pre
@@ -142,6 +144,9 @@ if [ -n "\$BASH" ] ; then
       export CTL_CLI_TERSE
     fi
 fi
+
+umask 002
+
 END
 
 cat <<END > ${RPM_INSTALL_PREFIX}/.bashrc

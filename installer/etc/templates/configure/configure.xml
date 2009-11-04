@@ -209,6 +209,8 @@ export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${env.java_home.escbackslash}
 CONFIG_PROPS="-Djobcenter.config.location=${env.ctier_root.escbackslash}/jobcenter/jobcenter-config.properties -Dreportcenter.config.location=${env.ctier_root.escbackslash}/reportcenter/reportcenter-config.properties"
 export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
+export JETTY_USER=${user.name}
+
 </echo>
                         <property name="rcfile.path" value="$CTL_HOME/bin:$JETTY_HOME/bin:$PATH"/>
                     </then>
@@ -229,6 +231,7 @@ if [ -n "$BASH" ] ; then
     fi
 fi
 
+umask 002
                 </echo>
             </then>
             <elseif>
@@ -308,6 +311,7 @@ export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${USER_ENV.JAVA_HOME}
 CONFIG_PROPS="-Djobcenter.config.location=${env.ctier_root}/jobcenter/jobcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}/reportcenter/reportcenter-config.properties"
 export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
+export JETTY_USER=${user.name}
 </echo>
                         <property name="rcfile.path" value="$CTL_HOME/bin:$JETTY_HOME/bin:$PATH"/>
                     </then>
@@ -327,7 +331,7 @@ if [ -n "$BASH" ] ; then
       export CTL_CLI_TERSE
     fi
 fi
-
+umask 002
                 </echo>
             </else>
         </if>
