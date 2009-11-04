@@ -229,7 +229,6 @@ if [ -n "$BASH" ] ; then
       export CTL_CLI_TERSE
     fi
 fi
-umask 002
 
                 </echo>
             </then>
@@ -329,7 +328,6 @@ if [ -n "$BASH" ] ; then
       export CTL_CLI_TERSE
     fi
 fi
-umask 002
 
                 </echo>
             </else>
