@@ -1,0 +1,13 @@
+4a5,8
+> # chkconfig: 345 99 99
+> # description: ControlTier Jetty Server
+> # processname: jetty
+> #
+130,133c134,135
+< if [ -f /etc/default/jetty6 ] ; then 
+<   . /etc/default/jetty6
+< elif [ -f /etc/default/jetty ] ; then 
+<   . /etc/default/jetty
+---
+> if [ -f /etc/default/ctier ] ; then 
+>   . /etc/default/ctier

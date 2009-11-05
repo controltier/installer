@@ -22,7 +22,7 @@ Distribution: ControlTier
 Vendor: ControlTier, Inc.
 Packager: ControlTier <info@controltier.com>
 AutoReqProv: no
-Requires: java >= 1.5, java-sdk >= 1.5
+Requires: java >= 1.5, java-sdk >= 1.5, chkconfig
 BuildArch: noarch
 
 %description
@@ -57,6 +57,10 @@ touch $RPM_BUILD_ROOT%{installRoot}/reportcenter/grailsdb.script
 touch $RPM_BUILD_ROOT%{installRoot}/ctierrc
 touch $RPM_BUILD_ROOT%{installRoot}/.bashrc
 touch $RPM_BUILD_ROOT%{installRoot}/.bash_profile
+mkdir -p $RPM_BUILD_ROOT%{_initrddir}
+mkdir -p $RPM_BUILD_ROOT/etc/default
+touch $RPM_BUILD_ROOT%{_initrddir}/ctier
+touch $RPM_BUILD_ROOT/etc/default/ctier
 
 %pre
 
@@ -306,7 +310,7 @@ fi
 %{installRoot}/ctl/etc/extensions/commander
 %{installRoot}/ctl/etc/jndi.properties.sample
 %config %{installRoot}/ctl/etc/setup.status
-%{installRoot}/ctl/modules
+%attr(2770,%{ctuser},%{ctgroup}) %{installRoot}/ctl/modules
 %{installRoot}/ctl/src
 %{installRoot}/examples
 %ghost %{installRoot}/ctierrc
@@ -315,6 +319,12 @@ fi
 
 # skip profile.bat
 #%{installRoot}/ctl/etc/profile.bat
+
+#
+# init script files
+
+%ghost %{_initrddir}/ctier
+%ghost /etc/default/ctier
 
 %post
 # run the server-setup.sh command
@@ -415,6 +425,32 @@ END
 
 chown %{ctuser}:%{ctgroup} ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
 chmod 640 ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
+
+#
+# setup ctier init script
+#
+cp ${RPM_INSTALL_PREFIX}/pkgs/jetty-%{jettyVersion}/bin/jetty.sh %{_initrddir}/ctier
+patch < ${RPM_INSTALL_PREFIX}/pkgs/configure/jetty.sh.patch %{_initrddir}/ctier
+
+cp ${RPM_INSTALL_PREFIX}/ctierrc /etc/default/ctier
+cat <<END >> /etc/default/ctier
+umask 002
+export JETTY_USER=%{ctuser}
+END
+
+chkconfig --add ctier
+
+%preun
+
+#
+# remove
+#
+if [ $1 -eq 0 ]
+then
+   /sbin/chkconfig --del ctier
+   [ -f %{_initrddir}/ctier ] && \
+   	%{_initrddir}/ctier stop
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT%{installRoot}/bin

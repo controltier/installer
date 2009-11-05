@@ -357,7 +357,7 @@ fi
         <!-- copy configure contents -->
         <mkdir dir="${env.ctier_root}/pkgs/configure"/>
         <copy todir="${env.ctier_root}/pkgs/configure">
-            <fileset dir="${basedir}/etc/templates/configure" includes="configure.xml"/>
+            <fileset dir="${basedir}/etc/templates/configure" includes="configure.xml,jetty.sh.patch"/>
         </copy>
         <mkdir dir="${env.ctier_root}/pkgs/configure/etc/templates"/>
         <copy todir="${env.ctier_root}/pkgs/configure/etc/templates">
