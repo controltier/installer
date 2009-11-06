@@ -312,7 +312,6 @@ fi
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/runrc.cmd
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/docs
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/etc
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/etc
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/fetch.xml
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/get-m2.xml
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/lib
