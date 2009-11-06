@@ -192,7 +192,10 @@ public key has been added to the authorized_keys file.
 export CTIER_ROOT=${env.ctier_root.escbackslash}
 
 export CTL_HOME=${env.ctl_home.escbackslash}
-export CTL_BASE=${env.ctl_base.escbackslash}
+if [ -z "$CTL_BASE" ] ; then
+  export CTL_BASE=${env.ctl_base.escbackslash}
+fi
+
 </echo>
                 <if>
                     <isset property="task.check-server-env.executed"/>
@@ -293,7 +296,9 @@ set Path=${rcfile.path}
 export CTIER_ROOT=${env.ctier_root}
 
 export CTL_HOME=${env.ctl_home}
-export CTL_BASE=${env.ctl_base}
+if [ -z "$CTL_BASE" ] ; then
+  export CTL_BASE=${env.ctl_base}
+fi
 </echo>
                 <if>
                     <isset property="task.check-server-env.executed"/>
