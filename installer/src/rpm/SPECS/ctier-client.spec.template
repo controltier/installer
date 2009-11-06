@@ -100,15 +100,15 @@ if [ $? -ne 0 ]; then
 fi
 
 %files
-%defattr(640, %{ctuser}, %{ctgroup},740)
+%defattr(644, %{ctuser}, %{ctgroup},755)
 %undefine __check_files
 %dir %{installRoot}
 %{installRoot}/ctierrc
 %dir %{installRoot}/pkgs
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
-%attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl
-%attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl-*
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl-*
 %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/commander-depotsetup.xml
 %{installRoot}/pkgs/ctl-%{ctlVersion}/classes/
 #%doc %{installRoot}/pkgs/ctl-%{ctlVersion}/docs/
@@ -167,7 +167,7 @@ if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
 END
 
 chown %{ctuser}:%{ctgroup} ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
-chmod 640 ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
+chmod 644 ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
 
 %clean
 rm -rf $RPM_BUILD_ROOT

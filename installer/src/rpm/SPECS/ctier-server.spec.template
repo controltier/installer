@@ -76,15 +76,15 @@ if [ $? -ne 0 ]; then
 fi
 
 %files
-%defattr(640, %{ctuser}, %{ctgroup},750)
+%defattr(644, %{ctuser}, %{ctgroup},755)
 #%undefine __check_files
 
-%dir %attr(2770,%{ctuser},%{ctgroup}) %{installRoot}
-%attr(2770,%{ctuser},%{ctgroup}) %{installRoot}/ctl/depots
-%dir %attr(2770,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var
-%dir %attr(2770,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp
-%dir %attr(2770,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp/downloads
-%dir %attr(2770,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/logs
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}
+%attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/depots
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp/downloads
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/logs
 %ghost %{installRoot}/ctl/var/logs/command.log
 
 %dir %{installRoot}/jobcenter
@@ -134,7 +134,7 @@ fi
 %{installRoot}/pkgs/jetty-%{jettyVersion}/README.txt
 %{installRoot}/pkgs/jetty-%{jettyVersion}/VERSION.txt
 %dir %{installRoot}/pkgs/jetty-%{jettyVersion}/bin
-%attr(750,-,-) %{installRoot}/pkgs/jetty-%{jettyVersion}/bin/jetty.sh
+%attr(755,-,-) %{installRoot}/pkgs/jetty-%{jettyVersion}/bin/jetty.sh
 %{installRoot}/pkgs/jetty-%{jettyVersion}/contexts
 %{installRoot}/pkgs/jetty-%{jettyVersion}/contrib
 %{installRoot}/pkgs/jetty-%{jettyVersion}/controltier
@@ -282,8 +282,8 @@ fi
 
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
-%attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl
-%attr(750,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl-*
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl-*
 %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/commander-depotsetup.xml
 %{installRoot}/pkgs/ctl-%{ctlVersion}/classes
 %docdir %{installRoot}/pkgs/ctl-%{ctlVersion}/docs
@@ -301,7 +301,7 @@ fi
 %{installRoot}/pkgs/configure
 
 %dir %{installRoot}/bin
-%attr(750,-,-) %{installRoot}/bin/*.sh
+%attr(755,-,-) %{installRoot}/bin/*.sh
 %dir %{installRoot}/ctl
 %dir %{installRoot}/ctl/etc
 %{installRoot}/ctl/etc/acls.dtd
@@ -310,7 +310,7 @@ fi
 %{installRoot}/ctl/etc/extensions/commander
 %{installRoot}/ctl/etc/jndi.properties.sample
 %config %{installRoot}/ctl/etc/setup.status
-%attr(2770,%{ctuser},%{ctgroup}) %{installRoot}/ctl/modules
+%attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/modules
 %{installRoot}/ctl/src
 %{installRoot}/examples
 %ghost %{installRoot}/ctierrc
@@ -424,7 +424,7 @@ if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
 END
 
 chown %{ctuser}:%{ctgroup} ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
-chmod 640 ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
+chmod 644 ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
 
 #
 # setup ctier init script
