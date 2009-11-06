@@ -30,19 +30,6 @@ ControlTier Client
 
 %prep
 %setup -c -n %{name}-%{version}/pkgs/ctl-%{ctlVersion}
-#cd %{_topdir}/BUILD
-#rm -rf %{name}-%{version}
-#mkdir -p %{_topdir}/BUILD/%{name}-%{version}/pkgs/ctl-%{ctlVersion}
-#cd %{_topdir}/BUILD/%{name}-%{version}/pkgs/ctl-%{ctlVersion}
-
-#gzip -dc %{_topdir}/SOURCES/%{name}-%{version}.tgz | tar -xvvf -
-#if [ $? -ne 0 ]; then
-#  exit $?
-#fi
-#cd %{_topdir}/BUILD/%{name}-%{version}
-
-#chmod -R a+rX,g-w,o-w .
-
 
 %build
 echo build is skipped
@@ -57,11 +44,6 @@ cp -R %{_topdir}/BUILD/%{name}-%{version}/* $RPM_BUILD_ROOT%{installRoot}/
 %else
 cp -r %{_topdir}/BUILD/%{name}-%{version}/* $RPM_BUILD_ROOT%{installRoot}/
 %endif
-
-rm $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/*.bat
-chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/{ant,antRun}
-chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/*.pl
-chmod +x $RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/{ctl,ctl-check,ctl-depot,ctl-acl,ctl-exec,ctl-setup,ctl-extension,ctl-archive}
 
 cat <<END > $RPM_BUILD_ROOT%{installRoot}/ctierrc
 export CTIER_ROOT=$RPM_BUILD_ROOT%{installRoot}
@@ -114,7 +96,32 @@ fi
 #%doc %{installRoot}/pkgs/ctl-%{ctlVersion}/docs/
 %{installRoot}/pkgs/ctl-%{ctlVersion}/etc/
 %{installRoot}/pkgs/ctl-%{ctlVersion}/lib/
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/
+%dir %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/
+%dir %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/INSTALL
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/KEYS
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/LICENSE
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/NOTICE
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/PATCH_NOTE.txt
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/README
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/WHATSNEW
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/ant
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/antRun
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/*.pl
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/ant.bat
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/ant.cmd
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/antRun.bat
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/antenv.cmd
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/envset.cmd
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/lcp.bat
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/runant.py
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/runrc.cmd
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/docs
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/etc
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/etc
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/fetch.xml
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/get-m2.xml
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/lib
 %{installRoot}/pkgs/ctl-%{ctlVersion}/tests/
 %{installRoot}/pkgs/ctl-%{ctlVersion}/var/
 
