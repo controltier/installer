@@ -461,6 +461,11 @@ END
 
 chkconfig --add ctier
 
+#
+# start service
+#
+%{_initrddir}/ctier start
+
 %preun
 
 #
