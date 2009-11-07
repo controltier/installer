@@ -43,7 +43,8 @@ fi
 echo running install script
 cd %{_topdir}/BUILD/ControlTier-%{version}
 cp %{_topdir}/BUILD/ControlTier-%{version}/default.properties %{_topdir}/BUILD/ControlTier-%{version}/default.properties.orig
-sh %{_topdir}/BUILD/ControlTier-%{version}/install.sh -d $RPM_BUILD_ROOT%{installRoot} -Dserver.hostname=localhost -Dclient.hostname=localhost -Drcfile.location=$RPM_BUILD_ROOT%{installRoot}/ctierrc
+mkdir -p $RPM_BUILD_ROOT%{installRoot}/etc
+sh %{_topdir}/BUILD/ControlTier-%{version}/install.sh -d $RPM_BUILD_ROOT%{installRoot} -Dserver.hostname=localhost -Dclient.hostname=localhost -Drcfile.location=$RPM_BUILD_ROOT%{installRoot}/etc/ctierrc
 cp %{_topdir}/BUILD/ControlTier-%{version}/default.properties.orig $RPM_BUILD_ROOT%{installRoot}/pkgs/configure/default.properties
 
 #create missing dir, touch ghost files
@@ -54,7 +55,6 @@ touch $RPM_BUILD_ROOT%{installRoot}/jobcenter/grailsdb.properties
 touch $RPM_BUILD_ROOT%{installRoot}/jobcenter/grailsdb.script
 touch $RPM_BUILD_ROOT%{installRoot}/reportcenter/grailsdb.properties
 touch $RPM_BUILD_ROOT%{installRoot}/reportcenter/grailsdb.script
-touch $RPM_BUILD_ROOT%{installRoot}/ctierrc
 touch $RPM_BUILD_ROOT%{installRoot}/.bashrc
 touch $RPM_BUILD_ROOT%{installRoot}/.bash_profile
 mkdir -p $RPM_BUILD_ROOT%{_initrddir}
@@ -333,7 +333,8 @@ fi
 %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/modules
 %{installRoot}/ctl/src
 %{installRoot}/examples
-%ghost %{installRoot}/ctierrc
+%dir %{installRoot}/etc
+%ghost %{installRoot}/etc/ctierrc
 %ghost %{installRoot}/.bashrc
 %ghost %{installRoot}/.bash_profile
 
@@ -419,7 +420,7 @@ cd ~%{ctuser}
 CTUSERDIR=`pwd`
 cd $RPM_INSTALL_PREFIX
 sudo -u %{ctuser} -H sh -c "JAVA_HOME=${JAVA_HOME} ${RPM_INSTALL_PREFIX}/bin/server-setup.sh -f ${RPM_INSTALL_PREFIX}/pkgs/configure/default.properties -d ${RPM_INSTALL_PREFIX} \
-    -Dserver.hostname=`hostname` -Drcfile.location=${RPM_INSTALL_PREFIX}/ctierrc"
+    -Dserver.hostname=`hostname` -Drcfile.location=${RPM_INSTALL_PREFIX}/etc/ctierrc"
 
 
 cat <<END > ${RPM_INSTALL_PREFIX}/.bashrc
@@ -432,10 +433,10 @@ fi
 
 # User specific aliases and functions
 
-if [ -f ${RPM_INSTALL_PREFIX}/ctierrc ]; then
-        . ${RPM_INSTALL_PREFIX}/ctierrc
+if [ -f ${RPM_INSTALL_PREFIX}/etc/ctierrc ]; then
+        . ${RPM_INSTALL_PREFIX}/etc/ctierrc
 else
-        echo ${RPM_INSTALL_PREFIX}/ctierrc not found 1>&2
+        echo ${RPM_INSTALL_PREFIX}/etc/ctierrc not found 1>&2
 fi
 END
 
@@ -444,7 +445,7 @@ if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
 END
 
 chown %{ctuser}:%{ctgroup} ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
-chmod 644 ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
+chmod 644 ${RPM_INSTALL_PREFIX}/etc/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
 
 #
 # setup ctier init script
@@ -452,7 +453,7 @@ chmod 644 ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RP
 cp ${RPM_INSTALL_PREFIX}/pkgs/jetty-%{jettyVersion}/bin/jetty.sh %{_initrddir}/ctier
 patch < ${RPM_INSTALL_PREFIX}/pkgs/configure/jetty.sh.patch %{_initrddir}/ctier
 
-cp ${RPM_INSTALL_PREFIX}/ctierrc /etc/default/ctier
+cp ${RPM_INSTALL_PREFIX}/etc/ctierrc /etc/default/ctier
 cat <<END >> /etc/default/ctier
 umask 002
 export JETTY_USER=%{ctuser}
@@ -481,7 +482,7 @@ rm -rf $RPM_BUILD_ROOT%{installRoot}/jobcenter
 rm -rf $RPM_BUILD_ROOT%{installRoot}/pkgs
 rm -rf $RPM_BUILD_ROOT%{installRoot}/reportcenter
 rm -rf $RPM_BUILD_ROOT%{installRoot}/workbench
-rm $RPM_BUILD_ROOT%{installRoot}/ctierrc
+rm -rf $RPM_BUILD_ROOT%{installRoot}/etc
 
 
 %changelog

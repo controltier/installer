@@ -45,7 +45,9 @@ cp -R %{_topdir}/BUILD/%{name}-%{version}/* $RPM_BUILD_ROOT%{installRoot}/
 cp -r %{_topdir}/BUILD/%{name}-%{version}/* $RPM_BUILD_ROOT%{installRoot}/
 %endif
 
-cat <<END > $RPM_BUILD_ROOT%{installRoot}/ctierrc
+mkdir $RPM_BUILD_ROOT%{installRoot}/etc
+
+cat <<END > $RPM_BUILD_ROOT%{installRoot}/etc/ctierrc
 export CTIER_ROOT=$RPM_BUILD_ROOT%{installRoot}
 
 export CTL_HOME=$RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}
@@ -85,7 +87,8 @@ fi
 %defattr(644, %{ctuser}, %{ctgroup},755)
 %undefine __check_files
 %dir %{installRoot}
-%{installRoot}/ctierrc
+%dir %{installRoot}/etc
+%{installRoot}/etc/ctierrc
 %dir %{installRoot}/pkgs
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
@@ -128,7 +131,7 @@ fi
 
 #generate ctierrc file
 cd $RPM_INSTALL_PREFIX
-cat <<END >  ${RPM_INSTALL_PREFIX}/ctierrc
+cat <<END >  ${RPM_INSTALL_PREFIX}/etc/ctierrc
 export CTIER_ROOT=${RPM_INSTALL_PREFIX}
 
 export CTL_HOME=${RPM_INSTALL_PREFIX}/pkgs/ctl-%{ctlVersion}
@@ -161,10 +164,10 @@ fi
 
 # User specific aliases and functions
 
-if [ -f ${RPM_INSTALL_PREFIX}/ctierrc ]; then
-        . ${RPM_INSTALL_PREFIX}/ctierrc
+if [ -f ${RPM_INSTALL_PREFIX}/etc/ctierrc ]; then
+        . ${RPM_INSTALL_PREFIX}/etc/ctierrc
 else
-        echo ${RPM_INSTALL_PREFIX}/ctierrc not found 1>&2
+        echo ${RPM_INSTALL_PREFIX}/etc/ctierrc not found 1>&2
 fi
 END
 
@@ -172,8 +175,8 @@ cat <<END > ${RPM_INSTALL_PREFIX}/.bash_profile
 if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
 END
 
-chown %{ctuser}:%{ctgroup} ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
-chmod 644 ${RPM_INSTALL_PREFIX}/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
+chown %{ctuser}:%{ctgroup} ${RPM_INSTALL_PREFIX}/etc/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
+chmod 644 ${RPM_INSTALL_PREFIX}/etc/ctierrc ${RPM_INSTALL_PREFIX}/.bash_profile ${RPM_INSTALL_PREFIX}/.bashrc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
