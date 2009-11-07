@@ -464,7 +464,7 @@ chkconfig --add ctier
 #
 # start service
 #
-%{_initrddir}/ctier start
+runlevel | egrep "[345]$" -q && %{_initrddir}/ctier start
 
 %preun
 
