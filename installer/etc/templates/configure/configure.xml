@@ -345,7 +345,7 @@ fi
         <property name="is.server.install" value="true"/>
     </target>
 
-    <target name="-setup-server" depends="check-server-env,-backup-server-config,setup-itnav,setup-jackrabbit,configure-server" >
+    <target name="-setup-server" depends="check-server-env,-backup-server-config,setup-itnav,setup-jackrabbit,configure-server,configure-landingpage" >
         <echo>ControlTier Server configured.</echo>
     </target>
     <target name="install-server" depends="-pre-server-install,-check-prereqs,-load-props,-setup-server" >
@@ -589,6 +589,17 @@ reportcenter.birt.rptdesign.dir=${birt.examples.dir}
                 <property name="ctl.integration.enabled" value="false"/>
             </else>
         </if>
+    </target>
+
+     <target name="configure-landingpage" depends="configure-server"
+             description="Rewrite the landing page with correct install info">
+        <!-- expand the properties in the landing page -->
+        <copy tofile="${server.jetty.base}/controltier/index.html" overwrite="true">
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+            <fileset file="${basedir}/etc/templates/web/index.html.template"/>
+        </copy>
     </target>
 
 

@@ -376,6 +376,10 @@ fi
         <copy todir="${env.ctier_root}/pkgs/configure/etc/templates/jetty6">
             <fileset dir="${basedir}/etc/templates/jetty6"/>
         </copy>
+        <mkdir dir="${env.ctier_root}/pkgs/configure/etc/templates/web"/>
+        <copy todir="${env.ctier_root}/pkgs/configure/etc/templates/web">
+            <fileset dir="${basedir}/web" includes="index.html.template"/>
+        </copy>
         <mkdir dir="${env.ctier_root}/pkgs/configure/etc/templates/reportcenter"/>
         <copy  todir="${env.ctier_root}/pkgs/configure/etc/templates/reportcenter">
             <fileset dir="${pkgs.root}/reportcenter-${pkgs.reportcenter.version}/templates/" includes="jetty-web.xml.template,BirtConfig.properties.template"/>
