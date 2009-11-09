@@ -79,7 +79,7 @@ fi
 %defattr(644, %{ctuser}, %{ctgroup},755)
 #%undefine __check_files
 
-%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}
+%dir %{installRoot}
 %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/depots
 %dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var
 %dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp
