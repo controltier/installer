@@ -462,6 +462,30 @@ END
 chkconfig --add ctier
 
 #
+# set up ulimit
+#
+grep \^%{ctuser} /etc/security/limits.conf -q
+if [ $? -ne 0 ]; then
+
+cat <<END >> /etc/security/limits.conf
+%{ctuser} soft nofile 16384
+%{ctuser} hard nofile 16384
+END
+
+fi
+
+
+grep "^session required /lib/security/pam_limits.so" /etc/pam.d/login -q
+if [ $? -ne 0 ]; then
+    cat <<END >> /etc/pam.d/login
+session required /lib/security/pam_limits.so
+END
+
+fi
+
+
+
+#
 # start service
 #
 runlevel | egrep "[345]$" -q && %{_initrddir}/ctier start
