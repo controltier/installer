@@ -468,8 +468,8 @@ grep \^%{ctuser} /etc/security/limits.conf -q
 if [ $? -ne 0 ]; then
 
 cat <<END >> /etc/security/limits.conf
-%{ctuser} soft nofile 16384
-%{ctuser} hard nofile 16384
+%{ctuser} soft nofile 65535
+%{ctuser} hard nofile 65535
 END
 
 fi
