@@ -139,7 +139,7 @@ export CTL_HOME=${RPM_INSTALL_PREFIX}/pkgs/ctl-%{ctlVersion}
 #
 # Uncomment and set this to the CTL_BASE path you are using:
 
-# export CTL_BASE=/path/to/ctl/base
+export CTL_BASE=${RPM_INSTALL_PREFIX}/ctl
 
 export PATH=\$CTL_HOME/bin:\$PATH
 
