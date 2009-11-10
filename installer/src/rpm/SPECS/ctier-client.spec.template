@@ -69,6 +69,8 @@ if [ -n "\$BASH" ] ; then
 fi
 
 END
+touch $RPM_BUILD_ROOT%{installRoot}/.bashrc
+touch $RPM_BUILD_ROOT%{installRoot}/.bash_profile
 
 %pre
 
@@ -108,6 +110,7 @@ fi
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/PATCH_NOTE.txt
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/README
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/WHATSNEW
+%dir %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin
 %attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/ant
 %attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/antRun
 %attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/*.pl
@@ -126,6 +129,8 @@ fi
 %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/lib
 %{installRoot}/pkgs/ctl-%{ctlVersion}/tests/
 %{installRoot}/pkgs/ctl-%{ctlVersion}/var/
+%ghost %{installRoot}/.bashrc
+%ghost %{installRoot}/.bash_profile
 
 %post
 
