@@ -55,7 +55,7 @@ export CTL_HOME=$RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}
 #
 # Uncomment and set this to the CTL_BASE path you are using:
 
-# export CTL_BASE=/path/to/ctl/base
+export CTL_BASE=$RPM_BUILD_ROOT%{installRoot}/ctl
 
 export PATH=\$CTL_HOME/bin:\$PATH
 
@@ -71,6 +71,10 @@ fi
 END
 touch $RPM_BUILD_ROOT%{installRoot}/.bashrc
 touch $RPM_BUILD_ROOT%{installRoot}/.bash_profile
+mkdir -p $RPM_BUILD_ROOT%{installRoot}/ctl/depots
+mkdir -p $RPM_BUILD_ROOT%{installRoot}/ctl/modules
+mkdir -p $RPM_BUILD_ROOT%{installRoot}/ctl/var/logs
+mkdir -p $RPM_BUILD_ROOT%{installRoot}/ctl/var/tmp/downloads
 
 %pre
 
@@ -89,6 +93,13 @@ fi
 %defattr(644, %{ctuser}, %{ctgroup},755)
 %undefine __check_files
 %dir %{installRoot}
+%dir %{installRoot}/ctl
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/depots
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/modules
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp/downloads
+%dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/logs
 %dir %{installRoot}/etc
 %{installRoot}/etc/ctierrc
 %dir %{installRoot}/pkgs
