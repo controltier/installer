@@ -29,6 +29,9 @@ ul, ol{
     margin: 10px 0;
     padding-left: 20px;
 }
+ul ul{
+    margin:0;
+}
 .mainContent {
     margin: 15px;
     
@@ -53,7 +56,11 @@ ul, ol{
 	<li><a href="jobcenter/">JobCenter (${pkgs.jobcenter.version})</a></li>
 	<li><a href="itnav/">Workbench (${pkgs.itnav.version})</a></li>
 	<li><a href="reportcenter/">ReportCenter (${pkgs.reportcenter.version})</a></li>
-	<li><a href="/${server.jetty.webdav.path}/">Apache Jackrabbit WebDAV Repository (${pkgs.jackrabbit.version})</a></li>
+	<li><a href="/${server.jetty.webdav.path}/">Apache Jackrabbit WebDAV Repository (${pkgs.jackrabbit.version})</a>
+        <ul><li>
+        <a href="jackrabbit/collect.jsp">Garbage Collection</a> - remove deleted WebDAV files from the filesystem
+        </li></ul>
+    </li>
       </ul>
       <p>You can login to these applications with the default user ID (${jetty.user.name}/${jetty.user.password}).
       You can define your own login IDs in the Jetty configuration:
