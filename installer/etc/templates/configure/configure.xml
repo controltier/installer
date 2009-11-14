@@ -224,7 +224,7 @@ export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
 
 export PATH=${rcfile.path}
 
-if [ -n "$BASH" ] ; then
+if [ -n "$BASH" -a -n "$CTL_BASE" ] ; then
     . $CTL_HOME\\etc\\bash_completion.sh ;
     if [ -t 0 -a -z "$CTL_CLI_TERSE" ]
     then
@@ -327,7 +327,7 @@ export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
 
 export PATH=${rcfile.path}
 
-if [ -n "$BASH" ] ; then
+if [ -n "$BASH" -a -n "$CTL_BASE" ] ; then
     . $CTL_HOME/etc/bash_completion.sh ;
     if [ -t 0 -a -z "$CTL_CLI_TERSE" ]
     then

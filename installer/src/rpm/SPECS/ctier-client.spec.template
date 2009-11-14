@@ -53,13 +53,15 @@ export CTIER_ROOT=$RPM_BUILD_ROOT%{installRoot}
 export CTL_HOME=$RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}
 
 #
-# Uncomment and set this to the CTL_BASE path you are using:
-
-export CTL_BASE=$RPM_BUILD_ROOT%{installRoot}/ctl
+# The CTL_BASE path you are using:
+#
+if [ -z "$CTL_BASE" ] ; then
+  export CTL_BASE=$RPM_BUILD_ROOT%{installRoot}/ctl
+fi
 
 export PATH=\$CTL_HOME/bin:\$PATH
 
-if [ -n "\$BASH" ] ; then
+if [ -n "\$BASH" -a -n "\$CTL_BASE" ] ; then
     . \$CTL_HOME/etc/bash_completion.sh ;
     if [ -t 0 -a -z "\$CTL_CLI_TERSE" ]
     then
