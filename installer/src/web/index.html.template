@@ -45,10 +45,10 @@ ul ul{
 <div id="main">
     <p>
       This is the ControlTier server installation on host: <code>${server.jetty.hostname}</code>.
-      For more information about this software, please visit our
-      <a href="http://open.controltier.org">Open.ControlTier</a> site.
-      Commercial support for these applications is available via
-      <a href="http://www.controltier.com">ControlTier Software Inc.</a>
+      For more information about this software, please visit the
+      <a href="http://www.controltier.org">ControlTier Project Site</a>.
+      Commercial support for these open source applications is available from
+      <a href="http://www.dtosolutions.com">DTO Solutions, Inc</a>.
     </p>
     <p>
   This ControlTier ${installer.version} installation includes several web applications:</p>
