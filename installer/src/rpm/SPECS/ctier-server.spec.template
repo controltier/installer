@@ -419,8 +419,8 @@ fi
 cd ~%{ctuser}
 CTUSERDIR=`pwd`
 cd $RPM_INSTALL_PREFIX
-sudo -u %{ctuser} -H sh -c "JAVA_HOME=${JAVA_HOME} ${RPM_INSTALL_PREFIX}/bin/server-setup.sh -f ${RPM_INSTALL_PREFIX}/pkgs/configure/default.properties -d ${RPM_INSTALL_PREFIX} \
-    -Dserver.hostname=`hostname` -Drcfile.location=${RPM_INSTALL_PREFIX}/etc/ctierrc" 2>&1 >${RPM_INSTALL_PREFIX}/pkgs/configure/server-setup.log
+/bin/su %{ctuser} -c "JAVA_HOME=${JAVA_HOME} ${RPM_INSTALL_PREFIX}/bin/server-setup.sh -f ${RPM_INSTALL_PREFIX}/pkgs/configure/default.properties -d ${RPM_INSTALL_PREFIX} \
+    -Dserver.hostname=`hostname` -Drcfile.location=${RPM_INSTALL_PREFIX}/etc/ctierrc 2>&1 >${RPM_INSTALL_PREFIX}/pkgs/configure/server-setup.log" 
 
 
 cat <<END > ${RPM_INSTALL_PREFIX}/.bashrc
