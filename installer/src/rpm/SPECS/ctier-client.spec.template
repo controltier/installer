@@ -55,7 +55,7 @@ export CTL_HOME=$RPM_BUILD_ROOT%{installRoot}/pkgs/ctl-%{ctlVersion}
 #
 # The CTL_BASE path you are using:
 #
-if [ -z "$CTL_BASE" ] ; then
+if [ -z "\$CTL_BASE" ] ; then
   export CTL_BASE=$RPM_BUILD_ROOT%{installRoot}/ctl
 fi
 
