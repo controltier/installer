@@ -418,7 +418,7 @@ fi
 
 cd ${RPM_INSTALL_PREFIX}
 /bin/rm -f ${RPM_INSTALL_PREFIX}/pkgs/configure/server-setup.log
-/bin/su %{ctuser} -c "JAVA_HOME=${JAVA_HOME} ${RPM_INSTALL_PREFIX}/bin/server-setup.sh -f ${RPM_INSTALL_PREFIX}/pkgs/configure/default.properties -d ${RPM_INSTALL_PREFIX} \
+/bin/su %{ctuser} -c "CTIER_ROOT=${RPM_INSTALL_PREFIX} JAVA_HOME=${JAVA_HOME} ${RPM_INSTALL_PREFIX}/bin/server-setup.sh -f ${RPM_INSTALL_PREFIX}/pkgs/configure/default.properties -d ${RPM_INSTALL_PREFIX} \
     -Dserver.hostname=`hostname` -Drcfile.location=${RPM_INSTALL_PREFIX}/etc/ctierrc 2>&1 >${RPM_INSTALL_PREFIX}/pkgs/configure/server-setup.log" 
 
 
