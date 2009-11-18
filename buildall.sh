@@ -16,10 +16,10 @@ if [ ! -f $HOME/.ssh/id_dsa.pub ] ; then
     exit 1
 fi
 
-CTLVERS=1.4.9
-CTIERVERS=3.4.9
-RCVERS=0.8.9
-JCVERS=1.4.9
+CTLVERS=1.4.10
+CTIERVERS=3.4.10
+RCVERS=0.8.10
+JCVERS=1.4.10
 
 
 CTLSVNROOT="https://ctl-dispatch.svn.sourceforge.net/svnroot/ctl-dispatch"
