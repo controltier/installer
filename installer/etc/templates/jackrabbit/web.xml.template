@@ -381,6 +381,6 @@
     <!-- for basic auth, not form based auth -->
     <login-config>
         <auth-method>BASIC</auth-method>
-        <realm-name>jackrabbit</realm-name>
+        <realm-name>ctrealm</realm-name>
     </login-config>
 </web-app>

@@ -192,24 +192,14 @@
     <!-- configuration (see $(jetty.home)/contexts/test.xml for an   -->
     <!-- example).                                                   -->
     <!-- =========================================================== -->
+    <New id="sso" class="org.mortbay.jetty.security.HashSSORealm"> </New>
     <Set name="UserRealms">
       <Array type="org.mortbay.jetty.security.UserRealm">
         <Item>
           <New class="org.mortbay.jetty.security.HashUserRealm">
-            <Set name="name">jackrabbit</Set>
+            <Set name="name">ctrealm</Set>
             <Set name="config"><SystemProperty name="jetty.home" default="."/>/etc/realm.properties</Set>
-          </New>
-        </Item>
-       <Item>
-          <New class="org.mortbay.jetty.security.HashUserRealm">
-            <Set name="name">jobcenterrealm</Set>
-            <Set name="config"><SystemProperty name="jetty.home" default="."/>/etc/realm.properties</Set>
-          </New>
-        </Item>
-       <Item>
-          <New class="org.mortbay.jetty.security.HashUserRealm">
-            <Set name="name">Workbench</Set>
-            <Set name="config"><SystemProperty name="jetty.home" default="."/>/etc/realm.properties</Set>
+            <Set name="sSORealm"><Ref id="sso"/></Set>
           </New>
         </Item>
       </Array>

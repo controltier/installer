@@ -559,19 +559,7 @@ reportcenter.birt.rptdesign.dir=${birt.examples.dir}
         update web.xml
         -->
       <echo>Doing workbench configuration...</echo>
-        <!-- change session cookie name in web.xml -->
-        <!-- duplicate original -->
-        <backup-file-with-datestamp file="${server.jetty.base}/webapps/itnav/WEB-INF/web.xml"/>
 
-        <!-- overwrite file -->
-        <copy tofile="${server.jetty.base}/webapps/itnav/WEB-INF/web.xml" overwrite="true" filtering="true" verbose="true">
-            <filterchain >
-            <replaceregex flags="si"
-                          pattern="^.*&lt;param-value&gt;JSESSIONID.*&lt;/param-value&gt;.*$"
-                          replace="        &lt;param-value&gt;JSESSIONID_CT_${pkgs.itnav.version}&lt;/param-value&gt;"/>
-            </filterchain>
-            <fileset file="${server.jetty.base}/webapps/itnav/WEB-INF/web.xml.${DSTAMP}-${TSTAMP}.backup"/>
-        </copy>
     </target>
 
     <target name="-prepare-configure-server">
