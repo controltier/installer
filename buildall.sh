@@ -501,7 +501,7 @@ MAVEN_HOME=$CTIERSVN/maven
 cd $CTIERSVN/installer
 	
 echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/installer/build.properties
-cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true server:rpmbuild
+cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true server:rpmbuild-full
 if [ 0 != $? ]
 then
    echo "Installer build failed"
