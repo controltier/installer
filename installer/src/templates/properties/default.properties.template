@@ -213,10 +213,12 @@ framework.ssh.user = ${user.name}
 framework.ssh.keypath = ${user.home}/.ssh/id_dsa
 
 ################
-# Project depot settings. Used to bootstrap the default project depot
+# Project depot settings. 
 ################
+# Bootstrap the default project depot
 depot.default.name = demo
 depot.default.description = The Demonstration project
 depot.default.organization =
 depot.default.create = false
-
+# Node objects should be managed like deployments
+depot.deployments.include.nodes = true
