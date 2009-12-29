@@ -17,7 +17,7 @@
    <id>depo</id>
      -->
    <id>ControlTier</id>
-   <currentVersion>3.4.10</currentVersion>
+   <currentVersion>3.5.0</currentVersion>
 
 
    <!--
@@ -154,7 +154,7 @@
 
       <dependency>
          <id>ctl</id>
-         <version>1.4.10</version>
+         <version>3.5.0</version>
          <url>http://open.controltier.org/</url>
           <type>tgz</type>
          <properties>
@@ -165,7 +165,7 @@
       <!-- the Workbench Server (ITNav) jar -->
       <dependency>
          <id>itnav</id>
-         <version>3.4.10</version>
+         <version>3.5.0</version>
          <url>http://open.controltier.org/</url>
           <type>war</type>
          <properties>
@@ -188,7 +188,7 @@ headlines sample par-->
        <!-- commander extension-->
        <dependency>
            <id>commander-extension</id>
-           <version>3.4.10</version>
+           <version>3.5.0</version>
            <url>http://open.controltier.org/</url>
            <properties>
                <war.bundle.jar>true</war.bundle.jar>
@@ -198,7 +198,7 @@ headlines sample par-->
        <!-- ctier-examples package -->
        <dependency>
            <id>ctier-examples</id>
-           <version>3.4.10</version>
+           <version>3.5.0</version>
            <url>http://open.controltier.org/</url>
            <properties>
                <war.bundle.jar>true</war.bundle.jar>
@@ -215,7 +215,7 @@ headlines sample par-->
 
        <dependency>
            <id>jobcenter</id>
-           <version>1.4.10</version>
+           <version>3.5.0</version>
            <url>http://open.controltier.org</url>
            <type>zip</type>
            <properties>
@@ -225,7 +225,7 @@ headlines sample par-->
 
        <dependency>
            <id>reportcenter</id>
-           <version>0.8.10</version>
+           <version>3.5.0</version>
            <url>http://open.controltier.org</url>
            <type>zip</type>
            <properties>
