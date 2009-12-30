@@ -18,18 +18,13 @@ fi
 
 CTLVERS=3.5.0
 CTIERVERS=3.5.0
-RCVERS=3.5.0
-JCVERS=3.5.0
-
 
 CTLSVNROOT="https://ctl-dispatch.svn.sourceforge.net/svnroot/ctl-dispatch"
 CTIERSVNROOT="https://controltier.svn.sourceforge.net/svnroot/controltier"
-JCSVNROOT="https://webad.svn.sourceforge.net/svnroot/webad"
 SEEDSVNROOT="https://moduleforge.svn.sourceforge.net/svnroot/moduleforge/controltier"
 
-CTLBRANCH=ctl-dispatch-1-4-support
-CTIERBRANCH=controltier-3-4-support
-JCBRANCH=jobcenter-1-4-support
+CTLBRANCH=ctl-dispatch-3-5-dev
+CTIERBRANCH=controltier-3-5-dev
 
 prepare_build(){
 
@@ -72,7 +67,7 @@ fi
 
 export GRAILS_HOME_103=$BUILD_ROOT/local/grails-1.0.3
 
-# extract grails 1.1.1 to local dir for use during build of Jobcenter
+# extract grails 1.1.1 to local dir for use during build of CTL Center
 if [ ! -f $BUILD_ROOT/local/grails-1.1.1/bin/grails ] ; then 
     # get grails bin distribution
     cd $BUILD_ROOT/dl
@@ -110,16 +105,7 @@ fi
 fi
 export CTLSVN=$BUILD_ROOT/ctlsvn
 
-#checkout jobcenter source
-if [ ! -d jobcentersvn ] ; then
-svn co $JCSVNROOT/branches/$JCBRANCH/webad jobcentersvn
-if [ 0 != $? ]
-then
-   echo "Jobcenter src checkout failed"
-   exit 2
-fi
-fi
-export JCSVN=$BUILD_ROOT/jobcentersvn
+export CCSVN=$CTIERSVN/ctl-center
 
 #checkout modules source
 if [ ! -d ctierseedsvn ] ; then
@@ -333,13 +319,13 @@ fi
 
 }
 
-build_jobcenter(){
+build_ctl_center(){
 #####################
 #
-# Jobcenter build
+# CTL Center build
 #
 
-cd $JCSVN
+cd $CCSVN
 # copy the dependencies into the lib directory
 cp $LOCALREPO/ctl/jars/ctl-$CTLVERS.jar lib/
 cp $LOCALREPO/ctier-common/jars/ctier-common-$CTIERVERS.jar lib/
@@ -348,21 +334,21 @@ cp $LOCALREPO/commander/jars/commander-$CTIERVERS.jar lib/
 MYPATH=$PATH
 export GRAILS_HOME=$GRAILS_HOME_111
 export PATH=$PATH:$GRAILS_HOME/bin
-grails install-plugin $JCSVN/plugins/grails-webrealms-0.1.zip
+grails install-plugin $CCSVN/plugins/grails-webrealms-0.1.zip
 $ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist 
 if [ 0 != $? ]
 then
-   echo "Jobcenter build failed"
+   echo "CTL Center build failed"
    exit 2
 fi  
 
 
-# artifacts: jobcenter-X.zip
-mkdir -p $LOCALREPO/jobcenter/zips
-cp target/jobcenter-$JCVERS.zip $LOCALREPO/jobcenter/zips/jobcenter-$JCVERS.zip 
+# artifacts: ctlcenter-X.zip
+mkdir -p $LOCALREPO/ctlcenter/zips
+cp target/ctlcenter-$CTIERVERS.zip $LOCALREPO/ctlcenter/zips/ctlcenter-$CTIERVERS.zip 
 if [ 0 != $? ]
 then
-   echo "Jobcenter build failed: cannot copy target/jobcenter-$JCVERS.zip"
+   echo "Ctl Center build failed: cannot copy target/ctlcenter-$CTIERVERS.zip"
    exit 2
 fi  
 export PATH=$MYPATH
@@ -392,10 +378,10 @@ fi
 
 #artifacts: reportcenter-X.zip
 mkdir -p $LOCALREPO/reportcenter/zips
-cp target/reportcenter-$RCVERS.zip $LOCALREPO/reportcenter/zips/reportcenter-$RCVERS.zip 
+cp target/reportcenter-$CTIERVERS.zip $LOCALREPO/reportcenter/zips/reportcenter-$CTIERVERS.zip 
 if [ 0 != $? ]
 then
-   echo "Reportcenter build failed: cannot copy target/reportcenter-$RCVERS.zip"
+   echo "Reportcenter build failed: cannot copy target/reportcenter-$CTIERVERS.zip"
    exit 2
 fi  
 export PATH=$MYPATH
@@ -531,7 +517,7 @@ if [ -z "$*" ] ; then
     build_commander_extension
     build_workbench
     build_ctl_bundle
-    build_jobcenter
+    build_ctl_center
     build_reportcenter
     build_examples
     build_installer
@@ -557,8 +543,8 @@ else
             ctl_bundle)
                 build_ctl_bundle
                 ;;
-            jobcenter)
-                build_jobcenter
+            ctl_center)
+                build_ctl_center
                 ;;
             reportcenter)
                 build_reportcenter
