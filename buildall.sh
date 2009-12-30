@@ -30,6 +30,8 @@ CTIERBRANCH=controltier-3-5-dev
 
 prepare_build(){
 
+mkdir $BUILD_ROOT
+
 # dl dir is for downloaded files
 mkdir $BUILD_ROOT/dl
 
