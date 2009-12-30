@@ -4,7 +4,9 @@
 
 # configure JAVA_HOME and BUILD_ROOT as required
 #export JAVA_HOME=/usr/java/jdk1.5.0_15
-export BUILD_ROOT=$HOME/build
+if [ -z "$BUILD_ROOT" ] ; then
+    export BUILD_ROOT=$HOME/build
+fi
 
 if [ ! -f $JAVA_HOME/bin/java ] ; then
     echo "ERROR: java is not configured correctly.  Set JAVA_HOME."
@@ -42,9 +44,13 @@ export LOCALREPOURL=file:$LOCALREPO
 
 mkdir -p $LOCALREPO/apache-ant/zips
 if [ ! -f $LOCALREPO/apache-ant/zips/apache-ant-1.7.1p1.zip ] ; then
-    # get ant zip dependency to local repo if it doesn't exist
-    cd $LOCALREPO/apache-ant/zips
-    wget -N http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.7.1p1.zip
+    if [ ! -z "$PKGREPO" -a -f $PKGREPO/apache-ant/zips/apache-ant-1.7.1p1.zip ] ; then
+        cp $PKGREPO/apache-ant/zips/apache-ant-1.7.1p1.zip $LOCALREPO/apache-ant/zips/
+    else
+        # get ant zip dependency to local repo if it doesn't exist
+        cd $LOCALREPO/apache-ant/zips
+        wget -N http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.7.1p1.zip
+    fi
 fi
 
 # extract apache-ant to local dir for use during build
@@ -58,22 +64,32 @@ export ANT_HOME=$BUILD_ROOT/local/apache-ant-1.7.1p1
 
 # extract grails to local dir for use during build
 if [ ! -f $BUILD_ROOT/local/grails-1.0.3/bin/grails ] ; then 
-    # get grails bin distribution
-    cd $BUILD_ROOT/dl
-    wget -N http://dist.codehaus.org/grails/grails-bin-1.0.3.tar.gz
-    cd $BUILD_ROOT/local
-    tar xvzf $BUILD_ROOT/dl/grails-bin-1.0.3.tar.gz
+    if [ ! -z "$PKGREPO" -a -f $PKGREPO/grails-bin/tgzs/grails-bin-1.0.3.tar.gz ] ; then
+        cd $BUILD_ROOT/local
+        tar xvzf $PKGREPO/grails-bin/tgzs/grails-bin-1.0.3.tar.gz
+    else
+        # get grails bin distribution
+        cd $BUILD_ROOT/dl
+        wget -N http://dist.codehaus.org/grails/grails-bin-1.0.3.tar.gz
+        cd $BUILD_ROOT/local
+        tar xvzf $BUILD_ROOT/dl/grails-bin-1.0.3.tar.gz
+    fi
 fi
 
 export GRAILS_HOME_103=$BUILD_ROOT/local/grails-1.0.3
 
 # extract grails 1.1.1 to local dir for use during build of CTL Center
 if [ ! -f $BUILD_ROOT/local/grails-1.1.1/bin/grails ] ; then 
-    # get grails bin distribution
-    cd $BUILD_ROOT/dl
-    wget -N http://dist.codehaus.org/grails/grails-bin-1.1.1.tar.gz
-    cd $BUILD_ROOT/local
-    tar xvzf $BUILD_ROOT/dl/grails-bin-1.1.1.tar.gz
+    if [ ! -z "$PKGREPO" -a -f $PKGREPO/grails-bin/tgzs/grails-bin-1.1.1.tar.gz ] ; then
+        cd $BUILD_ROOT/local
+        tar xvzf $PKGREPO/grails-bin/tgzs/grails-bin-1.1.1.tar.gz
+    else
+        # get grails bin distribution
+        cd $BUILD_ROOT/dl
+        wget -N http://dist.codehaus.org/grails/grails-bin-1.1.1.tar.gz
+        cd $BUILD_ROOT/local
+        tar xvzf $BUILD_ROOT/dl/grails-bin-1.1.1.tar.gz
+    fi
 fi
 
 export GRAILS_HOME_111=$BUILD_ROOT/local/grails-1.1.1
