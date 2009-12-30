@@ -24,7 +24,7 @@
     <variables>
       <variable name="CTVERSION" value="@controltier.version@"/>
       <variable name="CTLVERSION" value="@ctl.version@"/>
-      <variable name="JCVERSION" value="@jobcenter.version@"/>
+      <variable name="JCVERSION" value="@ctlcenter.version@"/>
       <variable name="RCVERSION" value="@reportcenter.version@"/>
       <variable name="JETTYVERSION" value="@jetty.version@"/>
       <variable name="CONTROL_TIER" value="ControlTier-@controltier.version@"/>

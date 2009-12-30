@@ -214,7 +214,7 @@ headlines sample par-->
       </dependency>
 
        <dependency>
-           <id>jobcenter</id>
+           <id>ctlcenter</id>
            <version>3.5.0</version>
            <url>http://open.controltier.org</url>
            <type>zip</type>

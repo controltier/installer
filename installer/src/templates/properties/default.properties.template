@@ -70,25 +70,25 @@ users.install-default = true
 # the user named below belongs to these roles: "user,admin".
 ################
 
-# the name of the default ControlTier user, will also be used for Jobcenter
+# the name of the default ControlTier user, will also be used for ctlcenter
 jetty.user.name = default
 
 # the password of the default ControlTier user
 jetty.user.password = default
 
-# the name of the "admin" ControlTier user, will also be used for Jobcenter
+# the name of the "admin" ControlTier user, will also be used for ctlcenter
 jetty.user.admin.name = admin
 
 # the password of the "admin" ControlTier user
 jetty.user.admin.password = admin
 
-# the name of the "build" ControlTier user, will also be used for Jobcenter
+# the name of the "build" ControlTier user, will also be used for ctlcenter
 jetty.user.build.name = build
 
 # the password of the "build" ControlTier user
 jetty.user.build.password = build
 
-# the name of the "deploy" ControlTier user, will also be used for Jobcenter
+# the name of the "deploy" ControlTier user, will also be used for ctlcenter
 jetty.user.deploy.name = deploy
 
 # the password of the "build" ControlTier user
@@ -118,16 +118,16 @@ server.dav.basedir = ${env.ctier_root}/jackrabbit/repository/workbench
 ################
 
 #  the server install location for job center Jetty server (e.g. /usr/local/jetty)
-server.jobcenter.base_path = ${server.jetty.base}
+server.ctlcenter.base_path = ${server.jetty.base}
 
 #  the location for job center data
-server.jobcenter.data_path = ${env.ctier_root}/jobcenter
+server.ctlcenter.data_path = ${env.ctier_root}/ctlcenter
 
 # the jetty server hostname. (default ${server.jetty.hostname})
-server.jobcenter.host = ${server.jetty.hostname}
+server.ctlcenter.host = ${server.jetty.hostname}
 
-# jobcenter server HTTP port. (Default is ${server.jetty.port})
-server.jobcenter.jetty.port = ${server.jetty.port}
+# ctlcenter server HTTP port. (Default is ${server.jetty.port})
+server.ctlcenter.jetty.port = ${server.jetty.port}
 
 
 ##############

@@ -51,8 +51,8 @@ cp %{_topdir}/BUILD/ControlTier-%{version}/default.properties.orig $RPM_BUILD_RO
 mkdir $RPM_BUILD_ROOT%{installRoot}/jackrabbit
 touch $RPM_BUILD_ROOT%{installRoot}/pkgs/jetty-%{jettyVersion}/logs/jetty.pid
 touch $RPM_BUILD_ROOT%{installRoot}/ctl/var/logs/command.log
-touch $RPM_BUILD_ROOT%{installRoot}/jobcenter/grailsdb.properties
-touch $RPM_BUILD_ROOT%{installRoot}/jobcenter/grailsdb.script
+touch $RPM_BUILD_ROOT%{installRoot}/ctlcenter/grailsdb.properties
+touch $RPM_BUILD_ROOT%{installRoot}/ctlcenter/grailsdb.script
 touch $RPM_BUILD_ROOT%{installRoot}/reportcenter/grailsdb.properties
 touch $RPM_BUILD_ROOT%{installRoot}/reportcenter/grailsdb.script
 touch $RPM_BUILD_ROOT%{installRoot}/.bashrc
@@ -87,7 +87,7 @@ fi
 %dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/logs
 %ghost %{installRoot}/ctl/var/logs/command.log
 
-%dir %{installRoot}/jobcenter
+%dir %{installRoot}/ctlcenter
 %dir %{installRoot}/reportcenter
 %dir %{installRoot}/workbench
 %dir %{installRoot}/jackrabbit
@@ -95,13 +95,13 @@ fi
 %dir %{installRoot}/pkgs
 
 #### grails db
-%ghost %{installRoot}/jobcenter/grailsdb.properties
-%ghost %{installRoot}/jobcenter/grailsdb.script
+%ghost %{installRoot}/ctlcenter/grailsdb.properties
+%ghost %{installRoot}/ctlcenter/grailsdb.script
 %ghost %{installRoot}/reportcenter/grailsdb.properties
 %ghost %{installRoot}/reportcenter/grailsdb.script
 
 #### config files
-%config(noreplace) %{installRoot}/jobcenter/jobcenter-config.properties
+%config(noreplace) %{installRoot}/ctlcenter/ctlcenter-config.properties
 %config(noreplace) %{installRoot}/reportcenter/reportcenter-config.properties
 %config(noreplace) %{installRoot}/ctl/etc/acls.xml
 %config(noreplace) %{installRoot}/ctl/etc/deployments.properties
@@ -278,7 +278,7 @@ fi
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/templates
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/tld
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/web.xml
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jobcenter
+%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/ctlcenter
 
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
@@ -506,7 +506,7 @@ rm -rf $RPM_BUILD_ROOT%{installRoot}/bin
 rm -rf $RPM_BUILD_ROOT%{installRoot}/ctl
 rm -rf $RPM_BUILD_ROOT%{installRoot}/examples
 rm -rf $RPM_BUILD_ROOT%{installRoot}/jackrabbit
-rm -rf $RPM_BUILD_ROOT%{installRoot}/jobcenter
+rm -rf $RPM_BUILD_ROOT%{installRoot}/ctlcenter
 rm -rf $RPM_BUILD_ROOT%{installRoot}/pkgs
 rm -rf $RPM_BUILD_ROOT%{installRoot}/reportcenter
 rm -rf $RPM_BUILD_ROOT%{installRoot}/workbench

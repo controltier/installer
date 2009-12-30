@@ -172,10 +172,10 @@
       <Arg>/reportcenter</Arg>
       <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
     </New>
-    <New id="jobcenter"  class="org.mortbay.jetty.webapp.WebAppContext">      
+    <New id="ctlcenter"  class="org.mortbay.jetty.webapp.WebAppContext">
       <Arg><Ref id="Contexts"/></Arg>
-      <Arg><SystemProperty name="jetty.home" default="."/>/webapps/jobcenter</Arg>
-      <Arg>/jobcenter</Arg>
+      <Arg><SystemProperty name="jetty.home" default="."/>/webapps/ctlcenter</Arg>
+      <Arg>/ctlcenter</Arg>
       <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
     </New>
     <New id="itnav"  class="org.mortbay.jetty.webapp.WebAppContext">      

@@ -210,7 +210,7 @@ export JETTY_HOME=${server.jetty.home.escbackslash}
 export JETTY_LOGS=${server.jetty.home.escbackslash}/logs
 export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${env.java_home.escbackslash}
-CONFIG_PROPS="-Djobcenter.config.location=${env.ctier_root.escbackslash}/jobcenter/jobcenter-config.properties -Dreportcenter.config.location=${env.ctier_root.escbackslash}/reportcenter/reportcenter-config.properties"
+CONFIG_PROPS="-Dctlcenter.config.location=${env.ctier_root.escbackslash}/ctlcenter/ctlcenter-config.properties -Dreportcenter.config.location=${env.ctier_root.escbackslash}/reportcenter/reportcenter-config.properties"
 export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
 </echo>
                         <property name="rcfile.path" value="$CTL_HOME/bin:$JETTY_HOME/bin:$PATH"/>
@@ -264,7 +264,7 @@ set CTL_BASE=${env.ctl_base.converted}
 set JETTY_HOME=${server.jetty.home.converted}
 set JETTY_LOGS=${server.jetty.home.converted}\logs
 set JETTY_RUN=%JETTY_LOGS%
-set CONFIG_PROPS=-Djobcenter.config.location=${env.ctier_root}\jobcenter\jobcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}\reportcenter\reportcenter-config.properties
+set CONFIG_PROPS=-Dctlcenter.config.location=${env.ctier_root}\ctlcenter\ctlcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}\reportcenter\reportcenter-config.properties
 set JAVA_HOME=${USER_ENV.JAVA_HOME}
 set JAVA_OPTIONS=-XX:MaxPermSize=256m -Xmx768m -Xms256m %CONFIG_PROPS%
 </echo>
@@ -310,7 +310,7 @@ export JETTY_HOME=${server.jetty.home}
 export JETTY_LOGS=${server.jetty.home.converted}/logs
 export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${USER_ENV.JAVA_HOME}
-CONFIG_PROPS="-Djobcenter.config.location=${env.ctier_root}/jobcenter/jobcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}/reportcenter/reportcenter-config.properties"
+CONFIG_PROPS="-Dctlcenter.config.location=${env.ctier_root}/ctlcenter/ctlcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}/reportcenter/reportcenter-config.properties"
 export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
 </echo>
                         <property name="rcfile.path" value="$CTL_HOME/bin:$JETTY_HOME/bin:$PATH"/>
@@ -342,7 +342,7 @@ fi
         <property name="is.server.install" value="true"/>
     </target>
 
-    <target name="-install-server" depends="check-server-env,-backup-server-config,clean-server,expand-itnav,expand-jackrabbit,configure-server,install-examples,configure-landingpage,install-jobcenter,install-reportcenter,-install-resetup" >
+    <target name="-install-server" depends="check-server-env,-backup-server-config,clean-server,expand-itnav,expand-jackrabbit,configure-server,install-examples,configure-landingpage,install-ctlcenter,install-reportcenter,-install-resetup" >
         <echo>ControlTier Server installed.</echo>
     </target>
     <target name="install-server" depends="-pre-server-install,-check-prereqs,-load-props,-install-server" >
@@ -393,7 +393,7 @@ fi
             <filter token="pkgs.ctl.version" value="${pkgs.ctl.version}"/>
             <filter token="pkgs.commander.version" value="${pkgs.commander.version}"/>
             <filter token="pkgs.itnav.version" value="${pkgs.itnav.version}"/>
-            <filter token="pkgs.jobcenter.version" value="${pkgs.jobcenter.version}"/>
+            <filter token="pkgs.ctlcenter.version" value="${pkgs.ctlcenter.version}"/>
             <filter token="pkgs.reportcenter.version" value="${pkgs.reportcenter.version}"/>
             <filter token="pkgs.jetty.version" value="${pkgs.jetty.version}"/>
             <filter token="pkgs.jackrabbit.version" value="${pkgs.jackrabbit.version}"/>
@@ -419,31 +419,31 @@ fi
         <backup-file-with-datestamp file="${server.jetty.base}/${itnav.configpath}/runtime.properties"/>
     </target>
 
-    <target name="install-jobcenter">
-      <echo>Setting jobcenter jetty.home='${server.jetty.home}'</echo>
+    <target name="install-ctlcenter">
+      <echo>Setting ctlcenter jetty.home='${server.jetty.home}'</echo>
 
         <!--
-            expands the jobcenter package, and executes the build.xml install script with the appropriate properties
+            expands the ctlcenter package, and executes the build.xml install script with the appropriate properties
         -->
         <fail-if-blank name="env.ctl_home"/>
         <fail-if-blank name="env.ctl_base"/>
-        <unzip dest="${pkgs.root}/" src="${pkgs.root}/${pkgs.jobcenter.archive}"/>
+        <unzip dest="${pkgs.root}/" src="${pkgs.root}/${pkgs.ctlcenter.archive}"/>
         <if>
-            <available file="${pkgs.root}/jobcenter-${pkgs.jobcenter.version}/build.xml" type="file"/>
+            <available file="${pkgs.root}/ctlcenter-${pkgs.ctlcenter.version}/build.xml" type="file"/>
             <then>
-                <ant dir="${pkgs.root}/jobcenter-${pkgs.jobcenter.version}">
+                <ant dir="${pkgs.root}/ctlcenter-${pkgs.ctlcenter.version}">
                     <property name="ctl.base" value="${env.ctl_base}"/>
                     <property name="ctl.home" value="${env.ctl_home}"/>
                     <property name="install.ant.home" value="${env.ctl_home}/pkgs/apache-ant-${package.ant.version}"/>
                     <property name="jetty.home" value="${server.jetty.home}"/>
                     <property name="jetty.server.httpPort" value="${server.jetty.port}"/>
 		            <property name="jetty.server.hostname" value="${server.hostname}"/>
-                    <property name="jobcenter.base.path" value="${server.jobcenter.data_path}"/>
+                    <property name="ctlcenter.base.path" value="${server.ctlcenter.data_path}"/>
                     <property name="reportcenter.baseUrl" value="${reportcenter.baseUrl}"/>
                     <property name="reportcenter.host" value="${server.reportcenter.host}"/>
                     <property name="reportcenter.port" value="${server.reportcenter.port}"/>
-                    <property name="grails.datasource.path" value="${server.jobcenter.data_path}/grailsdb"/>
-                    <property name="quartz.datasource.path" value="${server.jobcenter.data_path}/quartzdb"/>
+                    <property name="grails.datasource.path" value="${server.ctlcenter.data_path}/grailsdb"/>
+                    <property name="quartz.datasource.path" value="${server.ctlcenter.data_path}/quartzdb"/>
                     <property name="default.username" value="${jetty.user.name}"/>
                     <property name="default.password" value="${jetty.user.password}"/>
                 </ant>
@@ -475,9 +475,9 @@ fi
                     <property name="reportcenter.base.path" value="${server.reportcenter.base_path}"/>
                     <property name="reportcenter.host" value="${server.reportcenter.host}"/>
                     <property name="reportcenter.port" value="${server.reportcenter.port}"/>
-                    <property name="jobcenter.server.httpPort" value="${server.jetty.port}"/>
-                    <property name="jobcenter.server.host" value="${server.hostname}"/>
-                    <property name="jobcenter.baseUrl" value="${jobcenter.baseUrl}"/>
+                    <property name="ctlcenter.server.httpPort" value="${server.jetty.port}"/>
+                    <property name="ctlcenter.server.host" value="${server.hostname}"/>
+                    <property name="ctlcenter.baseUrl" value="${ctlcenter.baseUrl}"/>
                     <property name="workbench.server.httpPort" value="${server.jetty.port}"/>
                     <property name="workbench.server.host" value="${server.hostname}"/>
                     <property name="workbench.baseUrl" value="${workbench.baseUrl}"/>
@@ -825,8 +825,8 @@ fi
                     pattern="^dav\.baseUrl *=(.*)$"
                     replace="dav.baseUrl = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}"/>
                 <replaceregex flags="si"
-                              pattern="^app\.jobcenter\.baseUrl *=(.*)$"
-                              replace="app.jobcenter.baseUrl = ${jobcenter.baseUrl}"/>
+                              pattern="^app\.ctlcenter\.baseUrl *=(.*)$"
+                              replace="app.ctlcenter.baseUrl = ${ctlcenter.baseUrl}"/>
 
                 <replaceregex flags="si"
                     pattern="^order\.package\.defaults\.packageRepoURL\.template *=(.*?)/pkgs(.*)$"
@@ -1013,10 +1013,10 @@ fi
             </then>
         </if>
         <if>
-            <available file="${server.jetty.base}/webapps/jobcenter/WEB-INF/lib" type="dir"/>
+            <available file="${server.jetty.base}/webapps/ctlcenter/WEB-INF/lib" type="dir"/>
             <then>
                 <delete verbose="true">
-                    <fileset dir="${server.jetty.base}/webapps/jobcenter/WEB-INF/lib"
+                    <fileset dir="${server.jetty.base}/webapps/ctlcenter/WEB-INF/lib"
                              includes="*.jar"/>
                 </delete>
             </then>
@@ -1281,7 +1281,7 @@ framework.pkgRepo.upload-url = http://localhost:8080/jackrabbit/repository/workb
 
 framework.moduleRepo.url = http://localhost:8080/jackrabbit/repository/workbench/publish/modules
 
-framework.jobcenter.url = http://localhost:8080/jobcenter
+framework.ctlcenter.url = http://localhost:8080/ctlcenter
 
  -->
 
@@ -1330,8 +1330,8 @@ framework.jobcenter.url = http://localhost:8080/jobcenter
                     pattern="^framework\.moduleRepo\.url *=(.*)$"
                     replace="framework.moduleRepo.url = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/publish/modules"/>				
                <replaceregex flags="si"
-                    pattern="^framework\.jobcenter\.url *=(.*)$"
-                    replace="framework.jobcenter.url = http://${server.hostname}:${server.jetty.port}/jobcenter"/>
+                    pattern="^framework\.ctlcenter\.url *=(.*)$"
+                    replace="framework.ctlcenter.url = http://${server.hostname}:${server.jetty.port}/ctlcenter"/>
 
                 <!-- email properties -->
                 <!--
@@ -1723,13 +1723,13 @@ log4j.appender.R.file=/tmp/workbench.log
             </else>
         </if>
 
-        <fail-if-blank name="server.jobcenter.base_path"/>
+        <fail-if-blank name="server.ctlcenter.base_path"/>
 
-        <pathconvert property="converted.server.jobcenter.base_path">
-            <path path="${server.jobcenter.base_path}"/>
+        <pathconvert property="converted.server.ctlcenter.base_path">
+            <path path="${server.ctlcenter.base_path}"/>
         </pathconvert>
 
-        <fail-if-blank name="server.jobcenter.data_path"/>
+        <fail-if-blank name="server.ctlcenter.data_path"/>
         <fail-if-blank name="server.jetty.port"/>
 	<!--
 	** 
@@ -1739,13 +1739,13 @@ log4j.appender.R.file=/tmp/workbench.log
 	**
 	-->
 	<if>
-	  <equals arg1="http://${server.jobcenter.host}:${server.jobcenter.jetty.port}" 
+	  <equals arg1="http://${server.ctlcenter.host}:${server.ctlcenter.jetty.port}"
 		  arg2="http://${server.hostname}:${server.jetty.port}"/>
 	  <then>
-	    <property name="jobcenter.baseUrl" value="/jobcenter"/>
+	    <property name="ctlcenter.baseUrl" value="/ctlcenter"/>
 	  </then>
 	  <else>
-	    <property name="jobcenter.baseUrl" value="http://${server.jobcenter.host}:${server.jobcenter.jetty.port}/jobcenter"/>
+	    <property name="ctlcenter.baseUrl" value="http://${server.ctlcenter.host}:${server.ctlcenter.jetty.port}/ctlcenter"/>
 	  </else>
 	</if>
 	<if>

@@ -61,7 +61,7 @@
             <filterset >
                 <filter token="controltier.version" value="${pom.currentVersion}"/>
                 <filter token="ctl.version" value="${ctl.version}"/>
-                <filter token="jobcenter.version" value="${pkg.jobcenter.version}"/>
+                <filter token="ctlcenter.version" value="${pkg.ctlcenter.version}"/>
                 <filter token="jetty.version" value="${pkg.jetty.version}"/>
             </filterset>
         </copy>
@@ -171,13 +171,13 @@
               <j:set var="pkg.commander.archive.name" value="${expanded.name}.jar"/>
               <j:set var="pkg.commander.version" value="${dep.version}"/>
           </j:if>
-          <j:if test="${dep.id == 'jobcenter'}">
+          <j:if test="${dep.id == 'ctlcenter'}">
               <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
                    ignoreerrors="false" verbose="true" usetimestamp="true"
                   />
-              <j:set var="pkg.jobcenter.archive.name" value="${expanded.name}.zip"/>
-              <j:set var="pkg.jobcenter.version" value="${dep.version}"/>
+              <j:set var="pkg.ctlcenter.archive.name" value="${expanded.name}.zip"/>
+              <j:set var="pkg.ctlcenter.version" value="${dep.version}"/>
           </j:if>
           <j:if test="${dep.id == 'reportcenter'}">
               <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
@@ -273,8 +273,8 @@
 	<filter token="pkg.headlines.archive.name" value="${pkg.headlines.archive.name}"/>
 	<filter token="pkg.itnav.archive.name" value="${pkg.itnav.archive.name}"/>
 	<filter token="pkg.itnav.version" value="${pkg.itnav.version}"/>
-	<filter token="pkg.jobcenter.archive.name" value="${pkg.jobcenter.archive.name}"/>
-	<filter token="pkg.jobcenter.version" value="${pkg.jobcenter.version}"/>
+	<filter token="pkg.ctlcenter.archive.name" value="${pkg.ctlcenter.archive.name}"/>
+	<filter token="pkg.ctlcenter.version" value="${pkg.ctlcenter.version}"/>
 	<filter token="pkg.reportcenter.archive.name" value="${pkg.reportcenter.archive.name}"/>
 	<filter token="pkg.reportcenter.version" value="${pkg.reportcenter.version}"/>
 	<filter token="pkg.examples.archive.name" value="${pkg.examples.archive.name}"/>
@@ -299,7 +299,7 @@
       <filterset>
 	<filter token="ctl.version" value="${ctl.version}"/>
 	<filter token="jetty.version" value="${pkg.jetty.version}"/>
-	<filter token="jobcenter.version" value="${pkg.jobcenter.version}"/>
+	<filter token="ctlcenter.version" value="${pkg.ctlcenter.version}"/>
 	<filter token="reportcenter.version" value="${pkg.reportcenter.version}"/>
       </filterset>
       <fileset dir="${src.dir}/templates/properties" includes="default.properties.template"/>

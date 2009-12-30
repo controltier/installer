@@ -53,7 +53,7 @@ ul ul{
     <p>
   This ControlTier ${installer.version} installation includes several web applications:</p>
       <ul>
-	<li><a href="jobcenter/">JobCenter (${pkgs.jobcenter.version})</a></li>
+	<li><a href="ctlcenter/">CTL Center (${pkgs.ctlcenter.version})</a></li>
 	<li><a href="itnav/">Workbench (${pkgs.itnav.version})</a></li>
 	<li><a href="reportcenter/">ReportCenter (${pkgs.reportcenter.version})</a></li>
 	<li><a href="/${server.jetty.webdav.path}/">Apache Jackrabbit WebDAV Repository (${pkgs.jackrabbit.version})</a>

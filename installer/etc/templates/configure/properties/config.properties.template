@@ -10,7 +10,7 @@
 pkgs.ctl.version=@pkgs.ctl.version@
 pkgs.commander.version=@pkgs.commander.version@
 pkgs.itnav.version=@pkgs.itnav.version@
-pkgs.jobcenter.version=@pkgs.jobcenter.version@
+pkgs.ctlcenter.version=@pkgs.ctlcenter.version@
 pkgs.jetty.version=@pkgs.jetty.version@
 pkgs.reportcenter.version=@pkgs.reportcenter.version@
 pkgs.jackrabbit.version=@pkgs.jackrabbit.version@
