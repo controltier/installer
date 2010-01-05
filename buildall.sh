@@ -103,23 +103,37 @@ cd $BUILD_ROOT
 
 #checkout ctier source
 if [ ! -d ctiersvn ] ; then
-svn co $CTIERSVNROOT/branches/$CTIERBRANCH ctiersvn
-if [ 0 != $? ]
-then
-   echo "CTIER src checkout failed"
-   exit 2
-fi
+    svn co $CTIERSVNROOT/branches/$CTIERBRANCH ctiersvn
+    if [ 0 != $? ]
+    then
+       echo "CTIER src checkout failed"
+       exit 2
+    fi
+else
+    svn up ctiersvn
+    if [ 0 != $? ]
+    then
+       echo "CTIER src checkout failed"
+       exit 2
+    fi
 fi
 export CTIERSVN=$BUILD_ROOT/ctiersvn
 
 #checkout ctl source
 if [ ! -d ctlsvn ] ; then
-svn co $CTLSVNROOT/branches/$CTLBRANCH ctlsvn
-if [ 0 != $? ]
-then
-   echo "CTL src checkout failed"
-   exit 2
-fi
+    svn co $CTLSVNROOT/branches/$CTLBRANCH ctlsvn
+    if [ 0 != $? ]
+    then
+       echo "CTL src checkout failed"
+       exit 2
+    fi
+else
+    svn up ctlsvn
+    if [ 0 != $? ]
+    then
+       echo "CTL src checkout failed"
+       exit 2
+    fi
 fi
 export CTLSVN=$BUILD_ROOT/ctlsvn
 
@@ -127,12 +141,20 @@ export CCSVN=$CTIERSVN/ctl-center
 
 #checkout modules source
 if [ ! -d ctierseedsvn ] ; then
-svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
-if [ 0 != $? ]
-then
-   echo "Controltier Seed src checkout failed"
-   exit 2
-fi
+    svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
+    if [ 0 != $? ]
+    then
+       echo "Controltier Seed src checkout failed"
+       exit 2
+    fi
+else
+    svn revert --recursive ctierseedsvn
+    svn up ctierseedsvn
+    if [ 0 != $? ]
+    then
+       echo "Controltier Seed src checkout failed"
+       exit 2
+    fi
 fi
 export SEEDSVN=$BUILD_ROOT/ctierseedsvn
 
