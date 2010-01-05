@@ -55,7 +55,6 @@ ul ul{
       <ul>
 	<li><a href="ctlcenter/">CTL Center (${pkgs.ctlcenter.version})</a></li>
 	<li><a href="itnav/">Workbench (${pkgs.itnav.version})</a></li>
-	<li><a href="reportcenter/">ReportCenter (${pkgs.reportcenter.version})</a></li>
 	<li><a href="/${server.jetty.webdav.path}/">Apache Jackrabbit WebDAV Repository (${pkgs.jackrabbit.version})</a>
         <ul><li>
         <a href="jackrabbit/collect.jsp">Garbage Collection</a> - remove deleted WebDAV files from the filesystem

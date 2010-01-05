@@ -131,23 +131,11 @@ server.ctlcenter.jetty.port = ${server.jetty.port}
 
 
 ##############
-# Reportcenter server installation
+# Reportservice installation
 ##############
 
-# install path for reportcenter
-server.reportcenter.home_path = ${server.jetty.base}
-
-# data path for reportcenter
-server.reportcenter.base_path = ${env.ctier_root}/reportcenter
-
-# the jetty server hostname. (default ${server.jetty.hostname})
-server.reportcenter.host=${server.jetty.hostname}
-
-# the reportcenter server HTTP port. (Default is ${server.jetty.port})
-server.reportcenter.jetty.port = ${server.jetty.port}
-
-# the reportcenter log4j listen port. (Default is 1055)
-server.reportcenter.port = 1055
+# the reports server log4j listen port. (Default is 1055)
+server.reportservice.port = 1055
 
 ##############
 # Jackrabbit server installation

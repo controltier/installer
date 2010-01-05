@@ -166,12 +166,6 @@
       <Arg>/jackrabbit</Arg>
       <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
     </New>
-    <New id="reportcenter"  class="org.mortbay.jetty.webapp.WebAppContext">      
-      <Arg><Ref id="Contexts"/></Arg>
-      <Arg><SystemProperty name="jetty.home" default="."/>/webapps/reportcenter</Arg>
-      <Arg>/reportcenter</Arg>
-      <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
-    </New>
     <New id="ctlcenter"  class="org.mortbay.jetty.webapp.WebAppContext">
       <Arg><Ref id="Contexts"/></Arg>
       <Arg><SystemProperty name="jetty.home" default="."/>/webapps/ctlcenter</Arg>

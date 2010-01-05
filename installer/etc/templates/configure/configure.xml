@@ -156,7 +156,7 @@ $Id$
 
 <!--    <property name="dontexpand" value="true"/>-->
 
-    <target name="execute" depends="-check-prereqs,-pre-server-install,-load-props,check-client-env,check-server-env,-setup-client,-setup-server,setup-ctlcenter,setup-reportcenter,generate-rcfile,echo-rcfile-info" >
+    <target name="execute" depends="-check-prereqs,-pre-server-install,-load-props,check-client-env,check-server-env,-setup-client,-setup-server,setup-ctlcenter,generate-rcfile,echo-rcfile-info" >
         <echo>
 Startup:
 
@@ -210,7 +210,7 @@ export JETTY_HOME=${server.jetty.home.escbackslash}
 export JETTY_LOGS=${server.jetty.home.escbackslash}/logs
 export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${env.java_home.escbackslash}
-CONFIG_PROPS="-Dctlcenter.config.location=${env.ctier_root.escbackslash}/ctlcenter/ctlcenter-config.properties -Dreportcenter.config.location=${env.ctier_root.escbackslash}/reportcenter/reportcenter-config.properties"
+CONFIG_PROPS="-Dctlcenter.config.location=${env.ctier_root.escbackslash}/ctlcenter/ctlcenter-config.properties "
 export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
 
 </echo>
@@ -265,7 +265,7 @@ set CTL_BASE=${env.ctl_base.converted}
 set JETTY_HOME=${server.jetty.home.converted}
 set JETTY_LOGS=${server.jetty.home.converted}\logs
 set JETTY_RUN=%JETTY_LOGS%
-set CONFIG_PROPS=-Dctlcenter.config.location=${env.ctier_root}\ctlcenter\ctlcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}\reportcenter\reportcenter-config.properties
+set CONFIG_PROPS=-Dctlcenter.config.location=${env.ctier_root}\ctlcenter\ctlcenter-config.properties
 set JAVA_HOME=${USER_ENV.JAVA_HOME}
 set JAVA_OPTIONS=-XX:MaxPermSize=256m -Xmx768m -Xms256m %CONFIG_PROPS%
 </echo>
@@ -314,7 +314,7 @@ export JETTY_HOME=${server.jetty.home}
 export JETTY_LOGS=${server.jetty.home.converted}/logs
 export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${USER_ENV.JAVA_HOME}
-CONFIG_PROPS="-Dctlcenter.config.location=${env.ctier_root}/ctlcenter/ctlcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}/reportcenter/reportcenter-config.properties"
+CONFIG_PROPS="-Dctlcenter.config.location=${env.ctier_root}/ctlcenter/ctlcenter-config.properties"
 export JAVA_OPTIONS="-XX:MaxPermSize=256m -Xmx1024m -Xms256m $CONFIG_PROPS"
 </echo>
                         <property name="rcfile.path" value="$CTL_HOME/bin:$JETTY_HOME/bin:$PATH"/>
@@ -366,9 +366,31 @@ fi
         <fail-if-blank name="env.ctl_home"/>
         <fail-if-blank name="env.ctl_base"/>
         <fail-if-blank name="server.ctlcenter.data_path"/>
-        <fail-if-blank name="reportcenter.baseUrl"/>
-        <fail-if-blank name="server.reportcenter.host"/>
-        <fail-if-blank name="server.reportcenter.port"/>
+        <fail-if-blank name="server.reportservice.port"/>
+
+        <!-- copy in jetty-web.xml -->
+        <property name="ctlcenter.jdbc.connection.url"
+                  value="jdbc:hsqldb:file:${server.ctlcenter.data_path}/grailsdb"/>
+        <property name="ctlcenter.jdbc.connection.username" value="sa"/>
+	    <property name="ctlcenter.jdbc.connection.password" value=""/>
+        <copy tofile="${server.jetty.base}/ctlcenter/WEB-INF/jetty-web.xml" overwrite="true">
+            <filterchain >
+                <expandproperties />
+            </filterchain>
+            <fileset file="${basedir}/etc/templates/ctlcenter/jetty-web.xml.template"/>
+        </copy>
+        <!-- copy in BirtConfig.properties -->
+        <property name="ctlcenter.log.dir" value="${server.jetty.home}/logs"/>
+        <copy tofile="${server.jetty.base}/ctlcenter/WEB-INF/classes/BirtConfig.properties" overwrite="true">
+            <filterchain >
+                <expandproperties />
+            </filterchain>
+            <fileset file="${basedir}/etc/templates/ctlcenter/BirtConfig.properties.template"/>
+        </copy>
+	    <pathconvert property="birt.examples.dir" dirsep="/">
+            <path path="${server.jetty.base}/ctlcenter/birt-reports/examples"/>
+        </pathconvert>
+
 
         <echo>Generating ctlcenter configuration ...</echo>
         <backup-file-with-datestamp file="${server.ctlcenter.data_path}/ctlcenter-config.properties"/>
@@ -379,67 +401,15 @@ loglevel.default=WARN
 #rss.enabled if set to true enables RSS feeds that are public (non-authenticated)
 rss.enabled=true
 
-reportcenter.baseUrl=${reportcenter.baseUrl}
-reportcenter.host=${server.reportcenter.host}
-reportcenter.port=${server.reportcenter.port}
+reportservice.log4j.port=${server.reportservice.port}
+reportservice.pagination.default=30
+ctlcenter.birt.rptdesign.dir=${birt.examples.dir}
+            
 dataSource.dbCreate = update
 dataSource.url = jdbc:hsqldb:file:${server.ctlcenter.data_path}/grailsdb;shutdown=true
 </echo>
     </target>
 
-    <target name="setup-reportcenter">
-        <!--
-            expands the reportcenter package, and executes the build.xml install script with the appropriate properties
-        -->
-        <fail-if-blank name="server.reportcenter.home_path"/>
-        <fail-if-blank name="server.reportcenter.base_path"/>
-        <fail-if-blank name="server.reportcenter.host"/>
-        <fail-if-blank name="server.reportcenter.jetty.port"/>
-        <fail-if-blank name="server.reportcenter.port"/>
-
-        <property  name="reportcenter.base" value="${server.jetty.base}/webapps/reportcenter"/>
-
-        <pathconvert property="converted.server.reportcenter.home_path">
-            <path path="${server.reportcenter.home_path}"/>
-        </pathconvert>
-
-        <echo>Generating reportcenter configuration...</echo>
-
-        <property  name="reportcenter.grails.datasource" value="${server.reportcenter.base_path}/grailsdb"/>
-        <!-- copy in jetty-web.xml -->
-        <property name="reportcenter.jdbc.connection.url"
-                  value="jdbc:hsqldb:file:${reportcenter.grails.datasource}"/>
-        <property name="reportcenter.jdbc.connection.username" value="sa"/>
-	    <property name="reportcenter.jdbc.connection.password" value=""/>
-        <copy tofile="${reportcenter.base}/WEB-INF/jetty-web.xml" overwrite="true">
-            <filterchain >
-                <expandproperties />
-            </filterchain>
-            <fileset file="${basedir}/etc/templates/reportcenter/jetty-web.xml.template"/>
-        </copy>
-        <!-- copy in BirtConfig.properties -->
-        <property name="reportcenter.log.dir" value="${server.jetty.home}/logs"/>
-        <copy tofile="${reportcenter.base}/WEB-INF/classes/BirtConfig.properties" overwrite="true">
-            <filterchain >
-                <expandproperties />
-            </filterchain>
-            <fileset file="${basedir}/etc/templates/reportcenter/BirtConfig.properties.template"/>
-        </copy>
-	    <pathconvert property="birt.examples.dir" dirsep="/">
-            <path path="${reportcenter.base}/birt-reports/examples"/>
-        </pathconvert>
-
-        <backup-file-with-datestamp file="${server.reportcenter.base_path}/reportcenter-config.properties"/>
-        <echo file="${server.reportcenter.base_path}/reportcenter-config.properties">
-#reportcenter.host=${server.reportcenter.host}
-reportcenter.log4j.port=${server.reportcenter.port}
-ctlcenter.baseUrl=${ctlcenter.baseUrl}
-workbench.baseUrl=${workbench.baseUrl}
-dataSource.url=jdbc:hsqldb:file:${reportcenter.grails.datasource};shutdown=true
-dataSource.dbCreate = update
-reportcenter.birt.rptdesign.dir=${birt.examples.dir}
-</echo>
-    </target>
     <target name="-setup-jetty" description="Expands jetty zip if necessary">
         <!-- change the hardcoded config value(s) in jetty.sh -->
         <backup-file-with-datestamp file="${server.jetty.home}/bin/jetty.sh"/>
@@ -723,7 +693,7 @@ reportcenter.birt.rptdesign.dir=${birt.examples.dir}
                     />
                 <replaceregex flags="si"
                               pattern="^app\.log4j\.appender\.CommonLog\.port *=(.*)$"
-                              replace="app.log4j.appender.CommonLog.port = ${server.reportcenter.port}"
+                              replace="app.log4j.appender.CommonLog.port = ${server.reportservice.port}"
                     />
                 <replaceregex flags="si"
                               pattern="^ctl\.base *=(.*)$"
@@ -734,17 +704,24 @@ reportcenter.birt.rptdesign.dir=${birt.examples.dir}
                               replace="ctl.integration.enabled = ${ctl.integration.enabled}"
                     />
                 <replaceregex flags="si"
-                              pattern="^app\.reportcenter\.baseUrl *=(.*)$"
-                              replace="app.reportcenter.baseUrl = ${reportcenter.baseUrl}"
+                              pattern="^app\.reportservice\.host *=(.*)$"
+                              replace="app.reportservice.host = ${server.hostname}"
                     />
                 <replaceregex flags="si"
+                              pattern="^app\.reportservice\.port *=(.*)$"
+                              replace="app.reportservice.port = ${server.reportservice.port}"
+                    />
+
+                <!-- Backwards compat for 3.4.x: replace "app.reportcenter.*" with "app.reportservice.*" -->
+                <replaceregex flags="si"
                               pattern="^app\.reportcenter\.host *=(.*)$"
-                              replace="app.reportcenter.host = ${server.reportcenter.host}"
+                              replace="app.reportservice.host = ${server.hostname}"
                     />
                 <replaceregex flags="si"
                               pattern="^app\.reportcenter\.port *=(.*)$"
-                              replace="app.reportcenter.port = ${server.reportcenter.port}"
+                              replace="app.reportservice.port = ${server.reportservice.port}"
                     />
+                <!-- end 3.4.x compat -->
                 <replaceregex flags="si"
                               pattern="^app\.uploads\.localpath *=(.*)$"
                               replace="app.uploads.localpath = ${env.ctier_root.forwardslash}/workbench/incoming"
@@ -1225,7 +1202,7 @@ depot.default.create = true
                 <!--
 log4j.logger.com.controltier.log.common=INFO,CommonLog
 log4j.appender.CommonLog.remoteHost=${server.hostname}
-log4j.appender.CommonLog.port=${server.reportcenter.port}
+log4j.appender.CommonLog.port=${server.reportservice.port}
 log4j.appender.R.file=/tmp/workbench.log
 
  -->
@@ -1234,10 +1211,10 @@ log4j.appender.R.file=/tmp/workbench.log
                               replace="log4j.logger.com.controltier.log.common = INFO,CommonLog"/>
                 <replaceregex flags="si"
                               pattern="^log4j\.appender\.CommonLog\.remoteHost *=(.*)$"
-                              replace="log4j.appender.CommonLog.remoteHost = ${server.reportcenter.host}"/>
+                              replace="log4j.appender.CommonLog.remoteHost = ${server.hostname}"/>
                 <replaceregex flags="si"
                               pattern="^log4j\.appender\.CommonLog\.port *=(.*)$"
-                              replace="log4j.appender.CommonLog.port = ${server.reportcenter.port}"/>
+                              replace="log4j.appender.CommonLog.port = ${server.reportservice.port}"/>
 
                <replaceregex flags="si"
                               pattern="^log4j\.appender\.R\.file *=(.*)$"
@@ -1283,7 +1260,7 @@ log4j.appender.R.file=/tmp/workbench.log
         -->
 
         <!-- default property values -->
-        <property name="server.reportcenter.port" value="1055"/>
+        <property name="server.reportservice.port" value="1055"/>
         <property name="framework.email.tolist" value="root"/>
         <property name="framework.email.from" value="root"/>
         <property name="framework.email.replyto" value="do-not-reply"/>
@@ -1304,7 +1281,7 @@ log4j.appender.R.file=/tmp/workbench.log
         <fail-if-blank name="jetty.user.name"/>
         <fail-if-blank name="jetty.user.password"/>
 
-        <fail-if-blank name="server.reportcenter.port"/>
+        <fail-if-blank name="server.reportservice.port"/>
         <fail-if-blank name="framework.ssh.user"/>
         <fail-if-blank name="framework.ssh.keypath"/>
 
@@ -1485,16 +1462,6 @@ log4j.appender.R.file=/tmp/workbench.log
 	  </then>
 	  <else>
 	    <property name="ctlcenter.baseUrl" value="http://${server.ctlcenter.host}:${server.ctlcenter.jetty.port}/ctlcenter"/>
-	  </else>
-	</if>
-	<if>
-	  <equals arg1="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}" 
-		  arg2="http://${server.hostname}:${server.jetty.port}"/>
-	  <then>
-	    <property name="reportcenter.baseUrl" value="/reportcenter"/>
-	  </then>
-	  <else>
-	    <property name="reportcenter.baseUrl" value="http://${server.reportcenter.host}:${server.reportcenter.jetty.port}/reportcenter"/>
 	  </else>
 	</if>
 	<if>

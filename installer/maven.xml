@@ -179,14 +179,6 @@
               <j:set var="pkg.ctlcenter.archive.name" value="${expanded.name}.zip"/>
               <j:set var="pkg.ctlcenter.version" value="${dep.version}"/>
           </j:if>
-          <j:if test="${dep.id == 'reportcenter'}">
-              <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
-                   dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
-                   ignoreerrors="false" verbose="true" usetimestamp="true"
-                  />
-              <j:set var="pkg.reportcenter.archive.name" value="${expanded.name}.zip"/>
-              <j:set var="pkg.reportcenter.version" value="${dep.version}"/>
-          </j:if>
           <j:if test="${dep.id == 'ctier-examples'}">
               <get src="${maven.repo.ctlocal}/${dep.id}/zips/${dep.id}-${dep.version}.zip"
                    dest="${installer.workspace}/pkgs/${dep.id}-${dep.version}.zip"
@@ -275,8 +267,6 @@
 	<filter token="pkg.itnav.version" value="${pkg.itnav.version}"/>
 	<filter token="pkg.ctlcenter.archive.name" value="${pkg.ctlcenter.archive.name}"/>
 	<filter token="pkg.ctlcenter.version" value="${pkg.ctlcenter.version}"/>
-	<filter token="pkg.reportcenter.archive.name" value="${pkg.reportcenter.archive.name}"/>
-	<filter token="pkg.reportcenter.version" value="${pkg.reportcenter.version}"/>
 	<filter token="pkg.examples.archive.name" value="${pkg.examples.archive.name}"/>
 	<filter token="pkg.jetty.version" value="${pkg.jetty.version}"/>
 	<filter token="pkg.jetty.archive.name" value="${pkg.jetty.archive.name}"/>
@@ -300,7 +290,6 @@
 	<filter token="ctl.version" value="${ctl.version}"/>
 	<filter token="jetty.version" value="${pkg.jetty.version}"/>
 	<filter token="ctlcenter.version" value="${pkg.ctlcenter.version}"/>
-	<filter token="reportcenter.version" value="${pkg.reportcenter.version}"/>
       </filterset>
       <fileset dir="${src.dir}/templates/properties" includes="default.properties.template"/>
     </copy>

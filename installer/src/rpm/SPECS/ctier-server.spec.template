@@ -53,8 +53,6 @@ touch $RPM_BUILD_ROOT%{installRoot}/pkgs/jetty-%{jettyVersion}/logs/jetty.pid
 touch $RPM_BUILD_ROOT%{installRoot}/ctl/var/logs/command.log
 touch $RPM_BUILD_ROOT%{installRoot}/ctlcenter/grailsdb.properties
 touch $RPM_BUILD_ROOT%{installRoot}/ctlcenter/grailsdb.script
-touch $RPM_BUILD_ROOT%{installRoot}/reportcenter/grailsdb.properties
-touch $RPM_BUILD_ROOT%{installRoot}/reportcenter/grailsdb.script
 touch $RPM_BUILD_ROOT%{installRoot}/.bashrc
 touch $RPM_BUILD_ROOT%{installRoot}/.bash_profile
 mkdir -p $RPM_BUILD_ROOT%{_initrddir}
@@ -88,7 +86,6 @@ fi
 %ghost %{installRoot}/ctl/var/logs/command.log
 
 %dir %{installRoot}/ctlcenter
-%dir %{installRoot}/reportcenter
 %dir %{installRoot}/workbench
 %dir %{installRoot}/jackrabbit
 %dir %{installRoot}/workbench/rdfdata
@@ -97,12 +94,9 @@ fi
 #### grails db
 %ghost %{installRoot}/ctlcenter/grailsdb.properties
 %ghost %{installRoot}/ctlcenter/grailsdb.script
-%ghost %{installRoot}/reportcenter/grailsdb.properties
-%ghost %{installRoot}/reportcenter/grailsdb.script
 
 #### config files
 %config(noreplace) %{installRoot}/ctlcenter/ctlcenter-config.properties
-%config(noreplace) %{installRoot}/reportcenter/reportcenter-config.properties
 %config(noreplace) %{installRoot}/ctl/etc/acls.xml
 %config(noreplace) %{installRoot}/ctl/etc/deployments.properties
 %config(noreplace) %{installRoot}/ctl/etc/depot.properties
@@ -256,28 +250,6 @@ fi
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/webdav-jcr.jsp
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/webdav-simple.jsp
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/jackrabbit/welcome.jsp
-%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/birt-reports
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/css
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/images
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/index.gsp
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/js
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/META-INF
-%dir %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/applicationContext.xml
-%config %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/BirtConfig.properties
-%config %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/jetty-web.xml
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/classes
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/grails-app
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/grails.xml
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/lib
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/platform
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/plugins
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/sitemesh.xml
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/spring
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/templates
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/tld
-%{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/reportcenter/WEB-INF/web.xml
 %{installRoot}/pkgs/jetty-%{jettyVersion}/webapps/ctlcenter
 
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}
@@ -508,7 +480,6 @@ rm -rf $RPM_BUILD_ROOT%{installRoot}/examples
 rm -rf $RPM_BUILD_ROOT%{installRoot}/jackrabbit
 rm -rf $RPM_BUILD_ROOT%{installRoot}/ctlcenter
 rm -rf $RPM_BUILD_ROOT%{installRoot}/pkgs
-rm -rf $RPM_BUILD_ROOT%{installRoot}/reportcenter
 rm -rf $RPM_BUILD_ROOT%{installRoot}/workbench
 rm -rf $RPM_BUILD_ROOT%{installRoot}/etc
 

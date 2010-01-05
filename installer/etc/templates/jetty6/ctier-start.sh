@@ -8,7 +8,7 @@ export JETTY_HOME=${server.jetty.home}
 export JETTY_LOGS=${server.jetty.home.converted}/logs
 export JETTY_RUN=$JETTY_LOGS
 export JAVA_HOME=${USER_ENV.JAVA_HOME}
-CONFIG_PROPS="-Dctlcenter.config.location=${env.ctier_root}/ctlcenter/ctlcenter-config.properties -Dreportcenter.config.location=${env.ctier_root}/reportcenter/reportcenter-config.properties"
+CONFIG_PROPS="-Dctlcenter.config.location=${env.ctier_root}/ctlcenter/ctlcenter-config.properties"
 export JAVA_OPTIONS="-XX:MaxPermSize=128m -Xmx1024m -Xms256m $CONFIG_PROPS"
 
 test -f $JETTY_LOGS/jetty.pid && {

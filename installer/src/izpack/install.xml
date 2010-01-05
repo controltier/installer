@@ -25,7 +25,6 @@
       <variable name="CTVERSION" value="@controltier.version@"/>
       <variable name="CTLVERSION" value="@ctl.version@"/>
       <variable name="JCVERSION" value="@ctlcenter.version@"/>
-      <variable name="RCVERSION" value="@reportcenter.version@"/>
       <variable name="JETTYVERSION" value="@jetty.version@"/>
       <variable name="CONTROL_TIER" value="ControlTier-@controltier.version@"/>
       <variable name="INSTALL_JETTY_BASE" value="$INSTALL_PATH/pkgs/jetty-@jetty.version@"/>

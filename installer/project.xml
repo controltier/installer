@@ -223,16 +223,6 @@ headlines sample par-->
            </properties>
        </dependency>
 
-       <dependency>
-           <id>reportcenter</id>
-           <version>3.5.0</version>
-           <url>http://open.controltier.org</url>
-           <type>zip</type>
-           <properties>
-               <war.bundle.jar>true</war.bundle.jar>
-           </properties>
-       </dependency>
-
        <!-- to build izpack gui installer -->
        <dependency>
            <id>izpack-standalone-compiler</id>
