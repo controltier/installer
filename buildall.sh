@@ -352,7 +352,10 @@ cp $LOCALREPO/commander/jars/commander-$CTIERVERS.jar lib/
 MYPATH=$PATH
 export GRAILS_HOME=$GRAILS_HOME_111
 export PATH=$PATH:$GRAILS_HOME/bin
-grails install-plugin $CCSVN/plugins/grails-webrealms-0.1.zip
+
+#echo 'y' to the command to quell y/n prompt on second time running it:
+echo -e "y\n" | grails install-plugin $CCSVN/plugins/grails-webrealms-0.1.zip
+
 $ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist 
 if [ 0 != $? ]
 then
