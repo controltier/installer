@@ -374,37 +374,6 @@ export GRAILS_HOME=
 
 }
 
-build_reportcenter(){
-######################
-#
-# Reportcenter build
-#
-
-cd $CTIERSVN/reportcenter
-# copy the dependencies into the lib directory
-cp $LOCALREPO/ctier-common/jars/ctier-common-$CTIERVERS.jar lib/
-MYPATH=$PATH
-export GRAILS_HOME=$GRAILS_HOME_103
-export PATH=$PATH:$GRAILS_HOME/bin
-$ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist 
-if [ 0 != $? ]
-then
-   echo "Reportcenter build failed"
-   exit 2
-fi  
-
-
-#artifacts: reportcenter-X.zip
-mkdir -p $LOCALREPO/reportcenter/zips
-cp target/reportcenter-$CTIERVERS.zip $LOCALREPO/reportcenter/zips/reportcenter-$CTIERVERS.zip 
-if [ 0 != $? ]
-then
-   echo "Reportcenter build failed: cannot copy target/reportcenter-$CTIERVERS.zip"
-   exit 2
-fi  
-export PATH=$MYPATH
-export GRAILS_HOME=
-}
 
 build_examples(){
 ######################
@@ -536,7 +505,6 @@ if [ -z "$*" ] ; then
     build_workbench
     build_ctl_bundle
     build_ctl_center
-    build_reportcenter
     build_examples
     build_installer
 else
@@ -563,9 +531,6 @@ else
                 ;;
             ctl_center)
                 build_ctl_center
-                ;;
-            reportcenter)
-                build_reportcenter
                 ;;
             examples)
                 build_examples
