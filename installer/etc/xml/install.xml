@@ -763,6 +763,8 @@ fi
 
         <!-- modify the runtime.properties to include the correct settings -->
 
+	<property name="ctl.deployments.include.nodes" value="true"/>
+
         <!-- duplicate original -->
         <copy tofile="${server.jetty.base}/${itnav.configpath}/runtime.properties.orig" overwrite="true">
             <fileset file="${server.jetty.base}/${itnav.configpath}/runtime.properties"/>
@@ -856,6 +858,11 @@ fi
                 <replaceregex flags="si"
                               pattern="^app\.uploads\.localpath *=(.*)$"
                               replace="app.uploads.localpath = ${env.ctier_root.forwardslash}/workbench/incoming"
+                    />
+
+		<replaceregex flags="si"
+                              pattern="^ctl\.deployments\.include\.nodes *=(.*)$"
+                              replace="ctl.deployments.include.nodes = ${ctl.deployments.include.nodes}"
                     />
             </filterchain>
             <fileset file="${server.jetty.base}/${itnav.configpath}/runtime.properties.orig"/>
