@@ -256,7 +256,7 @@ fi
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}/bin
 %attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl
 %attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/bin/ctl-*
-%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/commander-depotsetup.xml
+%{installRoot}/pkgs/ctl-%{ctlVersion}/bin/commander-ctl-project.xml
 %{installRoot}/pkgs/ctl-%{ctlVersion}/classes
 %docdir %{installRoot}/pkgs/ctl-%{ctlVersion}/docs
 %{installRoot}/pkgs/ctl-%{ctlVersion}/docs
