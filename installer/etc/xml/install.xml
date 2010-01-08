@@ -763,7 +763,7 @@ fi
 
         <!-- modify the runtime.properties to include the correct settings -->
 
-	<property name="ctl.deployments.include.nodes" value="true"/>
+	<property name="ctl.resources.include.nodes" value="true"/>
 
         <!-- duplicate original -->
         <copy tofile="${server.jetty.base}/${itnav.configpath}/runtime.properties.orig" overwrite="true">
@@ -862,7 +862,7 @@ fi
 
 		<replaceregex flags="si"
                               pattern="^ctl\.deployments\.include\.nodes *=(.*)$"
-                              replace="ctl.deployments.include.nodes = ${ctl.deployments.include.nodes}"
+                              replace="ctl.resources.include.nodes = ${ctl.resources.include.nodes}"
                     />
             </filterchain>
             <fileset file="${server.jetty.base}/${itnav.configpath}/runtime.properties.orig"/>
@@ -1382,10 +1382,10 @@ framework.email.failonerror = true
 
 
       <!-- duplicate original -->
-        <backup-file-with-datestamp file="${env.ctl_base}/etc/depot.properties"/>
+        <backup-file-with-datestamp file="${env.ctl_base}/etc/project.properties"/>
 
         <!-- overwrite file -->
-        <copy tofile="${env.ctl_base}/etc/depot.properties" overwrite="true">
+        <copy tofile="${env.ctl_base}/etc/project.properties" overwrite="true">
             <filterchain>
                 <replaceregex flags="si"
                    pattern="^depot\.default\.name *=(.*)$"
@@ -1400,7 +1400,7 @@ depot.default.name = default
 depot.default.create = true
  -->
 	    </filterchain>
-            <fileset file="${env.ctl_base}/etc/depot.properties.${DSTAMP}-${TSTAMP}.backup"/>
+            <fileset file="${env.ctl_base}/etc/project.properties.${DSTAMP}-${TSTAMP}.backup"/>
 	</copy>
 
 

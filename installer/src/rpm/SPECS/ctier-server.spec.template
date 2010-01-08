@@ -78,7 +78,7 @@ fi
 #%undefine __check_files
 
 %dir %{installRoot}
-%attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/depots
+%attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/projects
 %dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var
 %dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp
 %dir %attr(2775,%{ctuser},%{ctgroup}) %{installRoot}/ctl/var/tmp/downloads
@@ -98,8 +98,8 @@ fi
 #### config files
 %config(noreplace) %{installRoot}/ctlcenter/ctlcenter-config.properties
 %config(noreplace) %{installRoot}/ctl/etc/acls.xml
-%config(noreplace) %{installRoot}/ctl/etc/deployments.properties
-%config(noreplace) %{installRoot}/ctl/etc/depot.properties
+%config(noreplace) %{installRoot}/ctl/etc/resources.properties
+%config(noreplace) %{installRoot}/ctl/etc/project.properties
 %config(noreplace) %{installRoot}/ctl/etc/entity.properties
 %config(noreplace) %{installRoot}/ctl/etc/framework.properties
 %config(noreplace) %{installRoot}/ctl/etc/log4j.properties

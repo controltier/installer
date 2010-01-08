@@ -1149,10 +1149,10 @@ framework.email.failonerror = true
 
 
       <!-- duplicate original -->
-        <backup-file-with-datestamp file="${env.ctl_base}/etc/depot.properties"/>
+        <backup-file-with-datestamp file="${env.ctl_base}/etc/project.properties"/>
 
         <!-- overwrite file -->
-        <copy tofile="${env.ctl_base}/etc/depot.properties" overwrite="true">
+        <copy tofile="${env.ctl_base}/etc/project.properties" overwrite="true">
             <filterchain>
                 <replaceregex flags="si"
                    pattern="^depot\.default\.name *=(.*)$"
@@ -1167,7 +1167,7 @@ depot.default.name = default
 depot.default.create = true
  -->
 	        </filterchain>
-            <fileset file="${env.ctl_base}/etc/depot.properties.${DSTAMP}-${TSTAMP}.backup"/>
+            <fileset file="${env.ctl_base}/etc/project.properties.${DSTAMP}-${TSTAMP}.backup"/>
 	    </copy>
 
 

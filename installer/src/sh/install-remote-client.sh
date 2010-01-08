@@ -107,7 +107,7 @@ SERVER_PORT=8080
 SERVER_USER=$(awk '/framework.server.username/ {print $3}' $CTL_BASE/etc/framework.properties)
 SERVER_PASS=$(awk '/framework.server.password/ {print $3}' $CTL_BASE/etc/framework.properties)
 SERVER_PKG_REPO=$(awk '/framework.pkgRepo.uri/ {print $3}' $CTL_BASE/etc/framework.properties)
-PROJECT=$(awk '/depot.default.name/ {print $3}' $CTL_BASE/etc/depot.properties)
+PROJECT=$(awk '/depot.default.name/ {print $3}' $CTL_BASE/etc/project.properties)
 
 [ "$#" -lt 1 ] && { echo "$USAGE" ; exit 2 ; }
 #
