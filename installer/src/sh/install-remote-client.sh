@@ -80,7 +80,7 @@ OPTIONS
  -node               node to install client software
  -installer-zip      installer file base name
  -installer-url      installer repository URL 
- -project            the project depot name
+ -project            the project project name
  -server-host        the host where the ControlTier Jetty is hosted
  -server-port        the port where the ControlTier Jetty is listening
  -server-user        the Workbench/Jackrabbit user name
@@ -107,7 +107,7 @@ SERVER_PORT=8080
 SERVER_USER=$(awk '/framework.server.username/ {print $3}' $CTL_BASE/etc/framework.properties)
 SERVER_PASS=$(awk '/framework.server.password/ {print $3}' $CTL_BASE/etc/framework.properties)
 SERVER_PKG_REPO=$(awk '/framework.pkgRepo.uri/ {print $3}' $CTL_BASE/etc/framework.properties)
-PROJECT=$(awk '/depot.default.name/ {print $3}' $CTL_BASE/etc/project.properties)
+PROJECT=$(awk '/project.default.name/ {print $3}' $CTL_BASE/etc/project.properties)
 
 [ "$#" -lt 1 ] && { echo "$USAGE" ; exit 2 ; }
 #
@@ -203,10 +203,10 @@ DEFERRED_ARGS="$@"
 # get additional node information about the target host from the nodes.properties
 #
 echo "Looking up host info for node: '$NODE' ..."
-[ -r $CTL_BASE/depots/$PROJECT/etc/nodes.properties ] || { 
-  echo "file not found: $CTL_BASE/depots/$PROJECT/etc/nodes.properties"; exit 1 ;
+[ -r $CTL_BASE/projects/$PROJECT/etc/nodes.properties ] || { 
+  echo "file not found: $CTL_BASE/projects/$PROJECT/etc/nodes.properties"; exit 1 ;
 }
-for line in $(grep "^node.${NODE}" $CTL_BASE/depots/$PROJECT/etc/nodes.properties|sort)
+for line in $(grep "^node.${NODE}" $CTL_BASE/projects/$PROJECT/etc/nodes.properties|sort)
 do 
     key=$(echo $line|cut -f1 -d=)
     val=$(echo $line|cut -f2 -d=)

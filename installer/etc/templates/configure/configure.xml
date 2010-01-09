@@ -618,16 +618,16 @@ dataSource.url = jdbc:hsqldb:file:${server.ctlcenter.data_path}/grailsdb;shutdow
             <fileset file="${server.jetty.base}/${itnav.configpath}/bootstrap.properties.${DSTAMP}-${TSTAMP}.backup"/>
         </copy>
         <if>
-            <equals arg1="true" arg2="${depot.default.create}"/>
+            <equals arg1="true" arg2="${project.default.create}"/>
             <then>
-                <property name="app.depot.default.name" value="${depot.default.name}"/>
-                <property name="app.depot.default.description" value="${depot.default.description}"/>
-                <property name="app.depot.default.organization" value="${depot.default.organization}"/>
+                <property name="app.project.default.name" value="${project.default.name}"/>
+                <property name="app.project.default.description" value="${project.default.description}"/>
+                <property name="app.project.default.organization" value="${project.default.organization}"/>
             </then>
             <else>
-                <property name="app.depot.default.name" value=""/>
-                <property name="app.depot.default.description" value=""/>
-                <property name="app.depot.default.organization" value=""/>
+                <property name="app.project.default.name" value=""/>
+                <property name="app.project.default.description" value=""/>
+                <property name="app.project.default.organization" value=""/>
             </else>
         </if>
 
@@ -639,14 +639,14 @@ dataSource.url = jdbc:hsqldb:file:${server.ctlcenter.data_path}/grailsdb;shutdow
         <copy tofile="${server.jetty.base}/${itnav.configpath}/runtime.properties" overwrite="true">
             <filterchain>
                <replaceregex flags="si"
-                    pattern="^app\.depot\.default\.name *=(.*)$"
-                    replace="app.depot.default.name = ${app.depot.default.name}"/>
+                    pattern="^app\.project\.default\.name *=(.*)$"
+                    replace="app.project.default.name = ${app.project.default.name}"/>
                <replaceregex flags="si"
-                    pattern="^app\.depot\.default\.description *=(.*)$"
-                    replace="app.depot.default.description = ${app.depot.default.description}"/>
+                    pattern="^app\.project\.default\.description *=(.*)$"
+                    replace="app.project.default.description = ${app.project.default.description}"/>
                <replaceregex flags="si"
-                    pattern="^app\.depot\.default\.organization *=(.*)$"
-                    replace="app.depot.default.organization = ${app.depot.default.organization}"/>
+                    pattern="^app\.project\.default\.organization *=(.*)$"
+                    replace="app.project.default.organization = ${app.project.default.organization}"/>
                 <replaceregex flags="si"
                     pattern="^app\.external\.uri *=(.*)$"
                     replace="app.external.uri = http://${server.hostname}:${server.jetty.port}"/>
@@ -895,7 +895,7 @@ prior to starting up the jetty server.
                     <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
                     <env key="ANT_HOME" value="${anthome.dir}/${anthome.base}"/>
                     <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                    <arg line="-f -n ${client.node.name} -N ${client.hostname} -s ${server.hostname} --server.port=${server.jetty.port} --depot.default.name=${depot.default.name} --depot.default.create=${depot.default.create}"/>
+                    <arg line="-f -n ${client.node.name} -N ${client.hostname} -s ${server.hostname} --server.port=${server.jetty.port} --project.default.name=${project.default.name} --project.default.create=${project.default.create}"/>
                 </exec>
 		    </then>
             <elseif>
@@ -907,7 +907,7 @@ prior to starting up the jetty server.
                         <env key="CTL_BASE" value="${converted.env.ctl_base}"/>
 <!--                        <env key="ANT_HOME" value="${ant.home}"/>-->
                         <env key="JAVA_HOME" value="${USER_ENV.JAVA_HOME}"/>
-                        <arg line="-f -n ${client.hostname} -N ${client.hostname}  -s ${server.hostname} --server.port=${server.jetty.port} --depot.default.name=${depot.default.name} --depot.default.create=${depot.default.create}"/>
+                        <arg line="-f -n ${client.hostname} -N ${client.hostname}  -s ${server.hostname} --server.port=${server.jetty.port} --project.default.name=${project.default.name} --project.default.create=${project.default.create}"/>
                     </exec>
                 
                 </then>
@@ -1155,16 +1155,16 @@ framework.email.failonerror = true
         <copy tofile="${env.ctl_base}/etc/project.properties" overwrite="true">
             <filterchain>
                 <replaceregex flags="si"
-                   pattern="^depot\.default\.name *=(.*)$"
-                   replace="depot.default.name = ${depot.default.name}"
+                   pattern="^project\.default\.name *=(.*)$"
+                   replace="project.default.name = ${project.default.name}"
                 />
             <replaceregex flags="si"
-                   pattern="^depot\.default\.create *=(.*)$"
-                   replace="depot.default.create = ${depot.default.create}"
+                   pattern="^project\.default\.create *=(.*)$"
+                   replace="project.default.create = ${project.default.create}"
                 />
                 <!--
-depot.default.name = default
-depot.default.create = true
+project.default.name = default
+project.default.create = true
  -->
 	        </filterchain>
             <fileset file="${env.ctl_base}/etc/project.properties.${DSTAMP}-${TSTAMP}.backup"/>

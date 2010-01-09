@@ -60,7 +60,7 @@ public class CTierInstaller {
         options.addOption("f", "defaults", true, "default.properties file");
         options.addOption("c", "client", false, "install just the client");
         options.addOption("d", "dir", true, "ctier_root installation directory");
-        options.addOption("p", "project", true, "default project depot name");
+        options.addOption("p", "project", true, "default project project name");
         options.addOption(OptionBuilder.withArgName("property=value")
                 .hasArgs()
                 .withValueSeparator('=')
@@ -216,9 +216,9 @@ public class CTierInstaller {
             System.setProperty("env.ctier_root", ctierRoot.getAbsolutePath());            
         }
         if (cli.hasOption('p')) {
-            final String depotName = cli.getOptionValue('p');
-            verbose("Project depot name set: '" + depotName+"'");
-            overrideProps.put("depot.default.name", depotName);
+            final String projectName = cli.getOptionValue('p');
+            verbose("Project project name set: '" + projectName+"'");
+            overrideProps.put("project.default.name", projectName);
         }
 
         if (cli.hasOption('c')) {
