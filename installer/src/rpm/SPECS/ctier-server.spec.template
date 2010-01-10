@@ -100,7 +100,7 @@ fi
 %config(noreplace) %{installRoot}/ctl/etc/acls.xml
 %config(noreplace) %{installRoot}/ctl/etc/resources.properties
 %config(noreplace) %{installRoot}/ctl/etc/project.properties
-%config(noreplace) %{installRoot}/ctl/etc/entity.properties
+%config(noreplace) %{installRoot}/ctl/etc/resource.properties
 %config(noreplace) %{installRoot}/ctl/etc/framework.properties
 %config(noreplace) %{installRoot}/ctl/etc/log4j.properties
 %config(noreplace) %{installRoot}/ctl/etc/modules.properties
