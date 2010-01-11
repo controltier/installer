@@ -28,6 +28,9 @@ SEEDSVNROOT="https://moduleforge.svn.sourceforge.net/svnroot/moduleforge/control
 CTLBRANCH=ctl-dispatch-3-5-dev
 CTIERBRANCH=controltier-3-5-dev
 
+#grails version for ctl-center
+GRAILSVERS=1.1.1
+
 prepare_build(){
 
 mkdir $BUILD_ROOT
@@ -63,38 +66,21 @@ fi
 
 export ANT_HOME=$BUILD_ROOT/local/apache-ant-1.7.1p1
 
-
-# extract grails to local dir for use during build
-if [ ! -f $BUILD_ROOT/local/grails-1.0.3/bin/grails ] ; then 
-    if [ ! -z "$PKGREPO" -a -f $PKGREPO/grails-bin/tgzs/grails-bin-1.0.3.tar.gz ] ; then
+# extract grails to local dir for use during build of CTL Center
+if [ ! -f $BUILD_ROOT/local/grails-$GRAILSVERS/bin/grails ] ; then 
+    if [ ! -z "$PKGREPO" -a -f $PKGREPO/grails-bin/tgzs/grails-bin-$GRAILSVERS.tar.gz ] ; then
         cd $BUILD_ROOT/local
-        tar xvzf $PKGREPO/grails-bin/tgzs/grails-bin-1.0.3.tar.gz
+        tar xvzf $PKGREPO/grails-bin/tgzs/grails-bin-$GRAILSVERS.tar.gz
     else
         # get grails bin distribution
         cd $BUILD_ROOT/dl
-        wget -N http://dist.codehaus.org/grails/grails-bin-1.0.3.tar.gz
+        wget -N http://dist.codehaus.org/grails/grails-bin-$GRAILSVERS.tar.gz
         cd $BUILD_ROOT/local
-        tar xvzf $BUILD_ROOT/dl/grails-bin-1.0.3.tar.gz
+        tar xvzf $BUILD_ROOT/dl/grails-bin-$GRAILSVERS.tar.gz
     fi
 fi
 
-export GRAILS_HOME_103=$BUILD_ROOT/local/grails-1.0.3
-
-# extract grails 1.1.1 to local dir for use during build of CTL Center
-if [ ! -f $BUILD_ROOT/local/grails-1.1.1/bin/grails ] ; then 
-    if [ ! -z "$PKGREPO" -a -f $PKGREPO/grails-bin/tgzs/grails-bin-1.1.1.tar.gz ] ; then
-        cd $BUILD_ROOT/local
-        tar xvzf $PKGREPO/grails-bin/tgzs/grails-bin-1.1.1.tar.gz
-    else
-        # get grails bin distribution
-        cd $BUILD_ROOT/dl
-        wget -N http://dist.codehaus.org/grails/grails-bin-1.1.1.tar.gz
-        cd $BUILD_ROOT/local
-        tar xvzf $BUILD_ROOT/dl/grails-bin-1.1.1.tar.gz
-    fi
-fi
-
-export GRAILS_HOME_111=$BUILD_ROOT/local/grails-1.1.1
+export GRAILS_HOME_111=$BUILD_ROOT/local/grails-$GRAILSVERS
 
 
 # begin checkout of sources
@@ -118,6 +104,7 @@ else
     fi
 fi
 export CTIERSVN=$BUILD_ROOT/ctiersvn
+
 
 #checkout ctl source
 if [ ! -d ctlsvn ] ; then
@@ -174,7 +161,20 @@ cd $CTLSVN
 echo maven.repo.ctierlocal = $LOCALREPOURL > build.properties
 MAVEN_HOME=$CTLSVN/maven
 cd $CTLSVN && $MAVEN_HOME/bin/maven clean ctl:antConfigure
+if [ 0 != $? ]
+then
+   echo "CTL build failed"
+   exit 2
+fi
 cd $CTLSVN && $MAVEN_HOME/bin/maven ctl:stgz ctl:tgz ctl:zip
+if [ 0 != $? ]
+then
+   echo "CTL build failed"
+   exit 2
+fi
+#remove previous build artifacts from maven repository
+rm -rf $CTIERSVN/maven/repository/ctl
+rm -rf $CTIERSVN/maven/repository/ctl-dispatch
 
 mkdir -p $LOCALREPO/ctl/jars
 mkdir -p $LOCALREPO/ctl/tgzs
@@ -225,8 +225,15 @@ build_common(){
 MAVEN_HOME=$CTIERSVN/maven	
 echo maven.repo.ctlocal = $LOCALREPOURL >  $CTIERSVN/common/build.properties
 cd $CTIERSVN/common
-cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jars
+cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean java:jars
+if [ 0 != $? ]
+then
+   echo "CTIER common build failed"
+   exit 2
+fi  
 		
+rm -rf $CTIERSVN/maven/repository/ctier-common
+rm -rf $CTIERSVN/maven/repository/ctier-common-vocabulary
 
 mkdir -p $LOCALREPO/ctier-common/jars
 mkdir -p $LOCALREPO/ctier-common-vocabulary/jars
@@ -262,6 +269,8 @@ then
    echo "Ctier Seed build failed: unable to create the controltier-seed-$CTIERVERS.jar"
    exit 2
 fi  
+		
+rm -rf $CTIERSVN/maven/repository/controltier-seed
 
 mkdir -p $LOCALREPO/controltier-seed/jars
 cp $SEEDSVN/target/controltier-seed-$CTIERVERS.jar $LOCALREPO/controltier-seed/jars/controltier-seed-$CTIERVERS.jar 
@@ -282,9 +291,20 @@ MAVEN_HOME=$CTIERSVN/maven
 cd $CTIERSVN/workbench
 
 echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/workbench/build.properties
-cd $CTIERSVN/workbench && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar-resources
+cd $CTIERSVN/workbench && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean java:jar-resources
+if [ 0 != $? ]
+then
+   echo "Workbench build failed"
+   exit 2
+fi  
 cd $CTIERSVN/workbench && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar war
+if [ 0 != $? ]
+then
+   echo "Workbench build failed"
+   exit 2
+fi  
 
+rm -rf $CTIERSVN/maven/repository/itnav
 
 mkdir -p $LOCALREPO/itnav/wars
 cp target/itnav.war $LOCALREPO/itnav/wars/itnav-$CTIERVERS.war	
@@ -304,8 +324,22 @@ MAVEN_HOME=$CTIERSVN/maven
 cd $CTIERSVN/commander
 
 echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/commander/build.properties
-cd $CTIERSVN/commander && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true java:jar-resources 
+cd $CTIERSVN/commander && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean java:jar-resources 
+if [ 0 != $? ]
+then
+   echo "CTIER commander-extension build failed "
+   exit 2
+fi  
 cd $CTIERSVN/commander && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true extension:package
+if [ 0 != $? ]
+then
+   echo "CTIER commander-extension build failed "
+   exit 2
+fi  
+
+rm -rf $CTIERSVN/maven/repository/commander
+rm -rf $CTIERSVN/maven/repository/commander-extension
+rm -rf $CTLSVN/maven/repository/commander-extension
    
 #    artifacts: commander-extension-X.jar, commander-X.jar
 mkdir -p $LOCALREPO/commander-extension/jars
@@ -336,8 +370,16 @@ cd $CTLSVN/bundle
 export MAVEN_HOME=../maven
 echo maven.repo.ctier = $LOCALREPOURL > build.properties
 $MAVEN_HOME/bin/maven clean ctl:bundle
+if [ 0 != $? ]
+then
+   echo "CTL bundle build failed"
+   exit 2
+fi  
 
 #!! failed to download ctl-dispatch.jar ... !!!
+
+rm -rf $CTIERSVN/maven/repository/ctl/tgzs
+rm -rf $CTIERSVN/maven/repository/ctl/zips
 
 # artifacts: ctl-X.tgz, ctl-X.zip
 mkdir -p $LOCALREPO/ctl/zips
@@ -376,7 +418,7 @@ export GRAILS_HOME=$GRAILS_HOME_111
 export PATH=$PATH:$GRAILS_HOME/bin
 
 #echo 'y' to the command to quell y/n prompt on second time running it:
-echo -e "y\n" | grails install-plugin $CCSVN/plugins/grails-webrealms-0.1.zip
+echo -e "y\n" | $GRAILS_HOME/bin/grails install-plugin $CCSVN/plugins/grails-webrealms-0.1.zip
 
 $ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist 
 if [ 0 != $? ]
@@ -385,6 +427,7 @@ then
    exit 2
 fi  
 
+rm -rf $CTIERSVN/maven/repository/ctlcenter
 
 # artifacts: ctlcenter-X.zip
 mkdir -p $LOCALREPO/ctlcenter/zips
@@ -415,6 +458,9 @@ then
    echo "Examples package build failed"
    exit 2
 fi  
+
+
+rm -rf $CTIERSVN/maven/repository/ctier-examples
 
 #artifacts: ctier-examples-X.zip
 mkdir -p $LOCALREPO/ctier-examples/zips
