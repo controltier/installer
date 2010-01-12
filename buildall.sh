@@ -29,7 +29,7 @@ CTLBRANCH=ctl-dispatch-3-5-dev
 CTIERBRANCH=controltier-3-5-dev
 
 #grails version for ctl-center
-GRAILSVERS=1.1.1
+GRAILSVERS=1.2.0
 
 prepare_build(){
 
@@ -68,15 +68,15 @@ export ANT_HOME=$BUILD_ROOT/local/apache-ant-1.7.1p1
 
 # extract grails to local dir for use during build of CTL Center
 if [ ! -f $BUILD_ROOT/local/grails-$GRAILSVERS/bin/grails ] ; then 
-    if [ ! -z "$PKGREPO" -a -f $PKGREPO/grails-bin/tgzs/grails-bin-$GRAILSVERS.tar.gz ] ; then
+    if [ ! -z "$PKGREPO" -a -f $PKGREPO/grails/zips/grails-$GRAILSVERS.zip ] ; then
         cd $BUILD_ROOT/local
-        tar xvzf $PKGREPO/grails-bin/tgzs/grails-bin-$GRAILSVERS.tar.gz
+        unzip $PKGREPO/grails/zips/grails-$GRAILSVERS.zip
     else
         # get grails bin distribution
         cd $BUILD_ROOT/dl
-        wget -N http://dist.codehaus.org/grails/grails-bin-$GRAILSVERS.tar.gz
+        wget -N http://dist.codehaus.org/grails/grails-$GRAILSVERS.zip
         cd $BUILD_ROOT/local
-        tar xvzf $BUILD_ROOT/dl/grails-bin-$GRAILSVERS.tar.gz
+        unzip $BUILD_ROOT/dl/grails-$GRAILSVERS.zip
     fi
 fi
 
