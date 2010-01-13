@@ -236,7 +236,7 @@ headlines sample par-->
        <!-- jetty webapp container -->
        <dependency>
            <id>jetty</id>
-           <version>6.1.14</version>
+           <version>6.1.21</version>
            <type>zip</type>
            <properties>
                <war.bundle.jar>false</war.bundle.jar>
