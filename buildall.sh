@@ -449,8 +449,15 @@ build_examples(){
 # examples package build
 #
 cd $CTIERSVN/examples
+rm -rf $CTIERSVN/examples/target
 mkdir -p $CTIERSVN/examples/target
 svn export . $CTIERSVN/examples/target/examples
+if [ 0 != $? ]
+then
+   echo "Examples source svn export failed"
+   exit 2
+fi  
+
 cd target
 zip -r ctier-examples-$CTIERVERS.zip examples
 if [ 0 != $? ]
@@ -459,7 +466,7 @@ then
    exit 2
 fi  
 
-
+rm -rf $CTIERSVN/examples/target/examples
 rm -rf $CTIERSVN/maven/repository/ctier-examples
 
 #artifacts: ctier-examples-X.zip
