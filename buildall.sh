@@ -420,6 +420,15 @@ export PATH=$PATH:$GRAILS_HOME/bin
 #echo 'y' to the command to quell y/n prompt on second time running it:
 echo -e "y\n" | $GRAILS_HOME/bin/grails install-plugin $CCSVN/plugins/grails-webrealms-0.1.zip
 
+# run clean and test 
+$ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml clean test
+if [ 0 != $? ]
+then
+   echo "CTL Center tests failed"
+   exit 2
+fi  
+
+#run dist phase
 $ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml dist 
 if [ 0 != $? ]
 then
