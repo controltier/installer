@@ -1244,7 +1244,7 @@ framework.pkgRepo.uri = http://localhost:8080/jackrabbit/repository/workbench/pk
 framework.pkgRepo.rootdir =
 framework.pkgRepo.upload-url = http://localhost:8080/jackrabbit/repository/workbench/pkgs
 
-framework.moduleRepo.url = http://localhost:8080/jackrabbit/repository/workbench/publish/modules
+framework.moduleRepo.url = http://localhost:8080/jackrabbit/repository/workbench/artifacts/modules
 
 framework.ctlcenter.url = http://localhost:8080/ctlcenter
 
@@ -1293,7 +1293,7 @@ framework.ctlcenter.url = http://localhost:8080/ctlcenter
                     replace="framework.pkgRepo.upload-url = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
                <replaceregex flags="si"
                     pattern="^framework\.moduleRepo\.url *=(.*)$"
-                    replace="framework.moduleRepo.url = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/publish/modules"/>				
+                    replace="framework.moduleRepo.url = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/artifacts/modules"/>				
                <replaceregex flags="si"
                     pattern="^framework\.ctlcenter\.url *=(.*)$"
                     replace="framework.ctlcenter.url = http://${server.hostname}:${server.jetty.port}/ctlcenter"/>
