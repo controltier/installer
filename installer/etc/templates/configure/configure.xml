@@ -1003,15 +1003,15 @@ framework.server.password = user2pass
 framework.server.hostname = localhost
 framework.server.url = http://localhost:8080/itnav
 
-framework.webdav.uri = http://localhost:8080/jackrabbit/repository/workbench
+framework.webdav.uri = http://localhost:8080/jackrabbit/repository/controltier
 framework.webdav.username = user2
 framework.webdav.password = user2pass
 
-framework.pkgRepo.uri = http://localhost:8080/jackrabbit/repository/workbench/pkgs
+framework.pkgRepo.uri = http://localhost:8080/jackrabbit/repository/controltier/pkgs
 framework.pkgRepo.rootdir =
-framework.pkgRepo.upload-url = http://localhost:8080/jackrabbit/repository/workbench/pkgs
+framework.pkgRepo.upload-url = http://localhost:8080/jackrabbit/repository/controltier/pkgs
 
-framework.moduleRepo.url = http://localhost:8080/jackrabbit/repository/workbench/artifacts/modules
+framework.moduleRepo.url = http://localhost:8080/jackrabbit/repository/controltier/artifacts/modules
 
 framework.ctlcenter.url = http://localhost:8080/ctlcenter
 

@@ -53,7 +53,7 @@
     <!--
         location of workspaces root directory and name of default workspace
     -->
-    <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="workbench"/>
+    <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="controltier"/>
     <!--
         workspace configuration template:
         used to create the initial workspace if there's no workspace yet

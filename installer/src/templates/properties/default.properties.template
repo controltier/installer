@@ -46,7 +46,7 @@ server.jetty.httpsPort = 8443
 server.jetty.hostname = ${server.hostname}
 
 #  the application context path for the webdav app
-server.jetty.webdav.path = jackrabbit/repository/workbench
+server.jetty.webdav.path = jackrabbit/repository/controltier
 
 
 
@@ -111,7 +111,7 @@ server.workbench.jetty.port = ${server.jetty.port}
 server.rdfdata.path = ${env.ctier_root}/workbench/rdfdata
 
 # Webdav root path
-server.dav.basedir = ${env.ctier_root}/jackrabbit/repository/workbench
+server.dav.basedir = ${env.ctier_root}/jackrabbit/repository/controltier
 
 ################
 # Job Center server installation
