@@ -418,7 +418,20 @@ export GRAILS_HOME=$GRAILS_HOME_111
 export PATH=$PATH:$GRAILS_HOME/bin
 
 #echo 'y' to the command to quell y/n prompt on second time running it:
+echo -e "y\n" | $GRAILS_HOME/bin/grails install-plugin jetty
+if [ 0 != $? ]
+then
+   echo "failed to install jetty plugin"
+   exit 2
+fi  
+
+#echo 'y' to the command to quell y/n prompt on second time running it:
 echo -e "y\n" | $GRAILS_HOME/bin/grails install-plugin $CCSVN/plugins/grails-webrealms-0.1.zip
+if [ 0 != $? ]
+then
+   echo "failed to install webrealms plugin"
+   exit 2
+fi  
 
 # run clean and test 
 $ANT_HOME/bin/ant -Djetty.archive.available=true -f build.xml clean test
