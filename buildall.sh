@@ -126,22 +126,22 @@ export CTLSVN=$BUILD_ROOT/ctlsvn
 
 export CCSVN=$CTIERSVN/ctl-center
 
-#checkout modules source
-if [ ! -d ctierseedsvn ] ; then
-    svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
+#export modules source
+if [ -d $BUILD_ROOT/ctierseedsvn ] ; then
+    echo "Cleaning ctierseedsvn dir..."
+    rm -rf $BUILD_ROOT/ctierseedsvn
     if [ 0 != $? ]
     then
-       echo "Controltier Seed src checkout failed"
+       echo "Couldn't clean ctierseedsvn dir"
        exit 2
     fi
-else
-    svn revert --recursive ctierseedsvn
-    svn up ctierseedsvn
-    if [ 0 != $? ]
-    then
-       echo "Controltier Seed src checkout failed"
-       exit 2
-    fi
+fi
+cd $BUILD_ROOT
+svn export $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
+if [ 0 != $? ]
+then
+   echo "Controltier Seed src checkout failed"
+   exit 2
 fi
 export SEEDSVN=$BUILD_ROOT/ctierseedsvn
 
