@@ -510,11 +510,7 @@ fi
 	<filterchain >
 	  <expandproperties />
 	</filterchain>
-	<fileset dir="${basedir}/etc/templates/jetty6"
-		 includes="ctier-stop.sh,ctier-start.sh"/>
       </copy>
-      <chmod file="${env.ctier_root}/bin/ctier-start.sh" perm="ugo+rx"/>
-      <chmod file="${env.ctier_root}/bin/ctier-stop.sh" perm="ugo+rx"/>
     </target>
 
     <!--
