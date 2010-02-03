@@ -503,14 +503,7 @@ fi
 	</filterchain>
 	<fileset file="${server.jetty.home}/bin/jetty.sh.orig"/>
       </copy>
-      <chmod file="${server.jetty.home}/bin/jetty.sh" perm="ugo+rx"/>
-      <!-- custom start/stop scripts to to ${CTIER_ROOT}/bin -->
-      <mkdir dir="${env.ctier_root}/bin"/>
-      <copy todir="${env.ctier_root}/bin" overwrite="true">
-	<filterchain >
-	  <expandproperties />
-	</filterchain>
-      </copy>
+      <chmod file="${server.jetty.home}/bin/jetty.sh" perm="ugo+rx"/>     
     </target>
 
     <!--
