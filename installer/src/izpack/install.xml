@@ -32,7 +32,7 @@
       <variable name="CTL" value="ctl-@ctl.version@"/>
       <variable name="APACHE_ANT" value="apache-ant-1.7.1p1"/>
         <variable name="JDKPathPanel.minVersion" value="1.5"/>
-        <variable name="JDKPathPanel.maxVersion" value="1.5"/>
+        <variable name="JDKPathPanel.maxVersion" value="1.6"/>
         <variable name="JDKPathPanel.skipIfValid" value="yes"/>
     </variables>
 
