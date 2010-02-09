@@ -20,6 +20,12 @@ env.ctier_root = ${ctier.root.default}
 server.hostname = ${server.hostname.default}
 
 #
+# Enter the logical of the ControlTier server.  The default for a server installation will be the system hostname.
+#
+server.node.name = ${server.hostname.default}
+
+
+#
 # Enter the hostname used by the ControlTier client. This is the 
 # hostname that will appear in Workbench. The default will be the system hostname.
 #

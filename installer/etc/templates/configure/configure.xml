@@ -79,6 +79,7 @@ $Id$
             <then>
                 <!-- default for server.hostname is system hostname for a server installation -->
                 <property name="server.hostname.default" value="${system.hostname}"/>
+                <property name="server.node.name" value="${system.hostname}"/>
             </then>
         </if>
 
@@ -1034,6 +1035,14 @@ framework.ctlcenter.url = http://localhost:8080/ctlcenter
                 <replaceregex flags="si"
                     pattern="^framework\.server\.hostname *=(.*)$"
                     replace="framework.server.hostname = ${server.hostname}"/>
+
+                <replaceregex flags="si"
+                    pattern="^framework\.server\.name *=(.*)$"
+                    replace="framework.server.name = ${server.node.name}"/>
+		<replaceregex flags="si"
+			      pattern="^framework\.server\.name *=(.*)$"
+			      replace="framework.server.name = ${server.node.name}"
+                    />
                 <replaceregex flags="si"
                     pattern="^framework\.server\.url *=(.*)$"
                     replace="framework.server.url = http://${server.hostname}:${server.jetty.port}/itnav"/>
@@ -1277,6 +1286,7 @@ log4j.appender.R.file=/tmp/workbench.log
         <fail-if-blank name="client.hostname"/>
         <fail-if-blank name="server.jetty.port"/>
         <fail-if-blank name="server.hostname"/>
+        <fail-if-blank name="server.node.name"/>
         <fail-if-blank name="server.jetty.webdav.path"/>
         <fail-if-blank name="jetty.user.name"/>
         <fail-if-blank name="jetty.user.password"/>
@@ -1384,6 +1394,7 @@ log4j.appender.R.file=/tmp/workbench.log
 
         <fail-if-blank name="server.jetty.port"/>
         <fail-if-blank name="server.hostname"/>
+        <fail-if-blank name="server.node.name"/>
         <fail-if-blank name="server.jetty.webdav.path"/>
         <fail-if-blank name="jetty.user.name"/>
         <fail-if-blank name="jetty.user.password"/>
