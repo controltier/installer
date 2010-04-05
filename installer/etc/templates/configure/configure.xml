@@ -118,6 +118,23 @@ $Id$
             </then>
         </if>
 
+        <!-- test whether it is a client install and the client.node.name is unset -->
+        <if>
+            <and>
+                <isset property="is.client.install"/>
+                <or>
+                    <not>
+                        <isset property="client.node.name"/>
+                    </not>
+                    <equals arg1="${client.node.name}" arg2=""/>
+                </or>
+            </and>
+            <then>
+                <fail>client.node.name is not set. For client installation, set client.node.name in defaults.properties, or on commandline via -Dclient.node.name=&lt;value&gt;</fail>
+            </then>
+        </if>
+
+
         <echo>Using CTIER_ROOT: ${env.ctier_root}</echo>
         <echo>Using server HOSTNAME: ${server.hostname}</echo>
         <echo>Using client HOSTNAME: ${client.hostname}</echo>
@@ -1060,13 +1077,13 @@ framework.ctlcenter.url = http://localhost:8080/ctlcenter
                     replace="framework.webdav.rootdir = ${regex-escaped.framework.dav.rootDir}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.uri *=(.*)$"
-                    replace="framework.pkgRepo.uri = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
+                    replace="framework.pkgRepo.uri = ${framework.pkgRepo.uri}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.rootdir *=(.*)$"
                     replace="framework.pkgRepo.rootdir = ${regex-escaped.framework.pkgRepo.rootdir}"/>
                 <replaceregex flags="si"
                     pattern="^framework\.pkgRepo\.upload-url *=(.*)$"
-                    replace="framework.pkgRepo.upload-url = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs"/>
+                    replace="framework.pkgRepo.upload-url = ${framework.pkgRepo.upload-url}"/>
                <replaceregex flags="si"
                     pattern="^framework\.moduleRepo\.url *=(.*)$"
                     replace="framework.moduleRepo.url = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/artifacts/modules"/>				

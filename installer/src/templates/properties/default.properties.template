@@ -207,6 +207,17 @@ framework.ssh.user = ${user.name}
 framework.ssh.keypath = ${user.home}/.ssh/id_dsa
 
 ################
+# Client Package URL settings
+################
+# Package repo URL default to the locally hosted WebDAV but can optionally reference external repos.
+
+# URL to the package repository for downloads
+framework.pkgRepo.uri = http://${server.hostname}:${server.jetty.port}/${server.jetty.webdav.path}/pkgs
+
+# URL to the package repository for uploads
+framework.pkgRepo.upload-url = ${framework.pkgRepo.uri}
+
+################
 # Project project settings. 
 ################
 # Bootstrap the default project project
