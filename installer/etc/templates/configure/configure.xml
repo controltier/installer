@@ -118,21 +118,20 @@ $Id$
             </then>
         </if>
 
-        <!-- test whether it is a client install and the client.node.name is unset -->
-        <if>
-            <and>
-                <isset property="is.client.install"/>
-                <or>
-                    <not>
-                        <isset property="client.node.name"/>
-                    </not>
-                    <equals arg1="${client.node.name}" arg2=""/>
-                </or>
-            </and>
-            <then>
-                <fail>client.node.name is not set. For client installation, set client.node.name in defaults.properties, or on commandline via -Dclient.node.name=&lt;value&gt;</fail>
-            </then>
-        </if>
+        <!-- test whether the client.node.name is unset -->
+	<if>	  
+	  <or>
+	    <not>
+	      <isset property="client.node.name"/>
+	    </not>
+	    <equals arg1="${client.node.name}" arg2=""/>
+	  </or>	  
+	  <then>
+	    <fail>client.node.name is not set. For client installation, set client.node.name in defaults.properties, or on commandline via -Dclient.node.name=&lt;value&gt;</fail>
+	  </then>
+	</if>
+
+
 
 
         <echo>Using CTIER_ROOT: ${env.ctier_root}</echo>
