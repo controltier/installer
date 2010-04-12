@@ -5,10 +5,8 @@
     Comprehensive installation instructions for the ControlTier software
     in both server and client modes can be found at:
 
-      http://open.controltier.com/Docs/installer-install.html
+      http://controltier.org/wiki/Installation
 
-(c) 2006, ControlTier Software, Inc
-
-<http://open.controltier.com>
+<http://controltier.org>
 
 $Id$
