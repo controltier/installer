@@ -1588,14 +1588,17 @@ log4j.appender.R.file=/tmp/workbench.log
             </then>
         </if>
 	<!-- check java environment -->
-	<echo level="verbose">Checking for ${USER_ENV.JAVA_HOME}/bin/javac ...</echo>
-	<fail>JAVA_HOME does not appear to be a JDK. The server JSP compilation requires javac executable and libaries. The JDK installation will contain javac in the bin directory.
-	  <condition>
-	    <not>
-	      <available file="${USER_ENV.JAVA_HOME}/bin/javac"/>
-	    </not>
-	  </condition>
-	</fail>
+	<echo level="verbose">Checking for java compiler executable ...</echo>
+	<if>
+	  <equals arg1="${os.family}" arg2="windows"/>
+	  <then>
+	    <available file="${USER_ENV.JAVA_HOME}/bin/javac.exe" property="javac.exists"/>
+	  </then>
+	  <else>
+	    <available file="${USER_ENV.JAVA_HOME}/bin/javac" property="javac.exists"/>
+	  </else>
+	</if>
+	<fail unless="javac.exists">JAVA_HOME does not appear to be a JDK. The server JSP compilation requires javac executable and libaries. The JDK installation will contain javac in the bin directory.</fail>
 	<echo>JDK check succeeded.</echo>
   
         <fail-if-blank name="server.jetty.base"/>
