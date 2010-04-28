@@ -119,6 +119,9 @@ server.rdfdata.path = ${env.ctier_root}/workbench/rdfdata
 # Webdav root path
 server.dav.basedir = ${env.ctier_root}/jackrabbit/repository/controltier
 
+# Nodes file generation format
+ctl.nodes.file.format = projectxml
+
 ################
 # Job Center server installation
 ################
@@ -170,6 +173,9 @@ client.node.description = ControlTier managed node.
 client.nodeauthentication.classname = com.controltier.commander.authentication.WorkbenchNodeAuthResolutionStrategy
 
 framework.node.type = Node
+
+# nodes resource file name
+framework.nodes.file.name = nodes.xml
 
 ################
 # Client email settings

@@ -743,6 +743,11 @@ dataSource.url = jdbc:hsqldb:file:${server.ctlcenter.data_path}/grailsdb;shutdow
                               pattern="^app\.uploads\.localpath *=(.*)$"
                               replace="app.uploads.localpath = ${env.ctier_root.forwardslash}/workbench/incoming"
                     />
+
+                <replaceregex flags="si"
+                              pattern="^ctl\.nodes\.file\.format *=(.*)$"
+                              replace="ctl.nodes.file.format = ${ctl.nodes.file.format}"
+                    />
             </filterchain>
             <fileset file="${server.jetty.base}/${itnav.configpath}/runtime.properties.${DSTAMP}-${TSTAMP}.backup"/>
         </copy>
@@ -1160,7 +1165,12 @@ framework.email.failonerror = true
                <replaceregex flags="si" 
                              pattern="^framework\.node\.type *=(.*)$" 
                     replace="framework.node.type = ${framework.node.type}" 
-               /> 
+               />
+                <!-- node resource file name -->
+                <replaceregex flags="si"
+                              pattern="^framework\.nodes\.file\.name *=(.*)$"
+                              replace="framework.nodes.file.name = ${framework.nodes.file.name}"
+                    /> 
 	       	       
 	       <!-- node authentication strategy -->
 	       <replaceregex flags="si" 
