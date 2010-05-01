@@ -1170,7 +1170,12 @@ framework.email.failonerror = true
                 <replaceregex flags="si"
                               pattern="^framework\.nodes\.file\.name *=(.*)$"
                               replace="framework.nodes.file.name = ${framework.nodes.file.name}"
-                    /> 
+                    />
+                <!-- node resource file name -->
+                <replaceregex flags="si"
+                              pattern="^framework\.resources\.file\.name *=(.*)$"
+                              replace="framework.resources.file.name = ${framework.resources.file.name}"
+                    />
 	       	       
 	       <!-- node authentication strategy -->
 	       <replaceregex flags="si" 

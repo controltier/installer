@@ -175,7 +175,10 @@ client.nodeauthentication.classname = com.controltier.commander.authentication.W
 framework.node.type = Node
 
 # nodes resource file name
-framework.nodes.file.name = nodes.xml
+framework.nodes.file.name = resources.xml
+
+# resources file name
+framework.resources.file.name = resources.xml
 
 ################
 # Client email settings
