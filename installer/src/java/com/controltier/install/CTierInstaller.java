@@ -217,7 +217,7 @@ public class CTierInstaller {
         }
         if (cli.hasOption('p')) {
             final String projectName = cli.getOptionValue('p');
-            verbose("Project project name set: '" + projectName+"'");
+            verbose("Project name set: '" + projectName+"'");
             overrideProps.put("project.default.name", projectName);
         }
 
