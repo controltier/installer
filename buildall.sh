@@ -18,8 +18,6 @@ if [ ! -f $HOME/.ssh/id_dsa.pub ] ; then
     exit 1
 fi
 
-CTLVERS=3.5.0
-CTIERVERS=3.5.0
 
 CTLSVNROOT="https://ctl-dispatch.svn.sourceforge.net/svnroot/ctl-dispatch"
 CTIERSVNROOT="https://controltier.svn.sourceforge.net/svnroot/controltier"
@@ -27,6 +25,8 @@ SEEDSVNROOT="https://moduleforge.svn.sourceforge.net/svnroot/moduleforge/control
 
 CTLBRANCH=ctl-dispatch-3-5-dev
 CTIERBRANCH=controltier-3-5-dev
+
+# CTLVERS and CTIERVERS will be determined from "version.properties" file in svn root
 
 #grails version for ctl-center
 GRAILSVERS=1.2.0
@@ -104,6 +104,10 @@ else
     fi
 fi
 export CTIERSVN=$BUILD_ROOT/ctiersvn
+if [ -z "$CTIERVERS" ] ; then
+    export CTIERVERS=$( grep version.number= $CTIERSVN/version.properties | cut -d= -f 2 )
+fi
+echo "CTIERVERS=$CTIERVERS"
 
 
 #checkout ctl source
@@ -123,6 +127,10 @@ else
     fi
 fi
 export CTLSVN=$BUILD_ROOT/ctlsvn
+if [ -z "$CTLVERS" ] ; then
+    export CTLVERS=$( grep version.number= $CTLSVN/version.properties | cut -d= -f 2 )
+fi
+echo "CTLVERS=$CTLVERS"
 
 export CCSVN=$CTIERSVN/ctl-center
 
