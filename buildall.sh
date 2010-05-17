@@ -2,6 +2,16 @@
 # script for full controltier build
 ###################################
 
+# find wget
+if which -s wget; then
+    GET="wget -N"
+elif which -s curl; then
+    GET="curl -O"
+else
+    echo "Couldn't find wget or curl, need one or the other!" 1>&2
+    exit 1
+fi
+
 # configure JAVA_HOME and BUILD_ROOT as required
 #export JAVA_HOME=/usr/java/jdk1.5.0_15
 if [ -z "$BUILD_ROOT" ] ; then
@@ -33,16 +43,16 @@ GRAILSVERS=1.2.0
 
 prepare_build(){
 
-mkdir $BUILD_ROOT
+mkdir -p $BUILD_ROOT
 
 # dl dir is for downloaded files
-mkdir $BUILD_ROOT/dl
+mkdir -p $BUILD_ROOT/dl
 
 # local dir is for installed components needed for build
-mkdir $BUILD_ROOT/local
+mkdir -p $BUILD_ROOT/local
 
 # localrepo dir is the local repository for intermediate build files and other dependencies
-mkdir $BUILD_ROOT/localrepo
+mkdir -p $BUILD_ROOT/localrepo
 export LOCALREPO=$BUILD_ROOT/localrepo
 export LOCALREPOURL=file:$LOCALREPO
 
@@ -54,7 +64,7 @@ if [ ! -f $LOCALREPO/apache-ant/zips/apache-ant-1.7.1p1.zip ] ; then
     else
         # get ant zip dependency to local repo if it doesn't exist
         cd $LOCALREPO/apache-ant/zips
-        wget -N http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.7.1p1.zip
+        $GET http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.7.1p1.zip
     fi
 fi
 
@@ -74,7 +84,7 @@ if [ ! -f $BUILD_ROOT/local/grails-$GRAILSVERS/bin/grails ] ; then
     else
         # get grails bin distribution
         cd $BUILD_ROOT/dl
-        wget -N http://dist.codehaus.org/grails/grails-$GRAILSVERS.zip
+        $GET http://dist.codehaus.org/grails/grails-$GRAILSVERS.zip
         cd $BUILD_ROOT/local
         unzip $BUILD_ROOT/dl/grails-$GRAILSVERS.zip
     fi
