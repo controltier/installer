@@ -413,7 +413,7 @@ fi
         <backup-file-with-datestamp file="${server.ctlcenter.data_path}/ctlcenter-config.properties"/>
         <echo file="${server.ctlcenter.data_path}/ctlcenter-config.properties">ctl.base=${env.ctl_base.forwardslash}
 #loglevel.default is the default log level for jobs: ERR,WARN,INFO,VERBOSE,DEBUG
-loglevel.default=WARN
+loglevel.default=INFO
 
 #rss.enabled if set to true enables RSS feeds that are public (non-authenticated)
 rss.enabled=true
