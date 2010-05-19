@@ -418,6 +418,9 @@ loglevel.default=WARN
 #rss.enabled if set to true enables RSS feeds that are public (non-authenticated)
 rss.enabled=true
 
+
+grails.serverURL=http://${server.hostname}:${server.jetty.port}/ctlcenter
+
 reportservice.log4j.port=${server.reportservice.port}
 reportservice.pagination.default=30
 ctlcenter.birt.rptdesign.dir=${birt.examples.dir}
