@@ -3,9 +3,9 @@
 ###################################
 
 # find wget
-if which -s wget; then
+if which wget >/dev/null; then
     GET="wget -N"
-elif which -s curl; then
+elif which curl >/dev/null; then
     GET="curl -O"
 else
     echo "Couldn't find wget or curl, need one or the other!" 1>&2
