@@ -612,6 +612,39 @@ fi
 
 }
 
+do_clean(){
+
+    echo "Cleaning..."
+    #clean localrepo of build artifacts
+    rm -r $BUILD_ROOT/localrepo/ctier-* $BUILD_ROOT/localrepo/commander-extension \
+    $BUILD_ROOT/localrepo/commander $BUILD_ROOT/localrepo/ctl* $BUILD_ROOT/localrepo/itnav \
+    $BUILD_ROOT/localrepo/controltier-seed $BUILD_ROOT/localrepo/reportcenter
+
+    #clean build target dirs
+    rm -r $BUILD_ROOT/ctierseedsvn/target
+    rm -rf $BUILD_ROOT/ctlsvn/target
+    rm -r $BUILD_ROOT/ctiersvn/installer/target
+    rm -r $BUILD_ROOT/ctiersvn/workbench/target
+    rm -r $BUILD_ROOT/ctiersvn/ctl-center/target
+    rm -r $BUILD_ROOT/ctiersvn/commander/target
+    rm -r $BUILD_ROOT/ctiersvn/common/target
+
+    #clean intermediate maven repo dirs of build artifacts
+    rm -r $BUILD_ROOT/ctiersvn/maven/repository/commander*
+    rm -r $BUILD_ROOT/ctiersvn/maven/repository/ctier*
+    rm -r $BUILD_ROOT/ctiersvn/maven/repository/ctl*
+    rm -r $BUILD_ROOT/ctiersvn/maven/repository/itnav
+    rm -r $BUILD_ROOT/ctiersvn/maven/repository/jobcenter
+    rm -r $BUILD_ROOT/ctiersvn/maven/repository/reportcenter
+    rm -r $BUILD_ROOT/ctlsvn/maven/repository/ctl*
+
+    echo "Cleaned local build artifacts and targets."
+}
+
+if [ "$1" = "-clean" ] ; then
+    shift
+    do_clean
+fi
 
 if [ -z "$*" ] ; then
 
