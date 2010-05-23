@@ -6,7 +6,7 @@ $Id$
     <description>
     Build script to configure ControlTier Server and Client. Used by the server-setup.sh script.
     </description>
-    <property name="package.ant.version" value="1.7.1p1"/>
+    <property name="package.ant.version" value="1.8.0"/>
     <tstamp />
     <property environment="USER_ENV"/>
     

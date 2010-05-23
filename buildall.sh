@@ -58,23 +58,23 @@ export LOCALREPOURL=file:$LOCALREPO
 
 
 mkdir -p $LOCALREPO/apache-ant/zips
-if [ ! -f $LOCALREPO/apache-ant/zips/apache-ant-1.7.1p1.zip ] ; then
-    if [ ! -z "$PKGREPO" -a -f $PKGREPO/apache-ant/zips/apache-ant-1.7.1p1.zip ] ; then
-        cp $PKGREPO/apache-ant/zips/apache-ant-1.7.1p1.zip $LOCALREPO/apache-ant/zips/
+if [ ! -f $LOCALREPO/apache-ant/zips/apache-ant-1.8.0.zip ] ; then
+    if [ ! -z "$PKGREPO" -a -f $PKGREPO/apache-ant/zips/apache-ant-1.8.0.zip ] ; then
+        cp $PKGREPO/apache-ant/zips/apache-ant-1.8.0.zip $LOCALREPO/apache-ant/zips/
     else
         # get ant zip dependency to local repo if it doesn't exist
         cd $LOCALREPO/apache-ant/zips
-        $GET http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.7.1p1.zip
+        $GET http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.8.0.zip
     fi
 fi
 
 # extract apache-ant to local dir for use during build
-if [ ! -f $BUILD_ROOT/local/apache-ant-1.7.1p1/bin/ant ] ; then
+if [ ! -f $BUILD_ROOT/local/apache-ant-1.8.0/bin/ant ] ; then
     cd $BUILD_ROOT/local
-    unzip -o $LOCALREPO/apache-ant/zips/apache-ant-1.7.1p1.zip
+    unzip -o $LOCALREPO/apache-ant/zips/apache-ant-1.8.0.zip
 fi
 
-export ANT_HOME=$BUILD_ROOT/local/apache-ant-1.7.1p1
+export ANT_HOME=$BUILD_ROOT/local/apache-ant-1.8.0
 
 # extract grails to local dir for use during build of CTL Center
 if [ ! -f $BUILD_ROOT/local/grails-$GRAILSVERS/bin/grails ] ; then 
@@ -156,6 +156,7 @@ if [ -d $BUILD_ROOT/ctierseedsvn ] ; then
 fi
 cd $BUILD_ROOT
 svn export $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
+#svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
 if [ 0 != $? ]
 then
    echo "Controltier Seed src checkout failed"
@@ -433,6 +434,7 @@ cp $LOCALREPO/ctier-common-vocabulary/jars/ctier-common-vocabulary-$CTIERVERS.ja
 cp $LOCALREPO/commander/jars/commander-$CTIERVERS.jar lib/
 MYPATH=$PATH
 export GRAILS_HOME=$GRAILS_HOME_111
+echo GRAILS_HOME=$GRAILS_HOME
 export PATH=$PATH:$GRAILS_HOME/bin
 
 #echo 'y' to the command to quell y/n prompt on second time running it:

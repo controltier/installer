@@ -92,31 +92,31 @@ fi
 %{installRoot}/pkgs/ctl-%{ctlVersion}/etc/
 %{installRoot}/pkgs/ctl-%{ctlVersion}/lib/
 %dir %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/
-%dir %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/INSTALL
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/KEYS
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/LICENSE
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/NOTICE
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/PATCH_NOTE.txt
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/README
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/WHATSNEW
-%dir %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin
-%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/ant
-%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/antRun
-%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/*.pl
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/ant.bat
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/ant.cmd
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/antRun.bat
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/antenv.cmd
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/envset.cmd
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/lcp.bat
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/runant.py
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/bin/runrc.cmd
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/docs
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/etc
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/fetch.xml
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/get-m2.xml
-%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.7.1p1/lib
+%dir %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/INSTALL
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/KEYS
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/LICENSE
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/NOTICE
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/PATCH_NOTE.txt
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/README
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/WHATSNEW
+%dir %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/ant
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/antRun
+%attr(755,-,-) %{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/*.pl
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/ant.bat
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/ant.cmd
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/antRun.bat
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/antenv.cmd
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/envset.cmd
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/lcp.bat
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/runant.py
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/bin/runrc.cmd
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/docs
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/etc
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/fetch.xml
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/get-m2.xml
+%{installRoot}/pkgs/ctl-%{ctlVersion}/pkgs/apache-ant-1.8.0/lib
 %{installRoot}/pkgs/ctl-%{ctlVersion}/tests/
 %{installRoot}/pkgs/ctl-%{ctlVersion}/var/
 %ghost %{installRoot}/.bashrc

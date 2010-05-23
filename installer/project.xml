@@ -284,7 +284,7 @@ headlines sample par-->
        <!-- needed at ant runtime for testing -->
        <dependency>
            <id>ant-launcher</id>
-           <version>1.7.1</version>
+           <version>1.8.0</version>
            <url>http://ant.apache.org/</url>
            <properties>
                <war.bundle.jar>false</war.bundle.jar>
@@ -293,7 +293,7 @@ headlines sample par-->
        <!-- needed at ant runtime for testing -->
        <dependency>
            <id>apache-ant</id>
-           <version>1.7.1p1</version>
+           <version>1.8.0</version>
            <url>http://ant.apache.org/</url>
            <properties>
                <war.bundle.jar>false</war.bundle.jar>
