@@ -30,7 +30,7 @@
       <variable name="INSTALL_JETTY_BASE" value="$INSTALL_PATH/pkgs/jetty-@jetty.version@"/>
       <variable name="INSTALL_JETTY_HOME" value="$INSTALL_PATH/pkgs/jetty-@jetty.version@"/>
       <variable name="CTL" value="ctl-@ctl.version@"/>
-      <variable name="APACHE_ANT" value="apache-ant-1.8.0"/>
+      <variable name="APACHE_ANT" value="apache-ant-1.8.1"/>
         <variable name="JDKPathPanel.minVersion" value="1.5"/>
         <variable name="JDKPathPanel.maxVersion" value="1.6"/>
         <variable name="JDKPathPanel.skipIfValid" value="yes"/>
@@ -38,19 +38,17 @@
 
     <!-- Library files required to run ControlTier Installer script -->
     <jar src="ControlTier-@controltier.version@/lib/installer.jar"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.0/lib/ant.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.1/lib/ant.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.0/lib/ant-launcher.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.1/lib/ant-launcher.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.0/lib/regexp-1.5.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.1/lib/regexp-1.5.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.0/lib/ant-apache-regexp.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.1/lib/ant-apache-regexp.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.0/lib/ant-contrib-1.0b1.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.1/lib/ant-contrib-1.0b1.jar"
          stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.0/lib/ant-nodeps.jar"
-         stage="install"/>
-    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.0/lib/ant-trax.jar"
+    <jar src="ControlTier-@controltier.version@/pkgs/ctl-@ctl.version@/pkgs/apache-ant-1.8.1/lib/ant-nodeps.jar"
          stage="install"/>
 
     <!--

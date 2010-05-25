@@ -58,23 +58,23 @@ export LOCALREPOURL=file:$LOCALREPO
 
 
 mkdir -p $LOCALREPO/apache-ant/zips
-if [ ! -f $LOCALREPO/apache-ant/zips/apache-ant-1.8.0.zip ] ; then
-    if [ ! -z "$PKGREPO" -a -f $PKGREPO/apache-ant/zips/apache-ant-1.8.0.zip ] ; then
-        cp $PKGREPO/apache-ant/zips/apache-ant-1.8.0.zip $LOCALREPO/apache-ant/zips/
+if [ ! -f $LOCALREPO/apache-ant/zips/apache-ant-1.8.1.zip ] ; then
+    if [ ! -z "$PKGREPO" -a -f $PKGREPO/apache-ant/zips/apache-ant-1.8.1.zip ] ; then
+        cp $PKGREPO/apache-ant/zips/apache-ant-1.8.1.zip $LOCALREPO/apache-ant/zips/
     else
         # get ant zip dependency to local repo if it doesn't exist
         cd $LOCALREPO/apache-ant/zips
-        $GET http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.8.0.zip
+        $GET http://ctl-dispatch.sourceforge.net/repository/apache-ant/zips/apache-ant-1.8.1.zip
     fi
 fi
 
 # extract apache-ant to local dir for use during build
-if [ ! -f $BUILD_ROOT/local/apache-ant-1.8.0/bin/ant ] ; then
+if [ ! -f $BUILD_ROOT/local/apache-ant-1.8.1/bin/ant ] ; then
     cd $BUILD_ROOT/local
-    unzip -o $LOCALREPO/apache-ant/zips/apache-ant-1.8.0.zip
+    unzip -o $LOCALREPO/apache-ant/zips/apache-ant-1.8.1.zip
 fi
 
-export ANT_HOME=$BUILD_ROOT/local/apache-ant-1.8.0
+export ANT_HOME=$BUILD_ROOT/local/apache-ant-1.8.1
 
 # extract grails to local dir for use during build of CTL Center
 if [ ! -f $BUILD_ROOT/local/grails-$GRAILSVERS/bin/grails ] ; then 
@@ -146,8 +146,8 @@ export CCSVN=$CTIERSVN/ctl-center
 
 #export modules source
 if [ -d $BUILD_ROOT/ctierseedsvn ] ; then
-    echo "Cleaning ctierseedsvn dir..."
-    rm -rf $BUILD_ROOT/ctierseedsvn
+    #echo "Cleaning ctierseedsvn dir..."
+    #rm -rf $BUILD_ROOT/ctierseedsvn
     if [ 0 != $? ]
     then
        echo "Couldn't clean ctierseedsvn dir"
@@ -155,8 +155,8 @@ if [ -d $BUILD_ROOT/ctierseedsvn ] ; then
     fi
 fi
 cd $BUILD_ROOT
-svn export $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
-#svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
+#svn export $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
+svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
 if [ 0 != $? ]
 then
    echo "Controltier Seed src checkout failed"
