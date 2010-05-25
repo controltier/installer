@@ -146,8 +146,8 @@ export CCSVN=$CTIERSVN/ctl-center
 
 #export modules source
 if [ -d $BUILD_ROOT/ctierseedsvn ] ; then
-    #echo "Cleaning ctierseedsvn dir..."
-    #rm -rf $BUILD_ROOT/ctierseedsvn
+    echo "Cleaning ctierseedsvn dir..."
+    rm -rf $BUILD_ROOT/ctierseedsvn
     if [ 0 != $? ]
     then
        echo "Couldn't clean ctierseedsvn dir"
@@ -155,8 +155,8 @@ if [ -d $BUILD_ROOT/ctierseedsvn ] ; then
     fi
 fi
 cd $BUILD_ROOT
-#svn export $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
-svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
+svn export $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
+#svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
 if [ 0 != $? ]
 then
    echo "Controltier Seed src checkout failed"
