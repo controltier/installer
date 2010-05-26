@@ -6,7 +6,7 @@ $Id$
     <description>
     Build script to install ControlTier Server and Client. Used by the install.sh script.
     </description>
-    <property name="package.ant.version" value="1.8.0"/>
+    <property name="package.ant.version" value="1.8.1"/>
     <tstamp />
     <property environment="USER_ENV"/>
     
@@ -486,22 +486,29 @@ fi
       <chmod dir="${server.jetty.home}/bin" perm="ugo+rx" includes="*.sh"/>
       <!-- create logs directory -->
       <mkdir dir="${server.jetty.base}/logs"/>
-      <!-- copy in jasper libs as itnav still needs them -->
+      <!-- copy in jasper libs as itnav still need them -->
       <echo>Adding in jasper dependencies: ${pkgs.jasper-runtime.archive}, ${pkgs.jasper-compiler.archive} ...</echo>
-      <copy todir="${server.jetty.home}/lib">
-	<filelist
-	    dir="${pkgs.root}"
-	    files="${pkgs.jasper-runtime.archive},${pkgs.jasper-compiler.archive}"
-	    />
-      </copy>
-      <!-- copy in tools.jar the old jasper libs still needs them -->
-      <echo>Copying in tools.jar dependency  ...</echo>
-      <copy todir="${server.jetty.home}/lib">
-	<filelist
-	    dir="${USER_ENV.JAVA_HOME}/lib"
-	    files="tools.jar"
-	    />
-      </copy>
+      <copy file="${pkgs.root}/${pkgs.jasper-runtime.archive}"
+	    tofile="${server.jetty.home}/lib/${pkgs.jasper-runtime.archive}" 
+	    verbose="true"/>
+      <copy file="${pkgs.root}/${pkgs.jasper-compiler.archive}"
+	    tofile="${server.jetty.home}/lib/${pkgs.jasper-compiler.archive}" 
+	    verbose="true"/>
+
+
+      <!-- for non macosx, copy in tools.jar since the old jasper libs still need them -->
+      <if>
+	<not>
+	  <equals arg1="${os.name}" arg2="Mac OS X"/>
+	</not>
+	<then>
+	  <echo>Copying in tools.jar dependency  ...</echo>
+	  <copy file="${USER_ENV.JAVA_HOME}/lib/tools.jar"
+		tofile="${server.jetty.home}/lib/tools.jar"
+		verbose="true" failonerror="true"/>
+	</then>
+      </if>
+
       <!-- create a work dir for runtime generated application files -->
       <mkdir dir="${server.jetty.base}/work"/>
       <!-- change the hardcoded config value(s) in jetty.sh -->
