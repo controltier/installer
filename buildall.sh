@@ -622,6 +622,9 @@ do_clean(){
     $BUILD_ROOT/localrepo/commander $BUILD_ROOT/localrepo/ctl* $BUILD_ROOT/localrepo/itnav \
     $BUILD_ROOT/localrepo/controltier-seed $BUILD_ROOT/localrepo/reportcenter
 
+    #remove ctl expanded ant package
+    rm -rf $BUILD_ROOT/ctlsvn/pkgs/apache-ant*
+
     #remove ctl-center lib dir which may contain previously built jars
     rm  $BUILD_ROOT/ctiersvn/ctl-center/lib/{ctl,ctier,commander}*.jar
 
