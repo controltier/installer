@@ -22,7 +22,7 @@ Distribution: ControlTier
 Vendor: ControlTier Project
 Packager: ControlTier <info@controltier.org>
 AutoReqProv: no
-Requires: java >= 1.5, java-sdk >= 1.5, chkconfig
+Requires: java >= 1.5, java-sdk >= 1.5, chkconfig, passwd, shadow-utils
 BuildArch: noarch
 
 %description
