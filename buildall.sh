@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ###################################
 # script for full controltier build
 ###################################
@@ -27,7 +29,6 @@ if [ ! -f $HOME/.ssh/id_dsa.pub ] ; then
     echo "ERROR: $HOME/.ssh/id_dsa file must exist.  Please run: ssh-keygen -t dsa"
     exit 1
 fi
-
 
 CTLSVNROOT="https://ctl-dispatch.svn.sourceforge.net/svnroot/ctl-dispatch"
 CTIERSVNROOT="https://controltier.svn.sourceforge.net/svnroot/controltier"
@@ -119,6 +120,14 @@ if [ -z "$CTIERVERS" ] ; then
 fi
 echo "CTIERVERS=$CTIERVERS"
 
+if [ -z "$CTIERREL" ] ; then
+    export CTIERREL=$( grep version.release.number= $CTIERSVN/version.properties | cut -d= -f 2 )
+fi
+if [ -z "$CTIERREL" ] ; then
+    export CTIERREL="0"
+fi
+echo "CTIERREL=$CTIERREL"
+
 
 #checkout ctl source
 if [ ! -d ctlsvn ] ; then
@@ -144,24 +153,30 @@ echo "CTLVERS=$CTLVERS"
 
 export CCSVN=$CTIERSVN/ctl-center
 
-#export modules source
-if [ -d $BUILD_ROOT/ctierseedsvn ] ; then
-    echo "Cleaning ctierseedsvn dir..."
-    rm -rf $BUILD_ROOT/ctierseedsvn
+cd $BUILD_ROOT
+if [ ! -d $BUILD_ROOT/ctierseedsvn ] ; then
+    svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
     if [ 0 != $? ]
     then
-       echo "Couldn't clean ctierseedsvn dir"
+       echo "Controltier Seed src checkout failed"
        exit 2
     fi
-fi
-cd $BUILD_ROOT
-svn export $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
-if [ 0 != $? ]
-then
-   echo "Controltier Seed src checkout failed"
-   exit 2
+else
+    svn up ctierseedsvn
+    if [ 0 != $? ]
+    then
+       echo "Controltier Seed src update failed"
+       exit 2
+    fi
+
 fi
 export SEEDSVN=$BUILD_ROOT/ctierseedsvn
+
+
+# do release increment if necessary
+if [ "$DO_RELEASE_INCREMENT" = "true" ] ; then
+    do_release_increment
+fi
 
 }
 
@@ -240,7 +255,7 @@ build_common(){
 #
 # CTIER common build
 #
-MAVEN_HOME=$CTIERSVN/maven	
+MAVEN_HOME=$CTIERSVN/maven
 echo maven.repo.ctlocal = $LOCALREPOURL >  $CTIERSVN/common/build.properties
 cd $CTIERSVN/common
 cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean java:jars
@@ -276,7 +291,7 @@ build_elements_seed(){
 #
 # Note: this step uses the common sourcebase and maven dependency to build the elements-seed
 #
-MAVEN_HOME=$CTIERSVN/maven	
+MAVEN_HOME=$CTIERSVN/maven
 echo maven.repo.ctlocal = $LOCALREPOURL >  $CTIERSVN/common/build.properties
 
 mkdir -p $SEEDSVN/target
@@ -335,7 +350,7 @@ build_workbench(){
 # CTIER workbench build
 #
 
-MAVEN_HOME=$CTIERSVN/maven	
+MAVEN_HOME=$CTIERSVN/maven
 cd $CTIERSVN/workbench
 
 echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/workbench/build.properties
@@ -368,7 +383,7 @@ build_commander_extension(){
 #
 # CTIER commander-extension build
 #
-MAVEN_HOME=$CTIERSVN/maven	
+MAVEN_HOME=$CTIERSVN/maven
 cd $CTIERSVN/commander
 
 echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/commander/build.properties
@@ -595,7 +610,11 @@ MAVEN_HOME=$CTIERSVN/maven
 cd $CTIERSVN/installer
 	
 echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/installer/build.properties
-cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true clean client:rpmbuild
+echo "release version: $CTIERREL"
+#manually set the release number in spec file
+CSPECTEMPL=$CTIERSVN/installer/src/rpm/SPECS/ctier-client.spec.template
+perl  -i'.orig' -p -e "s#^Release: @release@.*\$#Release: $CTIERREL#" $CSPECTEMPL || (echo "Failed to change release number in client spec file: $!" && exit 2)
+cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true  clean client:rpmbuild
 if [ 0 != $? ]
 then
    echo "Installer build failed"
@@ -603,13 +622,13 @@ then
 fi  
 
 
-#artifacts: ctier-client-$CTIERVERS-1.noarch.rpm
+#artifacts: ctier-client-$CTIERVERS-$CTIERREL.noarch.rpm
 
 #ctier-client-3.4.9-1.noarch.rpm
-ls $CTIERSVN/installer/target/rpm/RPMS/noarch/ctier-client-${CTIERVERS}-1.noarch.rpm 
+ls $CTIERSVN/installer/target/rpm/RPMS/noarch/ctier-client-${CTIERVERS}-${CTIERREL}.noarch.rpm 
 if [ 0 != $? ]
 then
-   echo "Installer build failed: couldn't find target/rpmbuild/ctier-client-$CTIERVERS.rpm"
+   echo "Installer build failed: couldn't find target/rpmbuild/ctier-client-$CTIERVERS-$CTIERREL.rpm"
    exit 2
 fi  
 
@@ -619,10 +638,12 @@ build_server_rpm(){
 #
 # Installer build
 #
-MAVEN_HOME=$CTIERSVN/maven	
+MAVEN_HOME=$CTIERSVN/maven
 cd $CTIERSVN/installer
 	
 echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/installer/build.properties
+SSPECTEMPL=$CTIERSVN/installer/src/rpm/SPECS/ctier-server.spec.template
+perl  -i'.orig' -p -e "s#^Release: @release@.*\$#Release: $CTIERREL#" $SSPECTEMPL || (echo "Failed to change release number in server spec file: $!" && exit 2)
 cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true server:rpmbuild-full
 if [ 0 != $? ]
 then
@@ -631,13 +652,13 @@ then
 fi  
 
 
-#artifacts: ctier-client-$CTIERVERS-1.noarch.rpm
+#artifacts: ctier-client-$CTIERVERS-$CTIERREL.noarch.rpm
 
 #ctier-client-3.4.9-1.noarch.rpm
-ls $CTIERSVN/installer/target/rpm/RPMS/noarch/ctier-server-${CTIERVERS}-1.noarch.rpm 
+ls $CTIERSVN/installer/target/rpm/RPMS/noarch/ctier-server-${CTIERVERS}-${CTIERREL}.noarch.rpm 
 if [ 0 != $? ]
 then
-   echo "Installer build failed: couldn't find target/rpmbuild/ctier-server-$CTIERVERS.rpm"
+   echo "Installer build failed: couldn't find target/rpmbuild/ctier-server-$CTIERVERS-$CTIERREL.rpm"
    exit 2
 fi  
 
@@ -675,13 +696,41 @@ do_clean(){
     rm -r $BUILD_ROOT/ctiersvn/maven/repository/jobcenter
     rm -r $BUILD_ROOT/ctiersvn/maven/repository/reportcenter
     rm -r $BUILD_ROOT/ctlsvn/maven/repository/ctl*
+    
+    if [ -d $BUILD_ROOT/ctierseedsvn ] ; then
+        echo "Reverting SEED dir..."
+        svn revert --recursive $BUILD_ROOT/ctierseedsvn
+    fi
 
     echo "Cleaned local build artifacts and targets."
+}
+
+do_release_increment(){
+    CTIERREL=$(($CTIERREL + 1))
+
+    grep -q version.release.number $CTIERSVN/version.properties
+    if [ $? != 0 ] ; then
+        echo "version.release.number=$CTIERREL">> $CTIERSVN/version.properties
+        echo "Added release number to $CTIERSVN/version.properties"
+    else
+        perl  -i'.orig' -p -e "s#^version\.release\.number\s*=.*\$#version.release.number=$CTIERREL#" $CTIERSVN/version.properties || (echo "Failed to commit release number increment: $!" && exit 2)
+        echo "Updated release number in $CTIERSVN/version.properties"
+    fi
+
+    svn ci -m "Update Release number to $CTIERREL" $CTIERSVN/version.properties || (echo "Failed to commit release number increment: $!" && exit 2)
+    echo "Update release number to $CTIERREL"
 }
 
 if [ "$1" = "-clean" ] ; then
     shift
     do_clean
+fi
+
+DO_RELEASE_INCREMENT=false
+if [ "$1" = "-release" ] ; then
+    shift
+    #do_release_increment
+    DO_RELEASE_INCREMENT=true
 fi
 
 if [ -z "$*" ] ; then

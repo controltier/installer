@@ -35,6 +35,7 @@ perl  -0777 -i'.orig' -p -e "s#(<id>commander-extension</id>\s*)<version>.*?</ve
 
 # update version.properties
 perl  -i'.orig' -p -e "s#^version\.number\s*=.*\$#version.number=$CTVER#" $CTPATH/version.properties
+perl  -i'.orig' -p -e "s#^version\.release\.number\s*=.*\$#version.release\.number=0#" $CTPATH/version.properties
 # update ctier versions and dependencies
 perl  -i'.orig' -p -e "s#<currentVersion>.*?</currentVersion>#<currentVersion>$CTVER</currentVersion>#s" $CTPATH/common/project.xml
 
