@@ -156,7 +156,6 @@ if [ -d $BUILD_ROOT/ctierseedsvn ] ; then
 fi
 cd $BUILD_ROOT
 svn export $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
-#svn co $SEEDSVNROOT/branches/$CTIERBRANCH ctierseedsvn
 if [ 0 != $? ]
 then
    echo "Controltier Seed src checkout failed"
@@ -270,32 +269,62 @@ then
 fi  
 }
 
-build_controltier_seed(){
+build_elements_seed(){
 ######################
 #
-# CTIER Seed build
+# Elements Seed build
 #
-# Note: this step uses the common sourcebase and maven dependency to build the controltier-seed
+# Note: this step uses the common sourcebase and maven dependency to build the elements-seed
 #
 MAVEN_HOME=$CTIERSVN/maven	
 echo maven.repo.ctlocal = $LOCALREPOURL >  $CTIERSVN/common/build.properties
 
 mkdir -p $SEEDSVN/target
 cd $CTIERSVN/common
-cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Dseed.name=controltier -Dseed.build.name=controltier-seed-$CTIERVERS -Dseed.modulesrc.dir=$SEEDSVN/core/modules,$SEEDSVN/elements/modules -Dseed.target.dir=$SEEDSVN/target seed:build
+cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Dseed.name=elements -Dseed.build.name=elements-seed-$CTIERVERS -Dseed.modulesrc.dir=$SEEDSVN/core/modules,$SEEDSVN/elements/modules -Dseed.target.dir=$SEEDSVN/target seed:build
 if [ 0 != $? ]
 then
-   echo "Ctier Seed build failed: unable to create the controltier-seed-$CTIERVERS.jar"
+   echo "Elements Seed build failed: unable to create the elements-seed-$CTIERVERS.jar"
    exit 2
 fi  
 		
-rm -rf $CTIERSVN/maven/repository/controltier-seed
+rm -rf $CTIERSVN/maven/repository/elements-seed
 
-mkdir -p $LOCALREPO/controltier-seed/jars
-cp $SEEDSVN/target/controltier-seed-$CTIERVERS.jar $LOCALREPO/controltier-seed/jars/controltier-seed-$CTIERVERS.jar 
+mkdir -p $LOCALREPO/elements-seed/jars
+cp $SEEDSVN/target/elements-seed-$CTIERVERS.jar $LOCALREPO/elements-seed/jars/elements-seed-$CTIERVERS.jar 
 if [ 0 != $? ]
 then
-   echo "Ctier Seed build failed: cannot copy target/controltier-seed-$CTIERVERS.jar"
+   echo "Ctier Seed build failed: cannot copy target/elements-seed-$CTIERVERS.jar"
+   exit 2
+fi  
+}
+
+build_core_seed(){
+######################
+#
+# Core Seed build
+#
+# Note: this step uses the common sourcebase and maven dependency to build the core-seed
+#
+MAVEN_HOME=$CTIERSVN/maven	
+echo maven.repo.ctlocal = $LOCALREPOURL >  $CTIERSVN/common/build.properties
+
+mkdir -p $SEEDSVN/target
+cd $CTIERSVN/common
+cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Dseed.name=core -Dseed.build.name=core-seed-$CTIERVERS -Dseed.modulesrc.dir=$SEEDSVN/core/modules -Dseed.target.dir=$SEEDSVN/target seed:build
+if [ 0 != $? ]
+then
+   echo "Ctier Seed build failed: unable to create the core-seed-$CTIERVERS.jar"
+   exit 2
+fi  
+		
+rm -rf $CTIERSVN/maven/repository/core-seed
+
+mkdir -p $LOCALREPO/core-seed/jars
+cp $SEEDSVN/target/core-seed-$CTIERVERS.jar $LOCALREPO/core-seed/jars/core-seed-$CTIERVERS.jar 
+if [ 0 != $? ]
+then
+   echo "Base Seed build failed: cannot copy target/core-seed-$CTIERVERS.jar"
    exit 2
 fi  
 }
@@ -620,7 +649,8 @@ do_clean(){
     #clean localrepo of build artifacts
     rm -r $BUILD_ROOT/localrepo/ctier-* $BUILD_ROOT/localrepo/commander-extension \
     $BUILD_ROOT/localrepo/commander $BUILD_ROOT/localrepo/ctl* $BUILD_ROOT/localrepo/itnav \
-    $BUILD_ROOT/localrepo/controltier-seed $BUILD_ROOT/localrepo/reportcenter
+    $BUILD_ROOT/localrepo/core-seed  $BUILD_ROOT/localrepo/elements-seed \
+    $BUILD_ROOT/localrepo/reportcenter
 
     #remove ctl expanded ant package
     rm -rf $BUILD_ROOT/ctlsvn/pkgs/apache-ant*
@@ -659,7 +689,8 @@ if [ -z "$*" ] ; then
     prepare_build
     build_ctl
     build_common
-    build_controltier_seed
+    build_core_seed
+    build_elements_seed
     build_commander_extension
     build_workbench
     build_ctl_bundle
@@ -676,9 +707,12 @@ else
             common)
                 build_common
                 ;;
-            controltier_seed)
-                build_controltier_seed
+            elements_seed)
+                build_elements_seed
                 ;;
+            core_seed)
+                build_core_seed
+	                ;;
             workbench)
                 build_workbench
                 ;;
