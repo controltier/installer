@@ -613,7 +613,7 @@ echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/installer/build.properties
 echo "release version: $CTIERREL"
 #manually set the release number in spec file
 CSPECTEMPL=$CTIERSVN/installer/src/rpm/SPECS/ctier-client.spec.template
-perl  -i'.orig' -p -e "s#^Release: @release@.*\$#Release: $CTIERREL#" $CSPECTEMPL || (echo "Failed to change release number in client spec file: $!" && exit 2)
+perl  -i'.orig' -p -e "s#^Release: .*\$#Release: $CTIERREL#" $CSPECTEMPL || (echo "Failed to change release number in client spec file: $!" && exit 2)
 cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true  clean client:rpmbuild
 if [ 0 != $? ]
 then
@@ -643,7 +643,7 @@ cd $CTIERSVN/installer
 	
 echo maven.repo.ctlocal = $LOCALREPOURL > $CTIERSVN/installer/build.properties
 SSPECTEMPL=$CTIERSVN/installer/src/rpm/SPECS/ctier-server.spec.template
-perl  -i'.orig' -p -e "s#^Release: @release@.*\$#Release: $CTIERREL#" $SSPECTEMPL || (echo "Failed to change release number in server spec file: $!" && exit 2)
+perl  -i'.orig' -p -e "s#^Release: .*\$#Release: $CTIERREL#" $SSPECTEMPL || (echo "Failed to change release number in server spec file: $!" && exit 2)
 cd $CTIERSVN/installer && $MAVEN_HOME/bin/maven -Djava.net.preferIPv4Stack=true server:rpmbuild-full
 if [ 0 != $? ]
 then
