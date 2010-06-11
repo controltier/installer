@@ -294,9 +294,11 @@ build_elements_seed(){
 MAVEN_HOME=$CTIERSVN/maven
 echo maven.repo.ctlocal = $LOCALREPOURL >  $CTIERSVN/common/build.properties
 
-mkdir -p $SEEDSVN/target
+rm -rf $SEEDSVN/target/elements-seed
+mkdir -p $SEEDSVN/target/elements-seed
+
 cd $CTIERSVN/common
-cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Dseed.name=elements -Dseed.build.name=elements-seed-$CTIERVERS -Dseed.modulesrc.dir=$SEEDSVN/core/modules,$SEEDSVN/elements/modules -Dseed.target.dir=$SEEDSVN/target seed:build
+cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Dseed.name=elements -Dseed.build.name=elements-seed-$CTIERVERS -Dseed.modulesrc.dir=$SEEDSVN/core/modules,$SEEDSVN/elements/modules -Dseed.target.dir=$SEEDSVN/target/elements-seed seed:build
 if [ 0 != $? ]
 then
    echo "Elements Seed build failed: unable to create the elements-seed-$CTIERVERS.jar"
@@ -306,7 +308,7 @@ fi
 rm -rf $CTIERSVN/maven/repository/elements-seed
 
 mkdir -p $LOCALREPO/elements-seed/jars
-cp $SEEDSVN/target/elements-seed-$CTIERVERS.jar $LOCALREPO/elements-seed/jars/elements-seed-$CTIERVERS.jar 
+cp $SEEDSVN/target/elements-seed/elements-seed-$CTIERVERS.jar $LOCALREPO/elements-seed/jars/elements-seed-$CTIERVERS.jar 
 if [ 0 != $? ]
 then
    echo "Ctier Seed build failed: cannot copy target/elements-seed-$CTIERVERS.jar"
@@ -324,9 +326,10 @@ build_core_seed(){
 MAVEN_HOME=$CTIERSVN/maven	
 echo maven.repo.ctlocal = $LOCALREPOURL >  $CTIERSVN/common/build.properties
 
-mkdir -p $SEEDSVN/target
+rm -rf $SEEDSVN/target/core-seed
+mkdir -p $SEEDSVN/target/core-seed
 cd $CTIERSVN/common
-cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Dseed.name=core -Dseed.build.name=core-seed-$CTIERVERS -Dseed.modulesrc.dir=$SEEDSVN/core/modules -Dseed.target.dir=$SEEDSVN/target seed:build
+cd $CTIERSVN/common && $MAVEN_HOME/bin/maven -Dseed.name=core -Dseed.build.name=core-seed-$CTIERVERS -Dseed.modulesrc.dir=$SEEDSVN/core/modules -Dseed.target.dir=$SEEDSVN/target/core-seed seed:build
 if [ 0 != $? ]
 then
    echo "Ctier Seed build failed: unable to create the core-seed-$CTIERVERS.jar"
@@ -336,7 +339,7 @@ fi
 rm -rf $CTIERSVN/maven/repository/core-seed
 
 mkdir -p $LOCALREPO/core-seed/jars
-cp $SEEDSVN/target/core-seed-$CTIERVERS.jar $LOCALREPO/core-seed/jars/core-seed-$CTIERVERS.jar 
+cp $SEEDSVN/target/core-seed/core-seed-$CTIERVERS.jar $LOCALREPO/core-seed/jars/core-seed-$CTIERVERS.jar 
 if [ 0 != $? ]
 then
    echo "Base Seed build failed: cannot copy target/core-seed-$CTIERVERS.jar"
