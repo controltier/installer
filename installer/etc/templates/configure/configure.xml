@@ -385,12 +385,14 @@ fi
         <fail-if-blank name="server.ctlcenter.data_path"/>
         <fail-if-blank name="server.reportservice.port"/>
 
+        <property name="ctlcenter.webapp.base" value="${server.jetty.base}/webapps/ctlcenter"/>
+
         <!-- copy in jetty-web.xml -->
         <property name="ctlcenter.jdbc.connection.url"
                   value="jdbc:hsqldb:file:${server.ctlcenter.data_path}/grailsdb"/>
         <property name="ctlcenter.jdbc.connection.username" value="sa"/>
 	    <property name="ctlcenter.jdbc.connection.password" value=""/>
-        <copy tofile="${server.jetty.base}/ctlcenter/WEB-INF/jetty-web.xml" overwrite="true">
+        <copy tofile="${ctlcenter.webapp.base}/WEB-INF/jetty-web.xml" overwrite="true">
             <filterchain >
                 <expandproperties />
             </filterchain>
@@ -398,14 +400,14 @@ fi
         </copy>
         <!-- copy in BirtConfig.properties -->
         <property name="ctlcenter.log.dir" value="${server.jetty.home}/logs"/>
-        <copy tofile="${server.jetty.base}/ctlcenter/WEB-INF/classes/BirtConfig.properties" overwrite="true">
+        <copy tofile="${ctlcenter.webapp.base}/WEB-INF/classes/BirtConfig.properties" overwrite="true">
             <filterchain >
                 <expandproperties />
             </filterchain>
             <fileset file="${basedir}/etc/templates/ctlcenter/BirtConfig.properties.template"/>
         </copy>
 	    <pathconvert property="birt.examples.dir" dirsep="/">
-            <path path="${server.jetty.base}/ctlcenter/birt-reports/examples"/>
+            <path path="${ctlcenter.webapp.base}/birt-reports/examples"/>
         </pathconvert>
 
 
