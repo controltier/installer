@@ -61,6 +61,7 @@ touch $RPM_BUILD_ROOT/etc/default/ctier
 #initialize databases so we can keep track of them as config files
 touch $RPM_BUILD_ROOT%{installRoot}/ctlcenter/grailsdb.properties
 touch $RPM_BUILD_ROOT%{installRoot}/ctlcenter/grailsdb.script
+touch $RPM_BUILD_ROOT%{installRoot}/ctlcenter/grailsdb.log
 
 %pre
 
@@ -94,8 +95,9 @@ fi
 %dir %{installRoot}/pkgs
 
 #### grails db
-%config(noreplace) %{installRoot}/ctlcenter/grailsdb.properties
-%config(noreplace) %{installRoot}/ctlcenter/grailsdb.script
+%ghost %config(noreplace) %{installRoot}/ctlcenter/grailsdb.properties
+%ghost %config(noreplace) %{installRoot}/ctlcenter/grailsdb.script
+%ghost %config(noreplace) %{installRoot}/ctlcenter/grailsdb.log
 
 #### config files
 %config(noreplace) %{installRoot}/ctlcenter/ctlcenter-config.properties
